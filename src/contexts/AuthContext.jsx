@@ -6,7 +6,7 @@ const AuthContext = createContext();
 // Credenciais de teste
 const TEST_CREDENTIALS = {
 	username: 'teste',
-	password: 'teste123'
+	password: 'teste'
 };
 
 export const AuthProvider = ({ children }) => {
