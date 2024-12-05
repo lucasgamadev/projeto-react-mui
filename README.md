@@ -1,4 +1,4 @@
-# WindSurf Project
+# Projeto em React + MUI
 
 ## 📋 Sobre
 Uma aplicação moderna para gerenciamento de eventos e usuários, construída com React e Material-UI. O projeto inclui um sistema de autenticação, dashboard administrativo e gerenciamento de eventos.
