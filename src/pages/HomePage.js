@@ -102,7 +102,7 @@ const HomePage = () => {
             <MenuIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Windsurf Dashboard
+            Dashboard
             </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
               <Typography variant="body1" sx={{ mr: 1 }}>
