@@ -39,7 +39,7 @@ npm audit fix --force
 
 5. Scripts disponíveis:
 ```bash
-npm start    # Inicia o servidor de desenvolvimento
+cd CascadeProjects/windsurf-project && npm start    # Inicia o servidor de desenvolvimento
 npm build    # Cria a versão de produção
 npm test     # Executa os testes
 npm eject    # Ejeta as configurações do React Scripts
