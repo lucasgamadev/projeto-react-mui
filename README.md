@@ -29,10 +29,15 @@ npm install @emotion/react @emotion/styled @mui/icons-material @mui/material for
 
 3. Instale as dependências de desenvolvimento:
 ```bash
-npm install --save-dev @babel/plugin-proposal-private-property-in-object react-scripts
+npm install --save-dev @babel/plugin-proposal-private-property-in-object react-scripts@5.0.1
 ```
 
-4. Scripts disponíveis:
+4. Execute a correção de vulnerabilidades:
+```bash
+npm audit fix --force
+```
+
+5. Scripts disponíveis:
 ```bash
 npm start    # Inicia o servidor de desenvolvimento
 npm build    # Cria a versão de produção
