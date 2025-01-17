@@ -15,25 +15,29 @@ Uma aplicação moderna para gerenciamento de eventos e usuários, construída c
 - 📦 Node.js (versão 14 ou superior)
 - 📦 npm ou yarn
 
-## 🔧 Instalação
+## 🔧 Instalação e Scripts
 
 1. Clone o repositório:
 ```bash
 git clone [url-do-repositório]
 ```
 
-2. Instale as dependências:
+2. Instale as dependências principais:
 ```bash
-npm install
-# ou
-yarn install
+npm install @emotion/react @emotion/styled @mui/icons-material @mui/material formik react react-dom react-router-dom yup
 ```
 
-3. Inicie o servidor de desenvolvimento:
+3. Instale as dependências de desenvolvimento:
 ```bash
-npm start
-# ou
-yarn start
+npm install --save-dev @babel/plugin-proposal-private-property-in-object react-scripts
+```
+
+4. Scripts disponíveis:
+```bash
+npm start    # Inicia o servidor de desenvolvimento
+npm build    # Cria a versão de produção
+npm test     # Executa os testes
+npm eject    # Ejeta as configurações do React Scripts
 ```
 
 ## 🔑 Credenciais de Teste
