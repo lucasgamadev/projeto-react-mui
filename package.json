@@ -18,7 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --config eslint.config.js ./**/*.js"
   },
   "eslintConfig": {
     "extends": [
@@ -38,7 +39,7 @@
       "last 1 safari version"
     ]
   },
-  "type": "module",\n  "scripts": {\n    "lint": "eslint --config eslint.config.js ./**/*.js"\n  },\n  "devDependencies": {
+  "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
