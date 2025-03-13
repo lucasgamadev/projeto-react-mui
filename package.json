@@ -38,8 +38,18 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
+  "type": "module",\n  "scripts": {\n    "lint": "eslint --config eslint.config.js ./**/*.js"\n  },\n  "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "markdownlint-cli": "^0.44.0",
+    "prettier": "^3.5.3",
     "react-scripts": "^5.0.1"
   }
 }
