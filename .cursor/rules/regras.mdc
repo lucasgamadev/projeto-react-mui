@@ -1,7 +1,7 @@
 ---
-description: 
+description: REGRAS
 globs: 
-alwaysApply: true
+alwaysApply: false
 ---
 
 Primeiro, fazer exatamente o que está definido em @REGRAS.md.
