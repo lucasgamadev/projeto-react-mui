@@ -2,7 +2,14 @@
 
 ## Workflow de Atividades
 
-Regra Principal: Sempre criar, antes de qualquer alteração, um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` se existir o diretório. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
+### Regras Principais
+
+- Antes de iniciar qualquer desenvolvimento, consultar o arquivo `ESTRUTURA.md` localizado na pasta `docs` para compreender a organização do projeto, a hierarquia de diretórios e a localização dos principais arquivos.
+- Sempre criar, antes de qualquer alteração, um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` se existir o diretório. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
+- Sempre manter o arquivo `data-workflow-nome-da-atividade.md` atualizado com o progresso da atividade.
+- Sempre após a análise inicial, fazer perguntas pertinentes sobre a atividade para o usuário, para que seja possível entender melhor o que é necessário ser feito.
+
+### Passos do Workflow
 
 1. Análise Inicial:
    - Analisar o código existente relacionado à atividade
