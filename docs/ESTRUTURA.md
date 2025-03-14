@@ -167,3 +167,21 @@ Organização das páginas principais da aplicação:
    - 🛡️ Sistema de rotas protegidas
    - 🔄 Redirecionamentos automáticos
    - 🗺️ Navegação integrada ao layout
+
+## Componentes
+
+### Layout
+
+O componente Layout define a estrutura básica das páginas da aplicação, incluindo a navbar lateral e o conteúdo principal.
+
+#### Navbar
+
+A navbar lateral oferece navegação intuitiva entre as diferentes seções da aplicação:
+
+- **Funcionalidade de expandir/retrair**: permite alternar entre uma visualização completa e uma versão minimizada (apenas ícones)
+- **Persistência de estado**: o estado da navbar (expandida/retraída) é salvo no localStorage
+- **Indicador visual**: destaca claramente o item de menu selecionado
+- **Efeitos hover**: proporciona feedback visual ao passar o mouse sobre os itens
+- **Responsividade**: adapta-se automaticamente a diferentes tamanhos de tela
+- **Acessibilidade**: inclui tooltips e estados visuais claros
+- **Transições suaves**: oferece uma experiência de usuário fluida
