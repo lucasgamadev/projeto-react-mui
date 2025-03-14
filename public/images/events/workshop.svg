@@ -1,0 +1,7 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#ff9900"/>
+  <path d="M200,200 L600,200 L400,400 Z" fill="#ffffff"/>
+  <circle cx="400" cy="150" r="40" fill="#ffffff"/>
+  <path d="M300,450 Q400,400 500,450" stroke="#ffffff" stroke-width="8" fill="none"/>
+  <text x="400" y="500" font-family="Arial" font-size="24" fill="#ffffff" text-anchor="middle">Workshop de Iniciantes</text>
+</svg> 
