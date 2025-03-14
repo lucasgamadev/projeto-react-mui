@@ -3,5 +3,4 @@ description: REGRAS
 globs: 
 alwaysApply: false
 ---
-
 Primeiro, fazer exatamente o que está definido em @REGRAS.md.
