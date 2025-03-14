@@ -4,9 +4,9 @@
 
 ### Regras Principais (seguir os itens abaixo em ordem sequencial)
 
-- Regra 1: Consultar o arquivo `ESTRUTURA.md` na pasta `docs` para entender a organização do projeto, estrutura de diretórios e localização dos arquivos principais.
-- Regra 2: Após a análise inicial, elaborar perguntas relevantes ao usuário para esclarecer os requisitos e detalhes da atividade a ser implementada.
-- Regra 3: Sempre criar, antes de qualquer implementação, um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` localizado na pasta `docs`. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
+- Regra 1: Antes de qualquer implementação, criar um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` localizado na pasta `docs`. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
+- Regra 2: Consultar o arquivo `ESTRUTURA.md` na pasta `docs` para entender a organização do projeto, estrutura de diretórios e localização dos arquivos principais.
+- Regra 3: Após a análise inicial, elaborar perguntas relevantes ao usuário para esclarecer os requisitos e detalhes da atividade a ser implementada.
 - Regra 4: Sempre manter o arquivo `data-workflow-nome-da-atividade.md` atualizado com o progresso da atividade.
 
 ### Passos do Workflow
