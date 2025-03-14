@@ -2,12 +2,12 @@
 
 ## Workflow de Atividades
 
-### Regras Principais
+### Regras Principais (seguir os itens abaixo em ordem sequencial)
 
-- Antes de iniciar qualquer desenvolvimento, consultar o arquivo `ESTRUTURA.md` localizado na pasta `docs` para compreender a organização do projeto, a hierarquia de diretórios e a localização dos principais arquivos.
-- Sempre criar, antes de qualquer alteração, um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` localizado na pasta `docs`. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
-- Sempre manter o arquivo `data-workflow-nome-da-atividade.md` atualizado com o progresso da atividade.
-- Sempre após a análise inicial, fazer perguntas pertinentes sobre a atividade para o usuário, para que seja possível entender melhor o que é necessário ser feito.
+- Regra 1: Consultar o arquivo `ESTRUTURA.md` na pasta `docs` para entender a organização do projeto, estrutura de diretórios e localização dos arquivos principais.
+- Regra 2: Após a análise inicial, elaborar perguntas relevantes ao usuário para esclarecer os requisitos e detalhes da atividade a ser implementada.
+- Regra 3: Sempre criar, antes de qualquer implementação, um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` localizado na pasta `docs`. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
+- Regra 4: Sempre manter o arquivo `data-workflow-nome-da-atividade.md` atualizado com o progresso da atividade.
 
 ### Passos do Workflow
 
