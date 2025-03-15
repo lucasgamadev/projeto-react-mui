@@ -4,7 +4,7 @@
 
 ### Regras Principais (devem ser realizadas de imediato)
 
-- Regra 1: Criar um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` localizado na pasta `docs`. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
+- Regra 1: Criar um novo arquivo `data-workflow-nome-da-atividade.md` com o nome específico para a atividade solicitada e manter o progresso da atividade atualizado no arquivo, sempre que possível com o nome em PT-BR e criar o arquivo no diretório `workflow` existente, localizado na pasta `docs`. O início do nome do arquivo deve seguir o padrão Ano/Mês/Dia para facilitar a organização cronológica, usar o comando `Get-Date -Format "yyyy-MM-dd"` para capturar data atual no terminal do Windows ou comando `date +%Y-%m-%d` para no terminal do Linux.
 - Regra 2: Consultar o arquivo `ESTRUTURA.md` na pasta `docs` para entender a organização do projeto, estrutura de diretórios e localização dos arquivos principais.
 - Regra 3: Fazer um fluxograma Mermaid para entender a lógica da atividade a ser implementada e outros fluxogramas que sejam necessários, por exemplo, fluxograma de implementação e pós-implementação. Necessário a extenção `Markdown Preview Mermaid Support` para visualizar o fluxograma no markdown.
 - Regra 4: Sempre manter o arquivo `data-workflow-nome-da-atividade.md` atualizado com o progresso da atividade.
