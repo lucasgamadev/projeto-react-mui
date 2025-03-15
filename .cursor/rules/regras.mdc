@@ -1,6 +1,6 @@
 ---
 description: 
-globs: 
+globs: REGRAS.md
 alwaysApply: false
 ---
 Primeiro, fazer exatamente o que está definido em @REGRAS.md.
