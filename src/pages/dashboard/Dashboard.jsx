@@ -267,7 +267,7 @@ const Dashboard = () => {
           ))}
 
           {/* Gráfico de Linha - Atendimentos */}
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={6}>
             <GraficoEstatistico
               titulo="Evolução de Atendimentos"
               descricao="Número de atendimentos realizados ao longo do tempo"
@@ -282,13 +282,13 @@ const Dashboard = () => {
           </Grid>
 
           {/* Gráfico de Pizza - Distribuição */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <GraficoEstatistico
               titulo="Distribuição por Tipo"
               descricao="Distribuição de atendimentos por tipo"
               dados={dadosDistribuicao}
               tipo="pizza"
-              altura={350}
+              altura={400}
               categoriaX="nome"
               categoriaY="valor"
             />

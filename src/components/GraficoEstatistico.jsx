@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useRef } from "react";
 import {
   Area,
   AreaChart,
@@ -74,6 +74,8 @@ const GraficoEstatistico = ({
   onPeriodoChange
 }) => {
   const theme = useTheme();
+  // Adicionar uma referência para o container do gráfico
+  const graficoContainerRef = useRef(null);
 
   // Configurar cores padrão se não forem fornecidas
   const coresPadrao = cores || [
@@ -87,34 +89,73 @@ const GraficoEstatistico = ({
 
   // Função para baixar o gráfico como imagem (PNG)
   const handleDownload = () => {
-    const svg = document.querySelector(".grafico-container svg");
-    if (!svg) return;
+    // Usar a referência para acessar o container específico deste gráfico
+    if (!graficoContainerRef.current) {
+      console.error("Container do gráfico não encontrado");
+      return;
+    }
 
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const img = new Image();
+    // Buscar o SVG apenas dentro do container referenciado
+    const svg = graficoContainerRef.current.querySelector("svg");
+    if (!svg) {
+      console.error("SVG não encontrado no container");
+      return;
+    }
 
-    // Configurar dimensões do canvas
-    canvas.width = svg.width.baseVal.value;
-    canvas.height = svg.height.baseVal.value;
+    try {
+      // Clonar o SVG para não afetar o original
+      const clonedSvg = svg.cloneNode(true);
 
-    img.onload = () => {
-      // Desenhar fundo branco
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Obter as dimensões do SVG - com verificação de segurança
+      const svgWidth =
+        svg.width && svg.width.baseVal ? svg.width.baseVal.value : svg.viewBox.baseVal.width;
+      const svgHeight =
+        svg.height && svg.height.baseVal ? svg.height.baseVal.value : svg.viewBox.baseVal.height;
 
-      // Desenhar o SVG no canvas
-      ctx.drawImage(img, 0, 0);
+      if (!svgWidth || !svgHeight) {
+        console.error("Dimensões do SVG não disponíveis");
+        return;
+      }
 
-      // Converter para PNG e baixar
-      const a = document.createElement("a");
-      a.download = `${titulo.toLowerCase().replace(/\s+/g, "-")}-${new Date().toISOString().slice(0, 10)}.png`;
-      a.href = canvas.toDataURL("image/png");
-      a.click();
-    };
+      // Definir dimensões explícitas no SVG clonado
+      clonedSvg.setAttribute("width", svgWidth);
+      clonedSvg.setAttribute("height", svgHeight);
 
-    img.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
+      const svgData = new XMLSerializer().serializeToString(clonedSvg);
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // Configurar dimensões do canvas com verificação
+      canvas.width = svgWidth || 600; // Valor padrão se a largura for zero
+      canvas.height = svgHeight || 400; // Valor padrão se a altura for zero
+
+      const img = new Image();
+      img.onload = () => {
+        // Desenhar fundo branco
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Desenhar o SVG no canvas
+        ctx.drawImage(img, 0, 0);
+
+        // Converter para PNG e baixar
+        const a = document.createElement("a");
+        a.download = `${titulo.toLowerCase().replace(/\s+/g, "-")}-${new Date().toISOString().slice(0, 10)}.png`;
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      };
+
+      // Tratamento de erros para a conversão Base64
+      try {
+        img.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
+      } catch (error) {
+        console.error("Erro ao converter SVG para Base64:", error);
+        // Alternativa sem Base64
+        img.src = `data:image/svg+xml,${encodeURIComponent(svgData)}`;
+      }
+    } catch (error) {
+      console.error("Erro ao processar o download da imagem:", error);
+    }
   };
 
   // Renderizar o tipo de gráfico selecionado
@@ -401,6 +442,7 @@ const GraficoEstatistico = ({
         }}
       >
         <Box
+          ref={graficoContainerRef}
           className="grafico-container"
           sx={{
             flex: 1,
