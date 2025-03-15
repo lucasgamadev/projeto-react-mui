@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Events from "../pages/events/Events";
 import Login from "../pages/login/Login";
+import ProfilePage from "../pages/profile/ProfilePage";
 import Settings from "../pages/settings/Settings";
 import Users from "../pages/users/Users";
 
@@ -28,7 +29,7 @@ export const AppRoutes = () => {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="events" element={<Events />} />
         <Route path="users" element={<Users />} />
-        <Route path="perfil" element={<div>Página de Perfil</div>} />
+        <Route path="perfil" element={<ProfilePage />} />
         <Route path="configuracoes" element={<Settings />} />
       </Route>
     </Routes>
