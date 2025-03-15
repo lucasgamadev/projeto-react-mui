@@ -1,5 +1,6 @@
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -8,9 +9,11 @@ import {
   Container,
   Grid,
   IconButton,
+  Snackbar,
   Typography
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import EventFormModal from "../../components/events/EventFormModal";
 
 const mockEvents = [
   {
@@ -30,19 +33,47 @@ const mockEvents = [
 ];
 
 export const Events = () => {
+  const [events, setEvents] = useState(mockEvents);
+  const [openModal, setOpenModal] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleAddEvent = (newEvent) => {
+    setEvents([...events, newEvent]);
+    setAlertMessage("Evento adicionado com sucesso!");
+    setAlertOpen(true);
+  };
+
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Eventos
         </Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleOpenModal}
+        >
           Novo Evento
         </Button>
       </Box>
 
       <Grid container spacing={3}>
-        {mockEvents.map((event) => (
+        {events.map((event) => (
           <Grid item xs={12} md={6} key={event.id}>
             <Card>
               <CardMedia
@@ -79,6 +110,16 @@ export const Events = () => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Modal de Cadastro de Evento */}
+      <EventFormModal open={openModal} onClose={handleCloseModal} onSave={handleAddEvent} />
+
+      {/* Alerta de sucesso */}
+      <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
+        <Alert onClose={handleCloseAlert} severity="success" sx={{ width: "100%" }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
