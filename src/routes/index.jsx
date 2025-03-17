@@ -5,6 +5,7 @@ import Consultas from "../pages/consultas/Consultas";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Login from "../pages/login/Login";
 import ProfilePage from "../pages/profile/ProfilePage";
+import Prontuario from "../pages/prontuario/Prontuario";
 import Settings from "../pages/settings/Settings";
 import Users from "../pages/users/Users";
 
@@ -28,6 +29,7 @@ export const AppRoutes = () => {
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="consultas" element={<Consultas />} />
+        <Route path="prontuario" element={<Prontuario />} />
         <Route path="users" element={<Users />} />
         <Route path="perfil" element={<ProfilePage />} />
         <Route path="configuracoes" element={<Settings />} />

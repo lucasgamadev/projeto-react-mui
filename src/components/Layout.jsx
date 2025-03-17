@@ -2,6 +2,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Dashboard as DashboardIcon,
+  DescriptionOutlined as DocumentIcon,
   Group as GroupIcon,
   MedicalServices as MedicalServicesIcon,
   Menu as MenuIcon,
@@ -78,6 +79,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 const menuItems = [
   { path: "/dashboard", name: "Dashboard", icon: <DashboardIcon /> },
   { path: "/consultas", name: "Consultas", icon: <MedicalServicesIcon /> },
+  { path: "/prontuario", name: "Prontuário", icon: <DocumentIcon /> },
   { path: "/users", name: "Usuários", icon: <GroupIcon /> },
   { path: "/perfil", name: "Perfil", icon: <PersonIcon /> },
   { path: "/configuracoes", name: "Configurações", icon: <SettingsIcon /> }
