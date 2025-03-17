@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   CardContent,
-  CardMedia,
   Container,
   Grid,
   IconButton,
@@ -13,27 +12,31 @@ import {
   Typography
 } from "@mui/material";
 import React, { useState } from "react";
-import EventFormModal from "../../components/events/EventFormModal";
+import ConsultaFormModal from "../../components/consultas/ConsultaFormModal";
 
-const mockEvents = [
+const mockConsultas = [
   {
     id: 1,
-    title: "Campeonato de Windsurf",
-    date: "14/02/2024", // Formato BR
-    location: "Praia de Copacabana",
-    image: "/images/events/windsurf.svg" // Alterado para SVG
+    paciente: "Maria Silva",
+    data: "14/02/2024", // Formato BR
+    horario: "14:30",
+    medico: "Dr. João Cardoso",
+    especialidade: "Cardiologia",
+    status: "Agendada"
   },
   {
     id: 2,
-    title: "Workshop de Iniciantes",
-    date: "29/02/2024", // Formato BR
-    location: "Praia do Forte",
-    image: "/images/events/workshop.svg" // Alterado para SVG
+    paciente: "Pedro Almeida",
+    data: "29/02/2024", // Formato BR
+    horario: "10:15",
+    medico: "Dra. Ana Pereira",
+    especialidade: "Dermatologia",
+    status: "Confirmada"
   }
 ];
 
-export const Events = () => {
-  const [events, setEvents] = useState(mockEvents);
+export const Consultas = () => {
+  const [consultas, setConsultas] = useState(mockConsultas);
   const [openModal, setOpenModal] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -46,9 +49,9 @@ export const Events = () => {
     setOpenModal(false);
   };
 
-  const handleAddEvent = (newEvent) => {
-    setEvents([...events, newEvent]);
-    setAlertMessage("Evento adicionado com sucesso!");
+  const handleAddConsulta = (newConsulta) => {
+    setConsultas([...consultas, newConsulta]);
+    setAlertMessage("Consulta agendada com sucesso!");
     setAlertOpen(true);
   };
 
@@ -60,7 +63,7 @@ export const Events = () => {
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Eventos
+          Consultas
         </Typography>
         <Button
           variant="contained"
@@ -68,32 +71,37 @@ export const Events = () => {
           startIcon={<AddIcon />}
           onClick={handleOpenModal}
         >
-          Novo Evento
+          Nova Consulta
         </Button>
       </Box>
 
       <Grid container spacing={3}>
-        {events.map((event) => (
-          <Grid item xs={12} md={6} key={event.id}>
+        {consultas.map((consulta) => (
+          <Grid item xs={12} md={6} key={consulta.id}>
             <Card>
-              <CardMedia
-                component="img"
-                height="200"
-                image={event.image}
-                alt={event.title}
-                sx={{ objectFit: "cover" }} // Para garantir que a imagem preencha adequadamente
-              />
               <CardContent>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
                   <Box>
                     <Typography variant="h6" component="h2">
-                      {event.title}
+                      {consulta.paciente}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                      Data: {event.date}
+                      Data: {consulta.data} às {consulta.horario}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Local: {event.location}
+                      Médico: {consulta.medico}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Especialidade: {consulta.especialidade}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: "bold",
+                        color: consulta.status === "Confirmada" ? "success.main" : "info.main"
+                      }}
+                    >
+                      Status: {consulta.status}
                     </Typography>
                   </Box>
                   <Box>
@@ -111,8 +119,8 @@ export const Events = () => {
         ))}
       </Grid>
 
-      {/* Modal de Cadastro de Evento */}
-      <EventFormModal open={openModal} onClose={handleCloseModal} onSave={handleAddEvent} />
+      {/* Modal de Cadastro de Consulta */}
+      <ConsultaFormModal open={openModal} onClose={handleCloseModal} onSave={handleAddConsulta} />
 
       {/* Alerta de sucesso */}
       <Snackbar open={alertOpen} autoHideDuration={6000} onClose={handleCloseAlert}>
@@ -124,4 +132,4 @@ export const Events = () => {
   );
 };
 
-export default Events;
+export default Consultas;

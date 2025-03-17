@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useAuth } from "../contexts/AuthContext";
+import Consultas from "../pages/consultas/Consultas";
 import Dashboard from "../pages/dashboard/Dashboard";
-import Events from "../pages/events/Events";
 import Login from "../pages/login/Login";
 import ProfilePage from "../pages/profile/ProfilePage";
 import Settings from "../pages/settings/Settings";
@@ -27,7 +27,7 @@ export const AppRoutes = () => {
       >
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="events" element={<Events />} />
+        <Route path="consultas" element={<Consultas />} />
         <Route path="users" element={<Users />} />
         <Route path="perfil" element={<ProfilePage />} />
         <Route path="configuracoes" element={<Settings />} />
