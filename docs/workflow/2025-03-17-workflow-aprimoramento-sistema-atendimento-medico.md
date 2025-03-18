@@ -15,7 +15,7 @@
 - [✅] Criar sistema de histórico médico dos pacientes
 - [✅] Desenvolver funcionalidade de triagem
 - [✅] Implementar sistema de acompanhamento de tratamentos
-- [⏳] Adicionar módulo de exames médicos
+- [✅] Adicionar módulo de exames médicos
 - [⏳] Melhorar gestão de medicamentos
 
 ## Fluxograma da Implementação
@@ -92,10 +92,10 @@ flowchart TD
 
 ### 5. Módulo de Exames
 
-- [⏳] Desenvolver cadastro de tipos de exames
-- [⏳] Criar formulário de solicitação de exames
-- [⏳] Implementar visualizador de resultados de exames
-- [⏳] Adicionar alertas para resultados críticos
+- [✅] Desenvolver cadastro de tipos de exames
+- [✅] Criar formulário de solicitação de exames
+- [✅] Implementar visualizador de resultados de exames
+- [✅] Adicionar alertas para resultados críticos
 
 ### 6. Gestão de Medicamentos
 

@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { useAuth } from "../contexts/AuthContext";
 import Consultas from "../pages/consultas/Consultas";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Exames from "../pages/Exames";
 import HistoricoMedico from "../pages/historicoMedico/HistoricoMedico";
 import Login from "../pages/login/Login";
 import ProfilePage from "../pages/profile/ProfilePage";
@@ -36,6 +37,7 @@ export const AppRoutes = () => {
         <Route path="historico-medico" element={<HistoricoMedico />} />
         <Route path="tratamento" element={<Tratamento />} />
         <Route path="triagem" element={<Triagem />} />
+        <Route path="exames" element={<Exames />} />
         <Route path="users" element={<Users />} />
         <Route path="perfil" element={<ProfilePage />} />
         <Route path="configuracoes" element={<Settings />} />
