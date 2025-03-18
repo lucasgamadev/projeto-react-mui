@@ -6,6 +6,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Exames from "../pages/Exames";
 import HistoricoMedico from "../pages/historicoMedico/HistoricoMedico";
 import Login from "../pages/login/Login";
+import Medicamentos from "../pages/medicamentos/Medicamentos";
 import ProfilePage from "../pages/profile/ProfilePage";
 import Prontuario from "../pages/prontuario/Prontuario";
 import Settings from "../pages/settings/Settings";
@@ -38,6 +39,7 @@ export const AppRoutes = () => {
         <Route path="tratamento" element={<Tratamento />} />
         <Route path="triagem" element={<Triagem />} />
         <Route path="exames" element={<Exames />} />
+        <Route path="medicamentos" element={<Medicamentos />} />
         <Route path="users" element={<Users />} />
         <Route path="perfil" element={<ProfilePage />} />
         <Route path="configuracoes" element={<Settings />} />

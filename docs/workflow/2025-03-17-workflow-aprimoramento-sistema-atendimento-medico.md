@@ -16,7 +16,7 @@
 - [✅] Desenvolver funcionalidade de triagem
 - [✅] Implementar sistema de acompanhamento de tratamentos
 - [✅] Adicionar módulo de exames médicos
-- [⏳] Melhorar gestão de medicamentos
+- [✅] Melhorar gestão de medicamentos
 
 ## Fluxograma da Implementação
 
@@ -99,10 +99,10 @@ flowchart TD
 
 ### 6. Gestão de Medicamentos
 
-- [⏳] Criar cadastro de medicamentos com posologia
-- [⏳] Desenvolver sistema de prescrição médica
-- [⏳] Implementar controle de estoque de medicamentos
-- [⏳] Adicionar alertas de interações medicamentosas
+- [✅] Criar cadastro de medicamentos com posologia
+- [✅] Desenvolver sistema de prescrição médica
+- [✅] Implementar controle de estoque de medicamentos
+- [✅] Adicionar alertas de interações medicamentosas
 
 ## Registros de Erros e Soluções
 

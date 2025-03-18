@@ -7,6 +7,7 @@ import {
   Group as GroupIcon,
   Healing as HealingIcon,
   MedicalServices as MedicalServicesIcon,
+  Medication as MedicationIcon,
   Menu as MenuIcon,
   Person as PersonIcon,
   Science as ScienceIcon,
@@ -88,6 +89,7 @@ const menuItems = [
   { path: "/historico-medico", name: "Histórico Médico", icon: <TimelineIcon /> },
   { path: "/tratamento", name: "Tratamentos", icon: <HealingIcon /> },
   { path: "/exames", name: "Exames", icon: <ScienceIcon /> },
+  { path: "/medicamentos", name: "Medicamentos", icon: <MedicationIcon /> },
   { path: "/users", name: "Usuários", icon: <GroupIcon /> },
   { path: "/perfil", name: "Perfil", icon: <PersonIcon /> },
   { path: "/configuracoes", name: "Configurações", icon: <SettingsIcon /> }
