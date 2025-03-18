@@ -12,7 +12,7 @@
 ### Identificação de Pontos de Melhoria
 
 - [✅] Implementar novo módulo de prontuário eletrônico
-- [⏳] Criar sistema de histórico médico dos pacientes
+- [✅] Criar sistema de histórico médico dos pacientes
 - [⏳] Desenvolver funcionalidade de triagem
 - [⏳] Implementar sistema de acompanhamento de tratamentos
 - [⏳] Adicionar módulo de exames médicos
@@ -71,10 +71,10 @@ flowchart TD
 
 ### 2. Histórico Médico dos Pacientes
 
-- [⏳] Modelar estrutura de dados para histórico médico
-- [⏳] Criar componente de visualização cronológica de histórico
-- [⏳] Implementar filtros de pesquisa no histórico
-- [⏳] Desenvolver exportação de histórico em PDF
+- [✅] Modelar estrutura de dados para histórico médico
+- [✅] Criar componente de visualização cronológica de histórico
+- [✅] Implementar filtros de pesquisa no histórico
+- [✅] Desenvolver exportação de histórico em PDF
 
 ### 3. Sistema de Triagem
 

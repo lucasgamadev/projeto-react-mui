@@ -7,7 +7,8 @@ import {
   MedicalServices as MedicalServicesIcon,
   Menu as MenuIcon,
   Person as PersonIcon,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  Timeline as TimelineIcon
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -80,6 +81,7 @@ const menuItems = [
   { path: "/dashboard", name: "Dashboard", icon: <DashboardIcon /> },
   { path: "/consultas", name: "Consultas", icon: <MedicalServicesIcon /> },
   { path: "/prontuario", name: "Prontuário", icon: <DocumentIcon /> },
+  { path: "/historico-medico", name: "Histórico Médico", icon: <TimelineIcon /> },
   { path: "/users", name: "Usuários", icon: <GroupIcon /> },
   { path: "/perfil", name: "Perfil", icon: <PersonIcon /> },
   { path: "/configuracoes", name: "Configurações", icon: <SettingsIcon /> }
