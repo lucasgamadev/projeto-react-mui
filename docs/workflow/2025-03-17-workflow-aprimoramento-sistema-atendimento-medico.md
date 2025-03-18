@@ -14,7 +14,7 @@
 - [✅] Implementar novo módulo de prontuário eletrônico
 - [✅] Criar sistema de histórico médico dos pacientes
 - [✅] Desenvolver funcionalidade de triagem
-- [⏳] Implementar sistema de acompanhamento de tratamentos
+- [✅] Implementar sistema de acompanhamento de tratamentos
 - [⏳] Adicionar módulo de exames médicos
 - [⏳] Melhorar gestão de medicamentos
 
@@ -85,10 +85,10 @@ flowchart TD
 
 ### 4. Acompanhamento de Tratamentos
 
-- [⏳] Criar modelo de dados para tratamentos contínuos
-- [⏳] Desenvolver interface de acompanhamento de tratamento
-- [⏳] Implementar sistema de lembretes para pacientes
-- [⏳] Adicionar gráficos de evolução de tratamento
+- [✅] Criar modelo de dados para tratamentos contínuos
+- [✅] Desenvolver interface de acompanhamento de tratamento
+- [✅] Implementar sistema de lembretes para pacientes
+- [✅] Adicionar gráficos de evolução de tratamento
 
 ### 5. Módulo de Exames
 

@@ -5,6 +5,7 @@ import {
   Dashboard as DashboardIcon,
   DescriptionOutlined as DocumentIcon,
   Group as GroupIcon,
+  Healing as HealingIcon,
   MedicalServices as MedicalServicesIcon,
   Menu as MenuIcon,
   Person as PersonIcon,
@@ -84,6 +85,7 @@ const menuItems = [
   { path: "/consultas", name: "Consultas", icon: <MedicalServicesIcon /> },
   { path: "/prontuario", name: "Prontuário", icon: <DocumentIcon /> },
   { path: "/historico-medico", name: "Histórico Médico", icon: <TimelineIcon /> },
+  { path: "/tratamento", name: "Tratamentos", icon: <HealingIcon /> },
   { path: "/users", name: "Usuários", icon: <GroupIcon /> },
   { path: "/perfil", name: "Perfil", icon: <PersonIcon /> },
   { path: "/configuracoes", name: "Configurações", icon: <SettingsIcon /> }
