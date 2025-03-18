@@ -1,4 +1,5 @@
 import {
+  Assessment as AssessmentIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Dashboard as DashboardIcon,
@@ -79,6 +80,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 const menuItems = [
   { path: "/dashboard", name: "Dashboard", icon: <DashboardIcon /> },
+  { path: "/triagem", name: "Triagem", icon: <AssessmentIcon /> },
   { path: "/consultas", name: "Consultas", icon: <MedicalServicesIcon /> },
   { path: "/prontuario", name: "Prontuário", icon: <DocumentIcon /> },
   { path: "/historico-medico", name: "Histórico Médico", icon: <TimelineIcon /> },

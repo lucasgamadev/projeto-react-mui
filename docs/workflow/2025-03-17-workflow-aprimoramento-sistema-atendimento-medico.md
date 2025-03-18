@@ -13,7 +13,7 @@
 
 - [✅] Implementar novo módulo de prontuário eletrônico
 - [✅] Criar sistema de histórico médico dos pacientes
-- [⏳] Desenvolver funcionalidade de triagem
+- [✅] Desenvolver funcionalidade de triagem
 - [⏳] Implementar sistema de acompanhamento de tratamentos
 - [⏳] Adicionar módulo de exames médicos
 - [⏳] Melhorar gestão de medicamentos
@@ -78,10 +78,10 @@ flowchart TD
 
 ### 3. Sistema de Triagem
 
-- [⏳] Desenvolver fluxo de triagem com classificação de risco
-- [⏳] Criar formulário de triagem com sinais vitais
-- [⏳] Implementar dashboard de pacientes em espera
-- [⏳] Adicionar alertas para casos prioritários
+- [✅] Desenvolver fluxo de triagem com classificação de risco
+- [✅] Criar formulário de triagem com sinais vitais
+- [✅] Implementar dashboard de pacientes em espera
+- [✅] Adicionar alertas para casos prioritários
 
 ### 4. Acompanhamento de Tratamentos
 

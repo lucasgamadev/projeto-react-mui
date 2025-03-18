@@ -8,6 +8,7 @@ import Login from "../pages/login/Login";
 import ProfilePage from "../pages/profile/ProfilePage";
 import Prontuario from "../pages/prontuario/Prontuario";
 import Settings from "../pages/settings/Settings";
+import Triagem from "../pages/triagem/Triagem";
 import Users from "../pages/users/Users";
 
 const PrivateRoute = ({ children }) => {
@@ -32,6 +33,7 @@ export const AppRoutes = () => {
         <Route path="consultas" element={<Consultas />} />
         <Route path="prontuario" element={<Prontuario />} />
         <Route path="historico-medico" element={<HistoricoMedico />} />
+        <Route path="triagem" element={<Triagem />} />
         <Route path="users" element={<Users />} />
         <Route path="perfil" element={<ProfilePage />} />
         <Route path="configuracoes" element={<Settings />} />
