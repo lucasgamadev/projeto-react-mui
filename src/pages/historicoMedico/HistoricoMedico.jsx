@@ -8,6 +8,7 @@ import {
   Timeline as TimelineIcon
 } from "@mui/icons-material";
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
@@ -29,6 +30,7 @@ import {
   MenuItem,
   Paper,
   Select,
+  Snackbar,
   Tab,
   Tabs,
   TextField,
@@ -382,6 +384,26 @@ const HistoricoMedico = () => {
   const [openFiltros, setOpenFiltros] = useState(false);
   const [eventoSelecionado, setEventoSelecionado] = useState(null);
   const [openDetalhesEvento, setOpenDetalhesEvento] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "info"
+  });
+
+  // Função para carregar pacientes de exemplo na busca
+  const handleCarregarExemplos = () => {
+    setSearchResults(pacientesExemplo);
+    setSnackbar({
+      open: true,
+      message: "Pacientes de exemplo carregados na busca",
+      severity: "success"
+    });
+  };
+
+  // Função para fechar o snackbar
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
 
   // Efeito para simular busca de pacientes quando o termo de busca mudar
   useEffect(() => {
@@ -489,9 +511,21 @@ const HistoricoMedico = () => {
           <Divider sx={{ mb: 3 }} />
 
           <Box sx={{ width: "100%", maxWidth: 600, mx: "auto" }}>
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              Selecione o paciente para visualizar o histórico médico:
-            </Typography>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}
+            >
+              <Typography variant="body1">
+                Selecione o paciente para visualizar o histórico médico:
+              </Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleCarregarExemplos}
+                size="small"
+              >
+                Carregar Exemplos
+              </Button>
+            </Box>
             <Autocomplete
               options={searchResults}
               getOptionLabel={(option) => `${option.nome} (${option.cpf})`}
@@ -652,6 +686,17 @@ const HistoricoMedico = () => {
         open={openDetalhesEvento}
         onClose={() => setOpenDetalhesEvento(false)}
       />
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: "100%" }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
