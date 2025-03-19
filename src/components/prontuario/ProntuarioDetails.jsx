@@ -178,14 +178,26 @@ const HistoricoMedico = ({ prontuario }) => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Histórico de Consultas</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={() => setConsultaModalOpen(true)}
-        >
-          Nova Consulta
-        </Button>
+        <Box>
+          {" "}
+          {/* Container para os botões */}
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={() => setConsultaModalOpen(true)}
+            sx={{ mr: 1 }} // Adiciona margem direita para espaçamento
+          >
+            Nova Consulta
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => console.log("Carregar Exemplos Clicado")} // Placeholder function
+          >
+            Carregar Exemplos
+          </Button>
+        </Box>
       </Box>
 
       <ConsultaFormModal
