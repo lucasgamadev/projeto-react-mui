@@ -38,7 +38,7 @@ import {
   Typography
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import HistoricoTimeline from "../../components/historicoMedico/HistoricoTimeline";
 import { historicoExemplo } from "../../models/HistoricoMedicoModel";
 
@@ -390,6 +390,89 @@ const HistoricoMedico = () => {
     severity: "info"
   });
 
+  // Referência para a seção que queremos exportar como PDF
+  const historicoRef = useRef(null);
+
+  // Função para exportar o histórico médico como PDF
+  const handleExportPDF = async () => {
+    if (!historicoRef.current || !pacienteSelecionado) return;
+
+    setSnackbar({
+      open: true,
+      message: "Gerando PDF, aguarde...",
+      severity: "info"
+    });
+
+    try {
+      const content = historicoRef.current;
+
+      // Usando o html2canvas carregado via CDN
+      window
+        .html2canvas(content, {
+          scale: 1.5,
+          useCORS: true,
+          logging: false,
+          allowTaint: true
+        })
+        .then((canvas) => {
+          // Usando o jsPDF carregado via CDN
+          const pdf = new window.jspdf.jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+          });
+
+          // Dimensões da página A4
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+
+          // Proporção para ajustar à largura da página
+          const ratio = pdfWidth / canvas.width;
+          const canvasHeight = canvas.height * ratio;
+
+          // Adicionando cabeçalho
+          pdf.setFontSize(16);
+          pdf.text(`Histórico Médico - ${pacienteSelecionado.nome}`, 14, 15);
+          pdf.setFontSize(10);
+          pdf.text(`Gerado em: ${new Date().toLocaleDateString("pt-BR")}`, 14, 22);
+          pdf.text(
+            `Paciente: ${pacienteSelecionado.nome} - CPF: ${pacienteSelecionado.cpf}`,
+            14,
+            27
+          );
+
+          // Adicionando o conteúdo HTML renderizado
+          const imgData = canvas.toDataURL("image/png");
+
+          // Adicionando a imagem à 30mm do topo para acomodar o cabeçalho
+          pdf.addImage(imgData, "PNG", 0, 30, pdfWidth, canvasHeight);
+
+          // Se o conteúdo for maior que a primeira página, lidar com paginação
+          let position = 30 + canvasHeight;
+          if (position > pdfHeight) {
+            pdf.addPage();
+            position = 0;
+          }
+
+          // Salvando o PDF
+          pdf.save(`historico_medico_${pacienteSelecionado.nome.replace(/\s+/g, "_")}.pdf`);
+
+          setSnackbar({
+            open: true,
+            message: "PDF exportado com sucesso!",
+            severity: "success"
+          });
+        });
+    } catch (error) {
+      console.error("Erro ao exportar o PDF:", error);
+      setSnackbar({
+        open: true,
+        message: "Erro ao exportar o PDF. Tente novamente.",
+        severity: "error"
+      });
+    }
+  };
+
   // Função para carregar pacientes de exemplo na busca
   const handleCarregarExemplos = () => {
     setSearchResults(pacientesExemplo);
@@ -569,6 +652,7 @@ const HistoricoMedico = () => {
                 variant="outlined"
                 sx={{ mr: 1 }}
                 disabled={!historico}
+                onClick={handleExportPDF}
               >
                 Exportar PDF
               </Button>
@@ -580,7 +664,7 @@ const HistoricoMedico = () => {
               <CircularProgress />
             </Box>
           ) : historico ? (
-            <>
+            <div ref={historicoRef}>
               <Grid container spacing={3} sx={{ mb: 3 }}>
                 <Grid item xs={12} md={6}>
                   <MetricasSaude metricas={historico.metricasSaude} />
@@ -672,7 +756,7 @@ const HistoricoMedico = () => {
                   )}
                 </Box>
               </Paper>
-            </>
+            </div>
           ) : (
             <Paper sx={{ p: 3, textAlign: "center" }}>
               <Typography>Não foi possível carregar o histórico médico do paciente.</Typography>
