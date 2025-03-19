@@ -720,6 +720,9 @@ const ProntuarioDetails = ({ prontuario }) => {
     return <Alert severity="warning">Prontuário não encontrado</Alert>;
   }
 
+  console.log("ProntuarioDetails - prontuario:", prontuario);
+  console.log("ProntuarioDetails - prontuario.dataCriacao:", prontuario.dataCriacao);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper elevation={3} sx={{ mb: 3 }}>
@@ -755,7 +758,7 @@ const ProntuarioDetails = ({ prontuario }) => {
               <Box display="flex" alignItems="center" mr={2}>
                 <EventIcon fontSize="small" color="disabled" sx={{ mr: 0.5 }} />
                 <Typography variant="caption" color="text.secondary">
-                  Criado em: {prontuario.dataCriacao.toLocaleDateString("pt-BR")}
+                  Criado em: {new Date(prontuario.dataCriacao).toLocaleDateString("pt-BR")}
                 </Typography>
               </Box>
             </Tooltip>
@@ -763,7 +766,8 @@ const ProntuarioDetails = ({ prontuario }) => {
               <Box display="flex" alignItems="center">
                 <AccessTimeIcon fontSize="small" color="disabled" sx={{ mr: 0.5 }} />
                 <Typography variant="caption" color="text.secondary">
-                  Atualizado em: {prontuario.ultimaAtualizacao.toLocaleDateString("pt-BR")}
+                  Atualizado em:{" "}
+                  {new Date(prontuario.ultimaAtualizacao).toLocaleDateString("pt-BR")}
                 </Typography>
               </Box>
             </Tooltip>
