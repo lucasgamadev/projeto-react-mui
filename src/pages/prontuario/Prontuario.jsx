@@ -18,23 +18,23 @@ import {
   TextField,
   Typography
 } from "@mui/material";
+import debounce from "lodash/debounce";
 import React, { useEffect, useState } from "react";
 import ProntuarioDetails from "../../components/prontuario/ProntuarioDetails";
-import { prontuarioExemplo } from "../../models/ProntuarioModel";
-
-// Lista de pacientes exemplo
-const pacientesExemplo = [
-  { id: 101, nome: "Maria Silva", cpf: "123.456.789-00", dataNascimento: "15/05/1985" },
-  { id: 102, nome: "João Oliveira", cpf: "987.654.321-00", dataNascimento: "22/11/1978" },
-  { id: 103, nome: "Ana Carolina Santos", cpf: "111.222.333-44", dataNascimento: "30/07/1992" },
-  { id: 104, nome: "Roberto Almeida", cpf: "555.666.777-88", dataNascimento: "14/03/1965" },
-  { id: 105, nome: "Fernanda Costa", cpf: "999.888.777-66", dataNascimento: "05/12/1983" }
-];
+import { useProntuario } from "../../contexts/ProntuarioContext";
 
 const Prontuario = () => {
+  const {
+    prontuarioAtual,
+    loading,
+    error,
+    buscarProntuario,
+    buscarProntuarioPorCPF,
+    buscarProntuarioPorNome,
+    limparProntuario
+  } = useProntuario();
+
   const [pacienteSelecionado, setPacienteSelecionado] = useState(null);
-  const [prontuario, setProntuario] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -42,63 +42,97 @@ const Prontuario = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [buscando, setBuscando] = useState(false);
 
-  // Efeito para simular busca de pacientes quando o termo de busca mudar
-  useEffect(() => {
-    if (searchTerm.length > 2) {
-      // Filtra pacientes pelo nome ou CPF
-      const resultados = pacientesExemplo.filter(
-        (paciente) =>
-          paciente.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          paciente.cpf.includes(searchTerm)
-      );
-      setSearchResults(resultados);
-    } else {
+  // Função de busca com debounce
+  const buscarPacientes = debounce(async (termo) => {
+    if (termo.length < 3) {
       setSearchResults([]);
+      return;
     }
-  }, [searchTerm]);
 
-  // Função para buscar prontuário (simulação de API)
-  const buscarProntuario = (pacienteId) => {
-    setLoading(true);
-
-    // Simulando uma chamada assíncrona a uma API
-    setTimeout(() => {
-      // Aqui estamos apenas usando o prontuário de exemplo, mas em uma
-      // aplicação real seria uma chamada a API para buscar o prontuário pelo ID
-      const prontuarioEncontrado = { ...prontuarioExemplo };
-
-      setProntuario(prontuarioEncontrado);
-      setLoading(false);
-
+    setBuscando(true);
+    try {
+      let resultados = [];
+      // Verifica se o termo é um CPF (contém apenas números e caracteres especiais)
+      if (/^[\d.-]*$/.test(termo)) {
+        resultados = await buscarProntuarioPorCPF(termo);
+      } else {
+        resultados = await buscarProntuarioPorNome(termo);
+      }
+      setSearchResults(resultados);
+    } catch (error) {
+      console.error("Erro ao buscar pacientes:", error);
       setSnackbar({
         open: true,
-        message: "Prontuário carregado com sucesso",
-        severity: "success"
+        message: "Erro ao buscar pacientes. Tente novamente.",
+        severity: "error"
       });
-    }, 1000);
-  };
+    } finally {
+      setBuscando(false);
+    }
+  }, 500);
+
+  // Efeito para buscar pacientes quando o termo de busca mudar
+  useEffect(() => {
+    buscarPacientes(searchTerm);
+    // Cleanup function para cancelar o debounce se o componente for desmontado
+    return () => buscarPacientes.cancel();
+  }, [searchTerm, buscarPacientes]);
 
   // Função para lidar com a seleção de um paciente
-  const handlePacienteSelecionado = (event, paciente) => {
+  const handlePacienteSelecionado = async (event, paciente) => {
     setPacienteSelecionado(paciente);
     if (paciente) {
-      buscarProntuario(paciente.id);
+      try {
+        await buscarProntuario(paciente.id);
+        setSnackbar({
+          open: true,
+          message: "Prontuário carregado com sucesso",
+          severity: "success"
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: "Erro ao carregar prontuário. Tente novamente.",
+          severity: "error"
+        });
+      }
     } else {
-      setProntuario(null);
+      limparProntuario();
     }
   };
 
   // Função para voltar à busca
   const handleVoltar = () => {
     setPacienteSelecionado(null);
-    setProntuario(null);
+    limparProntuario();
     setSearchTerm("");
   };
 
   // Função para fechar snackbar
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
+  };
+
+  // Função para tentar carregar o prontuário novamente
+  const handleTentarNovamente = async () => {
+    if (pacienteSelecionado) {
+      try {
+        await buscarProntuario(pacienteSelecionado.id);
+        setSnackbar({
+          open: true,
+          message: "Prontuário carregado com sucesso",
+          severity: "success"
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: "Erro ao carregar prontuário. Tente novamente.",
+          severity: "error"
+        });
+      }
+    }
   };
 
   return (
@@ -122,8 +156,9 @@ const Prontuario = () => {
           <Autocomplete
             id="busca-paciente"
             options={searchResults}
-            getOptionLabel={(option) => `${option.nome} (${option.cpf})`}
+            getOptionLabel={(option) => `${option.nomePaciente} (${option.cpf})`}
             onChange={handlePacienteSelecionado}
+            loading={buscando}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -145,20 +180,17 @@ const Prontuario = () => {
                 helperText="Digite pelo menos 3 caracteres para iniciar a busca"
               />
             )}
-            noOptionsText="Nenhum paciente encontrado"
-            loading={searchTerm.length > 2 && searchResults.length === 0}
-            loadingText="Buscando..."
+            noOptionsText={
+              searchTerm.length < 3
+                ? "Digite pelo menos 3 caracteres para iniciar a busca"
+                : "Nenhum paciente encontrado"
+            }
+            loadingText="Buscando pacientes..."
           />
 
-          {searchTerm.length > 0 && searchTerm.length < 3 && (
-            <Alert severity="info" sx={{ mt: 2 }}>
-              Digite pelo menos 3 caracteres para iniciar a busca
-            </Alert>
-          )}
-
-          {searchTerm.length >= 3 && searchResults.length === 0 && (
-            <Alert severity="warning" sx={{ mt: 2 }}>
-              Nenhum paciente encontrado com os termos informados
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              Erro ao buscar pacientes: {error}
             </Alert>
           )}
 
@@ -179,7 +211,7 @@ const Prontuario = () => {
               <ArrowBackIcon />
             </IconButton>
             <Typography variant="h4" component="h1">
-              Prontuário - {pacienteSelecionado.nome}
+              Prontuário - {pacienteSelecionado.nomePaciente}
             </Typography>
           </Box>
 
@@ -187,13 +219,13 @@ const Prontuario = () => {
             <Box display="flex" justifyContent="center" alignItems="center" height="400px">
               <CircularProgress />
             </Box>
-          ) : prontuario ? (
-            <ProntuarioDetails prontuario={prontuario} />
+          ) : prontuarioAtual ? (
+            <ProntuarioDetails prontuario={prontuarioAtual} />
           ) : (
             <Alert severity="error">
               Não foi possível carregar o prontuário. Tente novamente.
               <Box mt={2}>
-                <Button variant="outlined" onClick={() => buscarProntuario(pacienteSelecionado.id)}>
+                <Button variant="outlined" onClick={handleTentarNovamente}>
                   Tentar novamente
                 </Button>
               </Box>

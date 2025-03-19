@@ -1,5 +1,6 @@
 import {
   AccessTime as AccessTimeIcon,
+  Add as AddIcon,
   DocumentScanner as DocumentScannerIcon,
   Event as EventIcon,
   Healing as HealingIcon,
@@ -14,6 +15,7 @@ import {
   Alert,
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
@@ -34,6 +36,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import ConsultaFormModal from "./ConsultaFormModal";
 
 // Componente de Tab Panel para as abas do prontuário
 function TabPanel(props) {
@@ -159,16 +162,37 @@ DadosPessoais.propTypes = {
 // Componente para exibir histórico médico do paciente
 const HistoricoMedico = ({ prontuario }) => {
   const [expandedItem, setExpandedItem] = useState(null);
+  const [consultaModalOpen, setConsultaModalOpen] = useState(false);
 
   const handleExpandClick = (consultaId) => {
     setExpandedItem(expandedItem === consultaId ? null : consultaId);
   };
 
+  const handleAddConsulta = (novaConsulta) => {
+    // Aqui você deve implementar a lógica para adicionar a consulta ao prontuário
+    // Por enquanto, vamos apenas simular a adição
+    console.log("Nova consulta:", novaConsulta);
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Histórico de Consultas
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Histórico de Consultas</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setConsultaModalOpen(true)}
+        >
+          Nova Consulta
+        </Button>
+      </Box>
+
+      <ConsultaFormModal
+        open={consultaModalOpen}
+        onClose={() => setConsultaModalOpen(false)}
+        onSave={handleAddConsulta}
+      />
       {prontuario.consultas.length === 0 ? (
         <Alert severity="info">Não há consultas registradas para este paciente.</Alert>
       ) : (
