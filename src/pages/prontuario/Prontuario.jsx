@@ -1,4 +1,5 @@
 import {
+  AddCircle as AddCircleIcon,
   ArrowBack as ArrowBackIcon,
   PersonSearch as PersonSearchIcon,
   Search as SearchIcon
@@ -23,6 +24,40 @@ import React, { useEffect, useState } from "react";
 import ProntuarioDetails from "../../components/prontuario/ProntuarioDetails";
 import { useProntuario } from "../../contexts/ProntuarioContext";
 
+// Lista de pacientes exemplo para busca rápida
+const pacientesExemplo = [
+  {
+    id: 1,
+    nomePaciente: "Maria Silva",
+    cpf: "123.456.789-00",
+    dataNascimento: "15/05/1985"
+  },
+  {
+    id: 2,
+    nomePaciente: "João Oliveira",
+    cpf: "987.654.321-00",
+    dataNascimento: "22/11/1978"
+  },
+  {
+    id: 3,
+    nomePaciente: "Ana Carolina Santos",
+    cpf: "111.222.333-44",
+    dataNascimento: "30/07/1992"
+  },
+  {
+    id: 4,
+    nomePaciente: "Roberto Almeida",
+    cpf: "555.666.777-88",
+    dataNascimento: "14/03/1965"
+  },
+  {
+    id: 5,
+    nomePaciente: "Fernanda Costa",
+    cpf: "999.888.777-66",
+    dataNascimento: "05/12/1983"
+  }
+];
+
 const Prontuario = () => {
   const {
     prontuarioAtual,
@@ -44,6 +79,16 @@ const Prontuario = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [buscando, setBuscando] = useState(false);
 
+  // Função para carregar pacientes de exemplo na busca
+  const handleCarregarExemplos = () => {
+    setSearchResults(pacientesExemplo);
+    setSnackbar({
+      open: true,
+      message: "Pacientes de exemplo carregados na busca",
+      severity: "success"
+    });
+  };
+
   // Função de busca com debounce
   const buscarPacientes = debounce(async (termo) => {
     if (termo.length < 3) {
@@ -54,7 +99,6 @@ const Prontuario = () => {
     setBuscando(true);
     try {
       let resultados = [];
-      // Verifica se o termo é um CPF (contém apenas números e caracteres especiais)
       if (/^[\d.-]*$/.test(termo)) {
         resultados = await buscarProntuarioPorCPF(termo);
       } else {
@@ -73,14 +117,13 @@ const Prontuario = () => {
     }
   }, 500);
 
-  // Efeito para buscar pacientes quando o termo de busca mudar
   useEffect(() => {
-    buscarPacientes(searchTerm);
-    // Cleanup function para cancelar o debounce se o componente for desmontado
+    if (searchTerm.length >= 3) {
+      buscarPacientes(searchTerm);
+    }
     return () => buscarPacientes.cancel();
   }, [searchTerm, buscarPacientes]);
 
-  // Função para lidar com a seleção de um paciente
   const handlePacienteSelecionado = async (event, paciente) => {
     setPacienteSelecionado(paciente);
     if (paciente) {
@@ -103,42 +146,20 @@ const Prontuario = () => {
     }
   };
 
-  // Função para voltar à busca
   const handleVoltar = () => {
     setPacienteSelecionado(null);
     limparProntuario();
     setSearchTerm("");
+    setSearchResults([]);
   };
 
-  // Função para fechar snackbar
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
-  };
-
-  // Função para tentar carregar o prontuário novamente
-  const handleTentarNovamente = async () => {
-    if (pacienteSelecionado) {
-      try {
-        await buscarProntuario(pacienteSelecionado.id);
-        setSnackbar({
-          open: true,
-          message: "Prontuário carregado com sucesso",
-          severity: "success"
-        });
-      } catch (error) {
-        setSnackbar({
-          open: true,
-          message: "Erro ao carregar prontuário. Tente novamente.",
-          severity: "error"
-        });
-      }
-    }
   };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       {!pacienteSelecionado ? (
-        // Tela de busca de paciente
         <Paper elevation={3} sx={{ p: 3 }}>
           <Box display="flex" alignItems="center" mb={3}>
             <PersonSearchIcon fontSize="large" color="primary" sx={{ mr: 2 }} />
@@ -149,9 +170,17 @@ const Prontuario = () => {
 
           <Divider sx={{ mb: 3 }} />
 
-          <Typography variant="h6" gutterBottom>
-            Buscar Paciente
-          </Typography>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h6">Buscar Paciente</Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<AddCircleIcon />}
+              onClick={handleCarregarExemplos}
+            >
+              Carregar Exemplos
+            </Button>
+          </Box>
 
           <Autocomplete
             id="busca-paciente"
@@ -177,7 +206,11 @@ const Prontuario = () => {
                     </>
                   )
                 }}
-                helperText="Digite pelo menos 3 caracteres para iniciar a busca"
+                helperText={
+                  searchResults.length === 0
+                    ? "Digite pelo menos 3 caracteres para buscar ou use o botão 'Carregar Exemplos'"
+                    : ""
+                }
               />
             )}
             noOptionsText={
@@ -197,14 +230,13 @@ const Prontuario = () => {
           {searchResults.length > 0 && (
             <Box mt={2}>
               <Typography variant="subtitle2" color="text.secondary">
-                {searchResults.length} {searchResults.length === 1 ? "resultado" : "resultados"}{" "}
-                encontrado{searchResults.length === 1 ? "" : "s"}
+                {searchResults.length} {searchResults.length === 1 ? "paciente" : "pacientes"}{" "}
+                {searchResults.length === 1 ? "disponível" : "disponíveis"}
               </Typography>
             </Box>
           )}
         </Paper>
       ) : (
-        // Tela de visualização do prontuário
         <Box>
           <Box display="flex" alignItems="center" mb={3}>
             <IconButton onClick={handleVoltar} sx={{ mr: 1 }}>
@@ -225,8 +257,8 @@ const Prontuario = () => {
             <Alert severity="error">
               Não foi possível carregar o prontuário. Tente novamente.
               <Box mt={2}>
-                <Button variant="outlined" onClick={handleTentarNovamente}>
-                  Tentar novamente
+                <Button variant="outlined" onClick={handleVoltar}>
+                  Voltar à busca
                 </Button>
               </Box>
             </Alert>

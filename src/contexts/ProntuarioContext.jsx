@@ -1,6 +1,12 @@
 import PropTypes from "prop-types";
 import React, { createContext, useCallback, useContext, useState } from "react";
-import * as prontuarioService from "../services/prontuarioService";
+import {
+  addProntuario,
+  getProntuarioById,
+  getProntuariosByCPF,
+  getProntuariosByNome,
+  updateProntuario
+} from "../services/localStorageService";
 
 const ProntuarioContext = createContext();
 
@@ -13,7 +19,7 @@ export const ProntuarioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const prontuario = await prontuarioService.getProntuarioById(id);
+      const prontuario = getProntuarioById(id);
       setProntuarioAtual(prontuario);
       return prontuario;
     } catch (err) {
@@ -28,7 +34,7 @@ export const ProntuarioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const prontuarios = await prontuarioService.getProntuariosByCPF(cpf);
+      const prontuarios = getProntuariosByCPF(cpf);
       return prontuarios;
     } catch (err) {
       setError(err.message);
@@ -42,7 +48,7 @@ export const ProntuarioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const prontuarios = await prontuarioService.getProntuariosByNome(nome);
+      const prontuarios = getProntuariosByNome(nome);
       return prontuarios;
     } catch (err) {
       setError(err.message);
@@ -56,7 +62,7 @@ export const ProntuarioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const novoProntuario = await prontuarioService.createProntuario(dados);
+      const novoProntuario = addProntuario(dados);
       setProntuarioAtual(novoProntuario);
       return novoProntuario;
     } catch (err) {
@@ -76,10 +82,11 @@ export const ProntuarioProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       try {
-        const prontuarioAtualizado = await prontuarioService.addConsulta(
-          prontuarioAtual.id,
-          consulta
-        );
+        const consultas = [...(prontuarioAtual.consultas || []), consulta];
+        const prontuarioAtualizado = updateProntuario(prontuarioAtual.id, {
+          ...prontuarioAtual,
+          consultas
+        });
         setProntuarioAtual(prontuarioAtualizado);
         return prontuarioAtualizado;
       } catch (err) {
@@ -101,10 +108,11 @@ export const ProntuarioProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       try {
-        const prontuarioAtualizado = await prontuarioService.addAlergia(
-          prontuarioAtual.id,
-          alergia
-        );
+        const alergias = [...(prontuarioAtual.alergias || []), alergia];
+        const prontuarioAtualizado = updateProntuario(prontuarioAtual.id, {
+          ...prontuarioAtual,
+          alergias
+        });
         setProntuarioAtual(prontuarioAtualizado);
         return prontuarioAtualizado;
       } catch (err) {
@@ -126,10 +134,11 @@ export const ProntuarioProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       try {
-        const prontuarioAtualizado = await prontuarioService.addMedicamento(
-          prontuarioAtual.id,
-          medicamento
-        );
+        const medicamentos = [...(prontuarioAtual.medicamentos || []), medicamento];
+        const prontuarioAtualizado = updateProntuario(prontuarioAtual.id, {
+          ...prontuarioAtual,
+          medicamentos
+        });
         setProntuarioAtual(prontuarioAtualizado);
         return prontuarioAtualizado;
       } catch (err) {
@@ -151,7 +160,11 @@ export const ProntuarioProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       try {
-        const prontuarioAtualizado = await prontuarioService.addAnexo(prontuarioAtual.id, anexo);
+        const anexos = [...(prontuarioAtual.anexos || []), anexo];
+        const prontuarioAtualizado = updateProntuario(prontuarioAtual.id, {
+          ...prontuarioAtual,
+          anexos
+        });
         setProntuarioAtual(prontuarioAtualizado);
         return prontuarioAtualizado;
       } catch (err) {
