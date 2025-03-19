@@ -237,7 +237,12 @@ const Layout = () => {
               transition: theme.transitions.create("width", {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.enteringScreen
-              })
+              }),
+              "&::-webkit-scrollbar": {
+                display: "none"
+              },
+              msOverflowStyle: "none",
+              scrollbarWidth: "none"
             }
           }}
           open={desktopOpen}
