@@ -1,298 +1,226 @@
-import ErrorIcon from "@mui/icons-material/Error";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import PersonIcon from "@mui/icons-material/Person";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import WarningIcon from "@mui/icons-material/Warning";
 import {
   Alert,
-  Avatar,
-  Badge,
   Box,
   Button,
   Card,
   CardContent,
-  CardHeader,
-  Chip,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  IconButton,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
   Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography
 } from "@mui/material";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
 import ExameModel from "../../models/ExameModel";
 
-const AlertaExamesCriticos = ({ onVerExame }) => {
+const AlertaExamesCriticos = ({ onVerExame, mostrarApenasResumo = false }) => {
   const [examesCriticos, setExamesCriticos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [dialogExameAberto, setDialogExameAberto] = useState(false);
-  const [exameDetalhe, setExameDetalhe] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   useEffect(() => {
     carregarExamesCriticos();
-
-    // Verificar a cada 5 minutos
-    const intervalo = setInterval(
-      () => {
-        carregarExamesCriticos();
-      },
-      5 * 60 * 1000
-    );
-
-    return () => clearInterval(intervalo);
   }, []);
 
   const carregarExamesCriticos = async () => {
     try {
       setLoading(true);
+      setErro(null);
       const exames = await ExameModel.verificarResultadosCriticos();
       setExamesCriticos(exames);
+      setLoading(false);
     } catch (error) {
       console.error("Erro ao carregar exames críticos:", error);
-    } finally {
+      setErro("Não foi possível carregar os exames críticos. Tente novamente mais tarde.");
       setLoading(false);
     }
   };
 
-  const handleVerDetalhe = (exame) => {
-    setExameDetalhe(exame);
-    setDialogExameAberto(true);
-  };
+  const formatarData = (data) => {
+    if (!data) return "Data não disponível";
 
-  const fecharDialog = () => {
-    setDialogExameAberto(false);
-    setExameDetalhe(null);
-  };
-
-  const handleVerExame = () => {
-    if (onVerExame && exameDetalhe) {
-      onVerExame(exameDetalhe);
-      fecharDialog();
-    }
-  };
-
-  const formatarData = (timestamp) => {
-    if (!timestamp) return "";
     try {
-      const data = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-      return data.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
+      const dataObj = typeof data === "string" ? new Date(data) : data;
+      return format(dataObj, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     } catch (error) {
+      console.error("Erro ao formatar data:", error);
       return "Data inválida";
     }
   };
 
-  const renderDialogDetalheExame = () => {
-    if (!exameDetalhe) return null;
+  const verificarParametrosCriticos = (exame) => {
+    if (!exame.resultado || !exame.tipoExame || !exame.tipoExame.valoresReferencia) {
+      return [];
+    }
 
-    const exame = exameDetalhe;
+    const parametrosCriticos = [];
 
-    return (
-      <Dialog open={dialogExameAberto} onClose={fecharDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          <Box display="flex" alignItems="center">
-            <ErrorIcon color="error" sx={{ mr: 1 }} />
-            Alerta de Resultado Crítico
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              {exame.tipoExame?.nome}
-            </Typography>
+    Object.entries(exame.resultado.valores).forEach(([parametro, valor]) => {
+      const referencia = exame.tipoExame.valoresReferencia[parametro];
+      if (!referencia) return;
 
-            <Typography variant="body2" gutterBottom>
-              <strong>Paciente:</strong> {exame.pacienteNome || "ID: " + exame.pacienteId}
-            </Typography>
+      const valorNumerico = parseFloat(valor);
+      const minimo = parseFloat(referencia.minimo);
+      const maximo = parseFloat(referencia.maximo);
 
-            <Typography variant="body2" gutterBottom>
-              <strong>Data do Exame:</strong> {formatarData(exame.resultado?.dataRegistro)}
-            </Typography>
+      if (
+        !isNaN(valorNumerico) &&
+        !isNaN(minimo) &&
+        !isNaN(maximo) &&
+        (valorNumerico < minimo || valorNumerico > maximo)
+      ) {
+        parametrosCriticos.push({
+          nome: parametro,
+          valor: `${valor} ${referencia.unidade || ""}`,
+          referencia: `${referencia.minimo} - ${referencia.maximo} ${referencia.unidade || ""}`,
+          tipo: valorNumerico < minimo ? "abaixo" : "acima"
+        });
+      }
+    });
 
-            <Typography variant="body2" gutterBottom>
-              <strong>Categoria:</strong> {exame.tipoExame?.categoria || "Não especificada"}
-            </Typography>
-          </Box>
-
-          <Alert severity="error" sx={{ mb: 3 }}>
-            Este exame apresenta valores críticos que necessitam de atenção imediata!
-          </Alert>
-
-          <Typography variant="subtitle1" gutterBottom>
-            Resultados Alterados:
-          </Typography>
-
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            <List dense>
-              {exame.tipoExame?.valoresReferencia &&
-                exame.resultado?.valores &&
-                Object.entries(exame.resultado.valores).map(([parametro, valor]) => {
-                  const referencia = exame.tipoExame.valoresReferencia[parametro];
-                  if (!referencia) return null;
-
-                  const valorNumerico = parseFloat(valor);
-                  const minimo = parseFloat(referencia.minimo);
-                  const maximo = parseFloat(referencia.maximo);
-
-                  const isCritico = valorNumerico < minimo || valorNumerico > maximo;
-
-                  if (!isCritico) return null;
-
-                  return (
-                    <ListItem key={parametro}>
-                      <ListItemAvatar>
-                        <Avatar sx={{ bgcolor: "error.main" }}>
-                          <WarningIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={parametro}
-                        secondary={
-                          <Typography component="span" variant="body2">
-                            Valor:{" "}
-                            <strong>
-                              {valor} {referencia.unidade}
-                            </strong>{" "}
-                            | Referência: {referencia.minimo} - {referencia.maximo}{" "}
-                            {referencia.unidade}
-                          </Typography>
-                        }
-                      />
-                    </ListItem>
-                  );
-                })}
-            </List>
-          </Paper>
-
-          {exame.resultado?.observacoes && (
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="subtitle1" gutterBottom>
-                Observações:
-              </Typography>
-              <Typography variant="body2">{exame.resultado.observacoes}</Typography>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={fecharDialog}>Fechar</Button>
-          <Button
-            onClick={handleVerExame}
-            variant="contained"
-            color="primary"
-            startIcon={<VisibilityIcon />}
-          >
-            Ver Exame Completo
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
+    return parametrosCriticos;
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (erro) {
+    return (
+      <Alert severity="error" sx={{ mt: 2 }}>
+        {erro}
+      </Alert>
+    );
+  }
 
   return (
     <>
-      <Card>
-        <CardHeader
-          title={
-            <Box display="flex" alignItems="center">
-              <Badge badgeContent={examesCriticos.length} color="error" max={99} sx={{ mr: 1 }}>
-                <NotificationsIcon color="action" />
-              </Badge>
-              Alertas de Exames Críticos
-            </Box>
-          }
-          action={
-            <Button size="small" onClick={carregarExamesCriticos} disabled={loading}>
-              {loading ? <CircularProgress size={20} /> : "Atualizar"}
-            </Button>
-          }
-        />
-        <Divider />
-        <CardContent>
-          {loading && examesCriticos.length === 0 ? (
-            <Box display="flex" justifyContent="center" alignItems="center" height={100}>
-              <CircularProgress />
-            </Box>
-          ) : examesCriticos.length === 0 ? (
-            <Typography variant="body1" align="center" sx={{ py: 2 }}>
-              Não há exames com resultados críticos no momento.
-            </Typography>
+      {examesCriticos.length === 0 ? (
+        <Paper sx={{ p: 3, textAlign: "center" }}>
+          <Typography variant="body1" color="text.secondary">
+            Não há resultados críticos no momento.
+          </Typography>
+        </Paper>
+      ) : (
+        <>
+          {mostrarApenasResumo ? (
+            <Card>
+              <CardContent>
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body1" gutterBottom>
+                    <b>{examesCriticos.length}</b> resultados críticos requerem atenção
+                  </Typography>
+                </Box>
+
+                <List dense>
+                  {examesCriticos.slice(0, 3).map((exame) => (
+                    <ListItem
+                      key={exame.id}
+                      secondaryAction={
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => onVerExame && onVerExame(exame)}
+                        >
+                          Ver
+                        </Button>
+                      }
+                    >
+                      <ListItemText
+                        primary={exame.tipoExame?.nome || "Exame"}
+                        secondary={`Paciente: ${exame.paciente?.nome || "Não identificado"}`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+
+                {examesCriticos.length > 3 && (
+                  <Box sx={{ mt: 2, textAlign: "center" }}>
+                    <Button
+                      variant="text"
+                      color="primary"
+                      onClick={() => onVerExame && onVerExame({ tipo: "navegarParaAlertas" })}
+                    >
+                      Ver todos os {examesCriticos.length} resultados críticos
+                    </Button>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
           ) : (
-            <List sx={{ width: "100%" }}>
-              {examesCriticos.map((exame) => (
-                <React.Fragment key={exame.id}>
-                  <ListItem
-                    alignItems="flex-start"
-                    secondaryAction={
-                      <IconButton edge="end" onClick={() => handleVerDetalhe(exame)}>
-                        <VisibilityIcon />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: "error.main" }}>
-                        <PersonIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="subtitle1">
-                          {exame.tipoExame?.nome || "Exame não identificado"}
-                          <Chip size="small" label="Crítico" color="error" sx={{ ml: 1 }} />
-                        </Typography>
-                      }
-                      secondary={
-                        <>
-                          <Typography component="span" variant="body2" color="text.primary">
-                            Paciente: {exame.pacienteNome || "ID: " + exame.pacienteId}
-                          </Typography>
-                          <Typography variant="body2">
-                            Data: {formatarData(exame.resultado?.dataRegistro)}
-                          </Typography>
-                          <Typography variant="body2">
-                            {Object.entries(exame.resultado?.valores || {}).reduce(
-                              (acc, [param, valor]) => {
-                                const ref = exame.tipoExame?.valoresReferencia?.[param];
-                                if (!ref) return acc;
-
-                                const val = parseFloat(valor);
-                                const min = parseFloat(ref.minimo);
-                                const max = parseFloat(ref.maximo);
-
-                                if (val < min || val > max) {
-                                  if (acc) acc += ", ";
-                                  acc += `${param}: ${valor} ${ref.unidade}`;
-                                }
-                                return acc;
-                              },
-                              ""
-                            )}
-                          </Typography>
-                        </>
-                      }
-                    />
-                  </ListItem>
-                  <Divider variant="inset" component="li" />
-                </React.Fragment>
-              ))}
-            </List>
+            <>
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="tabela de resultados críticos">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Paciente</TableCell>
+                      <TableCell>Exame</TableCell>
+                      <TableCell>Data</TableCell>
+                      <TableCell>Médico</TableCell>
+                      <TableCell align="right">Ações</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {examesCriticos.map((exame) => (
+                      <TableRow
+                        key={exame.id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                          backgroundColor: "error.light",
+                          "&:hover": {
+                            backgroundColor: "error.main",
+                            "& .MuiTableCell-root": {
+                              color: "white"
+                            }
+                          }
+                        }}
+                      >
+                        <TableCell component="th" scope="row">
+                          {exame.paciente?.nome || "Não identificado"}
+                        </TableCell>
+                        <TableCell>{exame.tipoExame?.nome || "Não especificado"}</TableCell>
+                        <TableCell>
+                          {new Date(exame.dataResultado).toLocaleDateString("pt-BR")}
+                        </TableCell>
+                        <TableCell>{exame.medico?.nome || "Não atribuído"}</TableCell>
+                        <TableCell align="right">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={() => onVerExame && onVerExame(exame)}
+                          >
+                            Ver Detalhes
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
+                <Typography variant="body2" color="error">
+                  Resultados críticos requerem atenção imediata!
+                </Typography>
+              </Box>
+            </>
           )}
-        </CardContent>
-      </Card>
-
-      {renderDialogDetalheExame()}
+        </>
+      )}
     </>
   );
 };

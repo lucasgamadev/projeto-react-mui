@@ -49,7 +49,7 @@ const SolicitacaoExameForm = ({ pacienteId, medicoId, consultaId, onSuccess }) =
       setAlerta({
         aberto: true,
         tipo: "error",
-        mensagem: "Erro ao carregar tipos de exames."
+        mensagem: "Erro ao carregar tipos de exames. Tente novamente."
       });
     } finally {
       setLoading(false);

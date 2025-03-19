@@ -1,0 +1,546 @@
+{
+  "tiposExames": [
+    {
+      "id": "tipo1",
+      "nome": "Hemograma Completo",
+      "descricao": "Análise completa das células sanguíneas",
+      "preparoNecessario": "Jejum de 8 horas",
+      "categoria": "Hematologia",
+      "valoresReferencia": {
+        "Hemoglobina": { "minimo": "12", "maximo": "16", "unidade": "g/dL" },
+        "Hematócrito": { "minimo": "36", "maximo": "47", "unidade": "%" },
+        "Leucócitos": { "minimo": "4000", "maximo": "10000", "unidade": "mm³" },
+        "Plaquetas": { "minimo": "150000", "maximo": "450000", "unidade": "mm³" }
+      },
+      "dataCriacao": "2024-01-10T10:30:00Z"
+    },
+    {
+      "id": "tipo2",
+      "nome": "Glicemia de Jejum",
+      "descricao": "Medição do nível de glicose no sangue",
+      "preparoNecessario": "Jejum de 8 horas",
+      "categoria": "Bioquímica",
+      "valoresReferencia": {
+        "Glicose": { "minimo": "70", "maximo": "99", "unidade": "mg/dL" }
+      },
+      "dataCriacao": "2024-01-12T08:45:00Z"
+    },
+    {
+      "id": "tipo3",
+      "nome": "Colesterol Total e Frações",
+      "descricao": "Avaliação dos níveis de colesterol e triglicerídeos",
+      "preparoNecessario": "Jejum de 12 horas",
+      "categoria": "Bioquímica",
+      "valoresReferencia": {
+        "Colesterol Total": { "minimo": "0", "maximo": "200", "unidade": "mg/dL" },
+        "HDL": { "minimo": "40", "maximo": "60", "unidade": "mg/dL" },
+        "LDL": { "minimo": "0", "maximo": "130", "unidade": "mg/dL" },
+        "Triglicerídeos": { "minimo": "0", "maximo": "150", "unidade": "mg/dL" }
+      },
+      "dataCriacao": "2024-01-15T14:20:00Z"
+    },
+    {
+      "id": "tipo4",
+      "nome": "Ureia e Creatinina",
+      "descricao": "Avaliação da função renal",
+      "preparoNecessario": "Não é necessário jejum",
+      "categoria": "Bioquímica",
+      "valoresReferencia": {
+        "Ureia": { "minimo": "15", "maximo": "40", "unidade": "mg/dL" },
+        "Creatinina": { "minimo": "0.6", "maximo": "1.2", "unidade": "mg/dL" }
+      },
+      "dataCriacao": "2024-01-20T09:15:00Z"
+    },
+    {
+      "id": "tipo5",
+      "nome": "Hormônios Tireoidianos",
+      "descricao": "Avaliação da função da tireoide",
+      "preparoNecessario": "Jejum de 4 horas",
+      "categoria": "Endocrinologia",
+      "valoresReferencia": {
+        "TSH": { "minimo": "0.4", "maximo": "4.0", "unidade": "mUI/L" },
+        "T4 Livre": { "minimo": "0.8", "maximo": "1.8", "unidade": "ng/dL" },
+        "T3 Total": { "minimo": "80", "maximo": "200", "unidade": "ng/dL" }
+      },
+      "dataCriacao": "2024-01-25T11:30:00Z"
+    },
+    {
+      "id": "tipo6",
+      "nome": "Parasitológico de Fezes",
+      "descricao": "Identificação de parasitas nas fezes",
+      "preparoNecessario": "Coletar amostra em frasco próprio",
+      "categoria": "Microbiologia",
+      "valoresReferencia": {},
+      "dataCriacao": "2024-01-30T10:45:00Z"
+    },
+    {
+      "id": "tipo7",
+      "nome": "Radiografia de Tórax",
+      "descricao": "Exame de imagem da região torácica",
+      "preparoNecessario": "Remoção de objetos metálicos",
+      "categoria": "Imagem",
+      "valoresReferencia": {},
+      "dataCriacao": "2024-02-02T13:20:00Z"
+    },
+    {
+      "id": "tipo8",
+      "nome": "Eletrocardiograma",
+      "descricao": "Avaliação da atividade elétrica do coração",
+      "preparoNecessario": "Não utilizar cremes ou loções na pele",
+      "categoria": "Cardiologia",
+      "valoresReferencia": {
+        "Intervalo PR": { "minimo": "120", "maximo": "200", "unidade": "ms" },
+        "Intervalo QT": { "minimo": "320", "maximo": "440", "unidade": "ms" },
+        "Frequência Cardíaca": { "minimo": "60", "maximo": "100", "unidade": "bpm" }
+      },
+      "dataCriacao": "2024-02-05T09:30:00Z"
+    }
+  ],
+  "pacientes": [
+    {
+      "id": "paciente1",
+      "nome": "João Silva",
+      "idade": 45,
+      "sexo": "Masculino"
+    },
+    {
+      "id": "paciente2",
+      "nome": "Maria Oliveira",
+      "idade": 38,
+      "sexo": "Feminino"
+    },
+    {
+      "id": "paciente3",
+      "nome": "Carlos Pereira",
+      "idade": 52,
+      "sexo": "Masculino"
+    },
+    {
+      "id": "paciente4",
+      "nome": "Ana Costa",
+      "idade": 29,
+      "sexo": "Feminino"
+    },
+    {
+      "id": "paciente5",
+      "nome": "Pedro Souza",
+      "idade": 61,
+      "sexo": "Masculino"
+    }
+  ],
+  "medicos": [
+    {
+      "id": "medico1",
+      "nome": "Dr. Roberto Almeida",
+      "especialidade": "Clínico Geral"
+    },
+    {
+      "id": "medico2",
+      "nome": "Dra. Juliana Santos",
+      "especialidade": "Cardiologista"
+    },
+    {
+      "id": "medico3",
+      "nome": "Dr. Marcelo Lima",
+      "especialidade": "Endocrinologista"
+    }
+  ],
+  "exames": [
+    {
+      "id": "exame1",
+      "pacienteId": "paciente1",
+      "pacienteNome": "João Silva",
+      "medicoId": "medico1",
+      "medicoNome": "Dr. Roberto Almeida",
+      "tipoExameId": "tipo1",
+      "dataRequisicao": "2024-03-15T10:00:00Z",
+      "dataPrevista": "2024-03-20T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "Paciente com histórico de anemia",
+      "status": "Concluído",
+      "consultaId": "consulta1",
+      "tipoExame": {
+        "id": "tipo1",
+        "nome": "Hemograma Completo",
+        "descricao": "Análise completa das células sanguíneas",
+        "categoria": "Hematologia",
+        "valoresReferencia": {
+          "Hemoglobina": { "minimo": "12", "maximo": "16", "unidade": "g/dL" },
+          "Hematócrito": { "minimo": "36", "maximo": "47", "unidade": "%" },
+          "Leucócitos": { "minimo": "4000", "maximo": "10000", "unidade": "mm³" },
+          "Plaquetas": { "minimo": "150000", "maximo": "450000", "unidade": "mm³" }
+        }
+      },
+      "resultado": {
+        "valores": {
+          "Hemoglobina": "11.5",
+          "Hematócrito": "35",
+          "Leucócitos": "9000",
+          "Plaquetas": "200000"
+        },
+        "observacoes": "Hemoglobina ligeiramente abaixo do valor de referência",
+        "dataRegistro": "2024-03-22T14:30:00Z"
+      }
+    },
+    {
+      "id": "exame2",
+      "pacienteId": "paciente1",
+      "pacienteNome": "João Silva",
+      "medicoId": "medico1",
+      "medicoNome": "Dr. Roberto Almeida",
+      "tipoExameId": "tipo2",
+      "dataRequisicao": "2024-03-15T10:00:00Z",
+      "dataPrevista": "2024-03-20T00:00:00Z",
+      "prioridade": "Alta",
+      "observacoes": "Paciente diabético",
+      "status": "Solicitado",
+      "consultaId": "consulta1",
+      "tipoExame": {
+        "id": "tipo2",
+        "nome": "Glicemia de Jejum",
+        "descricao": "Medição do nível de glicose no sangue",
+        "categoria": "Bioquímica",
+        "valoresReferencia": {
+          "Glicose": { "minimo": "70", "maximo": "99", "unidade": "mg/dL" }
+        }
+      }
+    },
+    {
+      "id": "exame3",
+      "pacienteId": "paciente2",
+      "pacienteNome": "Maria Oliveira",
+      "medicoId": "medico1",
+      "medicoNome": "Dr. Roberto Almeida",
+      "tipoExameId": "tipo2",
+      "dataRequisicao": "2024-03-16T09:00:00Z",
+      "dataPrevista": "2024-03-21T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "",
+      "status": "Concluído",
+      "consultaId": "consulta2",
+      "tipoExame": {
+        "id": "tipo2",
+        "nome": "Glicemia de Jejum",
+        "descricao": "Medição do nível de glicose no sangue",
+        "categoria": "Bioquímica",
+        "valoresReferencia": {
+          "Glicose": { "minimo": "70", "maximo": "99", "unidade": "mg/dL" }
+        }
+      },
+      "resultado": {
+        "valores": {
+          "Glicose": "180"
+        },
+        "observacoes": "Paciente com glicemia elevada",
+        "dataRegistro": "2024-03-18T10:15:00Z"
+      }
+    },
+    {
+      "id": "exame4",
+      "pacienteId": "paciente3",
+      "pacienteNome": "Carlos Pereira",
+      "medicoId": "medico2",
+      "medicoNome": "Dra. Juliana Santos",
+      "tipoExameId": "tipo3",
+      "dataRequisicao": "2024-03-17T11:00:00Z",
+      "dataPrevista": "2024-03-22T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "Verificar níveis de colesterol",
+      "status": "Concluído",
+      "consultaId": "consulta3",
+      "tipoExame": {
+        "id": "tipo3",
+        "nome": "Colesterol Total e Frações",
+        "descricao": "Avaliação dos níveis de colesterol e triglicerídeos",
+        "categoria": "Bioquímica",
+        "valoresReferencia": {
+          "Colesterol Total": { "minimo": "0", "maximo": "200", "unidade": "mg/dL" },
+          "HDL": { "minimo": "40", "maximo": "60", "unidade": "mg/dL" },
+          "LDL": { "minimo": "0", "maximo": "130", "unidade": "mg/dL" },
+          "Triglicerídeos": { "minimo": "0", "maximo": "150", "unidade": "mg/dL" }
+        }
+      },
+      "resultado": {
+        "valores": {
+          "Colesterol Total": "280",
+          "HDL": "35",
+          "LDL": "190",
+          "Triglicerídeos": "200"
+        },
+        "observacoes": "Paciente com dislipidemia severa",
+        "dataRegistro": "2024-03-19T16:45:00Z"
+      }
+    },
+    {
+      "id": "exame5",
+      "pacienteId": "paciente4",
+      "pacienteNome": "Ana Costa",
+      "medicoId": "medico3",
+      "medicoNome": "Dr. Marcelo Lima",
+      "tipoExameId": "tipo5",
+      "dataRequisicao": "2024-03-18T14:30:00Z",
+      "dataPrevista": "2024-03-23T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "Paciente com fadiga",
+      "status": "Concluído",
+      "consultaId": "consulta4",
+      "tipoExame": {
+        "id": "tipo5",
+        "nome": "Hormônios Tireoidianos",
+        "descricao": "Avaliação da função da tireoide",
+        "categoria": "Endocrinologia",
+        "valoresReferencia": {
+          "TSH": { "minimo": "0.4", "maximo": "4.0", "unidade": "mUI/L" },
+          "T4 Livre": { "minimo": "0.8", "maximo": "1.8", "unidade": "ng/dL" },
+          "T3 Total": { "minimo": "80", "maximo": "200", "unidade": "ng/dL" }
+        }
+      },
+      "resultado": {
+        "valores": {
+          "TSH": "6.5",
+          "T4 Livre": "0.6",
+          "T3 Total": "75"
+        },
+        "observacoes": "Paciente com hipotireoidismo",
+        "dataRegistro": "2024-03-20T09:30:00Z"
+      }
+    },
+    {
+      "id": "exame6",
+      "pacienteId": "paciente5",
+      "pacienteNome": "Pedro Souza",
+      "medicoId": "medico2",
+      "medicoNome": "Dra. Juliana Santos",
+      "tipoExameId": "tipo8",
+      "dataRequisicao": "2024-03-19T10:45:00Z",
+      "dataPrevista": "2024-03-21T00:00:00Z",
+      "prioridade": "Alta",
+      "observacoes": "Paciente com dor torácica",
+      "status": "Concluído",
+      "consultaId": "consulta5",
+      "tipoExame": {
+        "id": "tipo8",
+        "nome": "Eletrocardiograma",
+        "descricao": "Avaliação da atividade elétrica do coração",
+        "categoria": "Cardiologia",
+        "valoresReferencia": {
+          "Intervalo PR": { "minimo": "120", "maximo": "200", "unidade": "ms" },
+          "Intervalo QT": { "minimo": "320", "maximo": "440", "unidade": "ms" },
+          "Frequência Cardíaca": { "minimo": "60", "maximo": "100", "unidade": "bpm" }
+        }
+      },
+      "resultado": {
+        "valores": {
+          "Intervalo PR": "190",
+          "Intervalo QT": "450",
+          "Frequência Cardíaca": "105"
+        },
+        "observacoes": "Paciente com taquicardia sinusal e intervalo QT prolongado",
+        "dataRegistro": "2024-03-21T14:00:00Z"
+      }
+    },
+    {
+      "id": "exame7",
+      "pacienteId": "paciente1",
+      "pacienteNome": "João Silva",
+      "medicoId": "medico1",
+      "medicoNome": "Dr. Roberto Almeida",
+      "tipoExameId": "tipo4",
+      "dataRequisicao": "2024-03-20T08:30:00Z",
+      "dataPrevista": "2024-03-25T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "",
+      "status": "Em Andamento",
+      "consultaId": "consulta6",
+      "tipoExame": {
+        "id": "tipo4",
+        "nome": "Ureia e Creatinina",
+        "descricao": "Avaliação da função renal",
+        "categoria": "Bioquímica",
+        "valoresReferencia": {
+          "Ureia": { "minimo": "15", "maximo": "40", "unidade": "mg/dL" },
+          "Creatinina": { "minimo": "0.6", "maximo": "1.2", "unidade": "mg/dL" }
+        }
+      }
+    },
+    {
+      "id": "exame8",
+      "pacienteId": "paciente2",
+      "pacienteNome": "Maria Oliveira",
+      "medicoId": "medico1",
+      "medicoNome": "Dr. Roberto Almeida",
+      "tipoExameId": "tipo3",
+      "dataRequisicao": "2024-03-21T11:15:00Z",
+      "dataPrevista": "2024-03-26T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "",
+      "status": "Solicitado",
+      "consultaId": "consulta7",
+      "tipoExame": {
+        "id": "tipo3",
+        "nome": "Colesterol Total e Frações",
+        "descricao": "Avaliação dos níveis de colesterol e triglicerídeos",
+        "categoria": "Bioquímica",
+        "valoresReferencia": {
+          "Colesterol Total": { "minimo": "0", "maximo": "200", "unidade": "mg/dL" },
+          "HDL": { "minimo": "40", "maximo": "60", "unidade": "mg/dL" },
+          "LDL": { "minimo": "0", "maximo": "130", "unidade": "mg/dL" },
+          "Triglicerídeos": { "minimo": "0", "maximo": "150", "unidade": "mg/dL" }
+        }
+      }
+    },
+    {
+      "id": "exame9",
+      "pacienteId": "paciente3",
+      "pacienteNome": "Carlos Pereira",
+      "medicoId": "medico2",
+      "medicoNome": "Dra. Juliana Santos",
+      "tipoExameId": "tipo7",
+      "dataRequisicao": "2024-03-22T09:45:00Z",
+      "dataPrevista": "2024-03-24T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "Paciente com tosse persistente",
+      "status": "Solicitado",
+      "consultaId": "consulta8",
+      "tipoExame": {
+        "id": "tipo7",
+        "nome": "Radiografia de Tórax",
+        "descricao": "Exame de imagem da região torácica",
+        "categoria": "Imagem",
+        "valoresReferencia": {}
+      }
+    },
+    {
+      "id": "exame10",
+      "pacienteId": "paciente4",
+      "pacienteNome": "Ana Costa",
+      "medicoId": "medico3",
+      "medicoNome": "Dr. Marcelo Lima",
+      "tipoExameId": "tipo6",
+      "dataRequisicao": "2024-03-23T14:00:00Z",
+      "dataPrevista": "2024-03-28T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "Paciente com dor abdominal",
+      "status": "Cancelado",
+      "consultaId": "consulta9",
+      "tipoExame": {
+        "id": "tipo6",
+        "nome": "Parasitológico de Fezes",
+        "descricao": "Identificação de parasitas nas fezes",
+        "categoria": "Microbiologia",
+        "valoresReferencia": {}
+      }
+    },
+    {
+      "id": "exame11",
+      "pacienteId": "paciente5",
+      "pacienteNome": "Pedro Souza",
+      "medicoId": "medico2",
+      "medicoNome": "Dra. Juliana Santos",
+      "tipoExameId": "tipo1",
+      "dataRequisicao": "2024-03-24T10:30:00Z",
+      "dataPrevista": "2024-03-29T00:00:00Z",
+      "prioridade": "Normal",
+      "observacoes": "",
+      "status": "Em Andamento",
+      "consultaId": "consulta10",
+      "tipoExame": {
+        "id": "tipo1",
+        "nome": "Hemograma Completo",
+        "descricao": "Análise completa das células sanguíneas",
+        "categoria": "Hematologia",
+        "valoresReferencia": {
+          "Hemoglobina": { "minimo": "12", "maximo": "16", "unidade": "g/dL" },
+          "Hematócrito": { "minimo": "36", "maximo": "47", "unidade": "%" },
+          "Leucócitos": { "minimo": "4000", "maximo": "10000", "unidade": "mm³" },
+          "Plaquetas": { "minimo": "150000", "maximo": "450000", "unidade": "mm³" }
+        }
+      }
+    },
+    {
+      "id": "exame12",
+      "pacienteId": "paciente1",
+      "pacienteNome": "João Silva",
+      "medicoId": "medico1",
+      "medicoNome": "Dr. Roberto Almeida",
+      "tipoExameId": "tipo5",
+      "dataRequisicao": "2024-03-25T09:00:00Z",
+      "dataPrevista": "2024-03-30T00:00:00Z",
+      "prioridade": "Alta",
+      "observacoes": "Suspeita de hipertireoidismo",
+      "status": "Solicitado",
+      "consultaId": "consulta11",
+      "tipoExame": {
+        "id": "tipo5",
+        "nome": "Hormônios Tireoidianos",
+        "descricao": "Avaliação da função da tireoide",
+        "categoria": "Endocrinologia",
+        "valoresReferencia": {
+          "TSH": { "minimo": "0.4", "maximo": "4.0", "unidade": "mUI/L" },
+          "T4 Livre": { "minimo": "0.8", "maximo": "1.8", "unidade": "ng/dL" },
+          "T3 Total": { "minimo": "80", "maximo": "200", "unidade": "ng/dL" }
+        }
+      }
+    }
+  ],
+  "estatisticas": {
+    "totalExames": 12,
+    "examesPorStatus": [
+      { "status": "Solicitado", "quantidade": 4 },
+      { "status": "Em Andamento", "quantidade": 2 },
+      { "status": "Concluído", "quantidade": 5 },
+      { "status": "Cancelado", "quantidade": 1 }
+    ],
+    "examesPorCategoria": [
+      {
+        "categoria": "Hematologia",
+        "solicitados": 2,
+        "concluidos": 1
+      },
+      {
+        "categoria": "Bioquímica",
+        "solicitados": 5,
+        "concluidos": 2
+      },
+      {
+        "categoria": "Endocrinologia",
+        "solicitados": 2,
+        "concluidos": 1
+      },
+      {
+        "categoria": "Microbiologia",
+        "solicitados": 1,
+        "concluidos": 0
+      },
+      {
+        "categoria": "Imagem",
+        "solicitados": 1,
+        "concluidos": 0
+      },
+      {
+        "categoria": "Cardiologia",
+        "solicitados": 1,
+        "concluidos": 1
+      }
+    ],
+    "examesPorPrioridade": [
+      { "prioridade": "Baixa", "quantidade": 0 },
+      { "prioridade": "Normal", "quantidade": 9 },
+      { "prioridade": "Alta", "quantidade": 3 },
+      { "prioridade": "Urgente", "quantidade": 0 }
+    ],
+    "examesPorMedico": [
+      { "medicoId": "medico1", "nome": "Dr. Roberto Almeida", "quantidade": 6 },
+      { "medicoId": "medico2", "nome": "Dra. Juliana Santos", "quantidade": 4 },
+      { "medicoId": "medico3", "nome": "Dr. Marcelo Lima", "quantidade": 2 }
+    ],
+    "examesPorPaciente": [
+      { "pacienteId": "paciente1", "nome": "João Silva", "quantidade": 4 },
+      { "pacienteId": "paciente2", "nome": "Maria Oliveira", "quantidade": 2 },
+      { "pacienteId": "paciente3", "nome": "Carlos Pereira", "quantidade": 2 },
+      { "pacienteId": "paciente4", "nome": "Ana Costa", "quantidade": 2 },
+      { "pacienteId": "paciente5", "nome": "Pedro Souza", "quantidade": 2 }
+    ],
+    "exameCriticoCount": 3
+  }
+}

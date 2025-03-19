@@ -1,5 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import PrintIcon from "@mui/icons-material/Print";
+import ShareIcon from "@mui/icons-material/Share";
 import {
   Alert,
   Box,
@@ -14,6 +16,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  IconButton,
   Paper,
   Snackbar,
   Table,
@@ -23,6 +26,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography
 } from "@mui/material";
 import { format } from "date-fns";
@@ -37,7 +41,7 @@ const statusColors = {
   Cancelado: "error"
 };
 
-const VisualizadorResultadosExames = ({ pacienteId, medicoLogado }) => {
+const VisualizadorResultadosExames = ({ pacienteId, medicoLogado, onExportarResultado }) => {
   const [exames, setExames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogRegistroAberto, setDialogRegistroAberto] = useState(false);
@@ -158,12 +162,14 @@ const VisualizadorResultadosExames = ({ pacienteId, medicoLogado }) => {
     setAlerta({ ...alerta, aberto: false });
   };
 
-  const formatarData = (timestamp) => {
-    if (!timestamp) return "Não definida";
+  const formatarData = (data) => {
+    if (!data) return "Não definida";
 
     try {
-      const data = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-      return format(data, "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR });
+      // Normalizar dados de diferentes fontes (string ou objeto Date)
+      const dataObj =
+        typeof data === "string" ? new Date(data) : data.toDate ? data.toDate() : new Date(data);
+      return format(dataObj, "dd 'de' MMMM 'de' yyyy 'às' HH:mm", { locale: ptBR });
     } catch (error) {
       console.error("Erro ao formatar data:", error);
       return "Data inválida";
@@ -259,68 +265,97 @@ const VisualizadorResultadosExames = ({ pacienteId, medicoLogado }) => {
     if (!exame.resultado) return "Não disponível";
 
     return (
-      <Box>
-        <Typography variant="subtitle2" gutterBottom>
-          Resultados:
-        </Typography>
+      <Card sx={{ mb: 3 }} key={exame.id}>
+        <CardHeader
+          title={exame.tipoExame.nome}
+          subheader={`Solicitado em: ${formatarData(exame.dataRequisicao)}`}
+          action={
+            <Box>
+              {exame.status === "Concluído" && (
+                <>
+                  <Tooltip title="Exportar resultado">
+                    <IconButton
+                      color="primary"
+                      onClick={() => onExportarResultado && onExportarResultado(exame)}
+                    >
+                      <PictureAsPdfIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Imprimir resultado">
+                    <IconButton color="secondary" onClick={() => window.print()}>
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Compartilhar">
+                    <IconButton>
+                      <ShareIcon />
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )}
+            </Box>
+          }
+        />
 
-        {exame.tipoExame?.valoresReferencia && exame.resultado.valores && (
-          <TableContainer component={Paper} variant="outlined" sx={{ mb: 1 }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Parâmetro</TableCell>
-                  <TableCell>Valor</TableCell>
-                  <TableCell>Referência</TableCell>
-                  <TableCell>Status</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Object.entries(exame.resultado.valores).map(([parametro, valor]) => {
-                  const referencia = exame.tipoExame.valoresReferencia[parametro];
-                  if (!referencia) return null;
+        <CardContent>
+          {exame.tipoExame?.valoresReferencia && exame.resultado.valores && (
+            <TableContainer component={Paper} variant="outlined" sx={{ mb: 1 }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Parâmetro</TableCell>
+                    <TableCell>Valor</TableCell>
+                    <TableCell>Referência</TableCell>
+                    <TableCell>Status</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.entries(exame.resultado.valores).map(([parametro, valor]) => {
+                    const referencia = exame.tipoExame.valoresReferencia[parametro];
+                    if (!referencia) return null;
 
-                  const valorNumerico = parseFloat(valor);
-                  const minimo = parseFloat(referencia.minimo);
-                  const maximo = parseFloat(referencia.maximo);
+                    const valorNumerico = parseFloat(valor);
+                    const minimo = parseFloat(referencia.minimo);
+                    const maximo = parseFloat(referencia.maximo);
 
-                  const isCritico = valorNumerico < minimo || valorNumerico > maximo;
+                    const isCritico = valorNumerico < minimo || valorNumerico > maximo;
 
-                  return (
-                    <TableRow key={parametro}>
-                      <TableCell>{parametro}</TableCell>
-                      <TableCell>
-                        {valor} {referencia.unidade}
-                      </TableCell>
-                      <TableCell>
-                        {referencia.minimo} - {referencia.maximo} {referencia.unidade}
-                      </TableCell>
-                      <TableCell>
-                        <Chip
-                          size="small"
-                          label={isCritico ? "Alterado" : "Normal"}
-                          color={isCritico ? "error" : "success"}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+                    return (
+                      <TableRow key={parametro}>
+                        <TableCell>{parametro}</TableCell>
+                        <TableCell>
+                          {valor} {referencia.unidade}
+                        </TableCell>
+                        <TableCell>
+                          {referencia.minimo} - {referencia.maximo} {referencia.unidade}
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            size="small"
+                            label={isCritico ? "Alterado" : "Normal"}
+                            color={isCritico ? "error" : "success"}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
 
-        {exame.resultado.observacoes && (
-          <Box sx={{ mt: 1 }}>
-            <Typography variant="subtitle2">Observações:</Typography>
-            <Typography variant="body2">{exame.resultado.observacoes}</Typography>
-          </Box>
-        )}
+          {exame.resultado.observacoes && (
+            <Box sx={{ mt: 1 }}>
+              <Typography variant="subtitle2">Observações:</Typography>
+              <Typography variant="body2">{exame.resultado.observacoes}</Typography>
+            </Box>
+          )}
 
-        <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-          Registrado em: {formatarData(exame.resultado.dataRegistro)}
-        </Typography>
-      </Box>
+          <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
+            Registrado em: {formatarData(exame.resultado.dataRegistro)}
+          </Typography>
+        </CardContent>
+      </Card>
     );
   };
 
@@ -409,17 +444,6 @@ const VisualizadorResultadosExames = ({ pacienteId, medicoLogado }) => {
                               sx={{ mr: 1 }}
                             >
                               Registrar Resultado
-                            </Button>
-                          )}
-
-                          {exame.status === "Concluído" && (
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              startIcon={<PictureAsPdfIcon />}
-                              onClick={() => {}}
-                            >
-                              PDF
                             </Button>
                           )}
                         </Box>
