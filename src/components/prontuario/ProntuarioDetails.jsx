@@ -503,7 +503,15 @@ const Medicamentos = ({ prontuario }) => {
                     p: 2,
                     border: 1,
                     borderColor: medicamento.continuo ? "success.main" : "primary.main",
-                    bgcolor: medicamento.continuo ? "success.lighter" : "primary.lighter"
+                    bgcolor: medicamento.continuo ? "success.lighter" : "primary.lighter",
+                    height: "220px",
+                    display: "flex",
+                    flexDirection: "column",
+                    transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-3px)",
+                      boxShadow: 3
+                    }
                   }}
                 >
                   <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -599,7 +607,15 @@ const AlergiasEPrecaucoes = ({ prontuario }) => {
                       ? "error.lighter"
                       : alergia.gravidade === "Moderada"
                         ? "warning.lighter"
-                        : "info.lighter"
+                        : "info.lighter",
+                  height: "220px",
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                    boxShadow: 3
+                  }
                 }}
               >
                 <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -706,7 +722,15 @@ const Cirurgias = ({ prontuario }) => {
                   p: 2,
                   border: 1,
                   borderColor: "secondary.main",
-                  bgcolor: "secondary.lighter"
+                  bgcolor: "secondary.lighter",
+                  height: "220px",
+                  display: "flex",
+                  flexDirection: "column",
+                  transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                    boxShadow: 3
+                  }
                 }}
               >
                 <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -793,7 +817,9 @@ const HistoricoFamiliar = ({ prontuario }) => {
                     border: 1,
                     borderColor: "info.main",
                     bgcolor: "info.lighter",
-                    minHeight: "140px",
+                    height: "220px",
+                    display: "flex",
+                    flexDirection: "column",
                     transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
                     "&:hover": {
                       transform: "translateY(-3px)",
