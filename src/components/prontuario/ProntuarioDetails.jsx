@@ -868,26 +868,31 @@ const ProntuarioDetails = ({ prontuario }) => {
           </Box>
         </Box>
 
-        {prontuario.alergias && prontuario.alergias.length > 0 && (
-          <Box
-            sx={{
-              bgcolor: "error.lighter",
-              p: 1,
-              display: "flex",
-              alignItems: "center",
-              borderBottom: 1,
-              borderColor: "divider"
-            }}
-          >
-            <SecurityUpdateWarningIcon color="error" sx={{ mr: 1 }} />
-            <Typography variant="body2" color="error">
-              <strong>Alerta de Alergias:</strong>{" "}
-              {prontuario.alergias
-                .map((a) => `${a.agente}${a.gravidade === "Grave" ? " (Grave)" : ""}`)
-                .join(", ")}
-            </Typography>
-          </Box>
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            bgcolor: "error.lighter",
+            p: 1,
+            borderRadius: 1,
+            mb: 2
+          }}
+        >
+          <SecurityUpdateWarningIcon color="error" sx={{ mr: 1 }} />
+          <Typography variant="body2" color="error">
+            <strong>Alerta de Alergias:</strong>{" "}
+            {prontuario.alergias && prontuario.alergias.length > 0
+              ? prontuario.alergias
+                  .map(
+                    (a) =>
+                      `${a.agente || "Não especificado"}${
+                        a.gravidade ? ` (${a.gravidade})` : ""
+                      } - ${a.reacao || "Reação não especificada"}`
+                  )
+                  .join(", ")
+              : "Nenhuma alergia registrada"}
+          </Typography>
+        </Box>
 
         <Tabs
           value={tabValue}

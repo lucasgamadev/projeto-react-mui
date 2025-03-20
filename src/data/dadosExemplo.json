@@ -136,15 +136,21 @@
       "alergias": [
         {
           "id": 1,
-          "substancia": "Penicilina",
-          "gravidade": "Alta",
-          "observacoes": "Reação anafilática"
+          "agente": "Penicilina",
+          "tipo": "Medicamento",
+          "gravidade": "Grave",
+          "reacao": "Anafilaxia",
+          "observacoes": "Reação anafilática",
+          "dataIdentificacao": "2015-06-20"
         },
         {
           "id": 2,
-          "substancia": "Dipirona",
+          "agente": "Dipirona",
+          "tipo": "Medicamento",
           "gravidade": "Moderada",
-          "observacoes": "Urticária e vermelhidão"
+          "reacao": "Urticária",
+          "observacoes": "Urticária e vermelhidão",
+          "dataIdentificacao": "2018-09-15"
         }
       ],
       "cirurgias": [
@@ -357,9 +363,12 @@
       "alergias": [
         {
           "id": 1,
-          "substancia": "Amoxicilina",
+          "agente": "Amoxicilina",
+          "tipo": "Medicamento",
           "gravidade": "Moderada",
-          "observacoes": "Erupção cutânea e prurido"
+          "reacao": "Erupção cutânea e prurido",
+          "observacoes": "Erupção cutânea e prurido",
+          "dataIdentificacao": "2023-10-05"
         }
       ],
       "cirurgias": [
@@ -531,9 +540,21 @@
       "alergias": [
         {
           "id": 1,
-          "substancia": "Pólen",
-          "gravidade": "Leve",
-          "observacoes": "Rinite alérgica sazonal"
+          "agente": "Sulfa",
+          "tipo": "Medicamento",
+          "gravidade": "Grave",
+          "reacao": "Edema",
+          "observacoes": "Edema de Quincke",
+          "dataIdentificacao": "2018-03-10"
+        },
+        {
+          "id": 2,
+          "agente": "Frutos do Mar",
+          "tipo": "Alimento",
+          "gravidade": "Moderada",
+          "reacao": "Urticária",
+          "observacoes": "Urticária e vômitos",
+          "dataIdentificacao": "2020-11-22"
         }
       ],
       "cirurgias": [],
@@ -798,14 +819,7 @@
           "observacoes": "Valores indicativos de hipotireoidismo"
         }
       ],
-      "alergias": [
-        {
-          "id": 1,
-          "substancia": "Penicilina",
-          "gravidade": "Grave",
-          "observacoes": "Reação anafilática"
-        }
-      ],
+      "alergias": [],
       "cirurgias": [
         {
           "id": 1,
