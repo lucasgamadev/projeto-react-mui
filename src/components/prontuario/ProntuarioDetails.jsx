@@ -36,6 +36,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { useProntuario } from "../../contexts/ProntuarioContext";
 import ConsultaFormModal from "./ConsultaFormModal";
 
 // Componente de Tab Panel para as abas do prontuário
@@ -163,6 +164,7 @@ DadosPessoais.propTypes = {
 const HistoricoMedico = ({ prontuario }) => {
   const [expandedItem, setExpandedItem] = useState(null);
   const [consultaModalOpen, setConsultaModalOpen] = useState(false);
+  const { carregarConsultasExemplo, loading } = useProntuario();
 
   const handleExpandClick = (consultaId) => {
     setExpandedItem(expandedItem === consultaId ? null : consultaId);
@@ -172,6 +174,15 @@ const HistoricoMedico = ({ prontuario }) => {
     // Aqui você deve implementar a lógica para adicionar a consulta ao prontuário
     // Por enquanto, vamos apenas simular a adição
     console.log("Nova consulta:", novaConsulta);
+  };
+
+  const handleCarregarExemplos = async () => {
+    try {
+      await carregarConsultasExemplo();
+      alert("Consultas de exemplo carregadas com sucesso!");
+    } catch (error) {
+      alert(`Erro ao carregar consultas: ${error.message}`);
+    }
   };
 
   return (
@@ -193,9 +204,10 @@ const HistoricoMedico = ({ prontuario }) => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => console.log("Carregar Exemplos Clicado")} // Placeholder function
+            onClick={handleCarregarExemplos}
+            disabled={loading}
           >
-            Carregar Exemplos
+            {loading ? "Carregando..." : "Carregar Exemplos"}
           </Button>
         </Box>
       </Box>
@@ -205,7 +217,7 @@ const HistoricoMedico = ({ prontuario }) => {
         onClose={() => setConsultaModalOpen(false)}
         onSave={handleAddConsulta}
       />
-      {prontuario.consultas.length === 0 ? (
+      {!prontuario.consultas || prontuario.consultas.length === 0 ? (
         <Alert severity="info">Não há consultas registradas para este paciente.</Alert>
       ) : (
         <List>
@@ -213,11 +225,22 @@ const HistoricoMedico = ({ prontuario }) => {
             const isExpanded = expandedItem === consulta.id;
 
             // Formatar data para exibição
-            const dataFormatada = consulta.data.toLocaleDateString("pt-BR");
-            const horaFormatada = consulta.data.toLocaleTimeString("pt-BR", {
-              hour: "2-digit",
-              minute: "2-digit"
-            });
+            let dataFormatada, horaFormatada;
+            try {
+              // Verifica se consulta.data é uma string ou objeto Date
+              const dataConsulta =
+                typeof consulta.data === "string" ? new Date(consulta.data) : consulta.data;
+
+              dataFormatada = dataConsulta.toLocaleDateString("pt-BR");
+              horaFormatada = dataConsulta.toLocaleTimeString("pt-BR", {
+                hour: "2-digit",
+                minute: "2-digit"
+              });
+            } catch (error) {
+              console.error("Erro ao formatar data:", error);
+              dataFormatada = consulta.data || "Data não disponível";
+              horaFormatada = "";
+            }
 
             return (
               <Paper
@@ -238,20 +261,22 @@ const HistoricoMedico = ({ prontuario }) => {
                   <ListItemText
                     primary={
                       <Box display="flex" justifyContent="space-between">
-                        <Typography variant="subtitle1">{consulta.medicoNome}</Typography>
+                        <Typography variant="subtitle1">
+                          {consulta.medico || consulta.medicoNome}
+                        </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {dataFormatada} às {horaFormatada}
+                          {dataFormatada} {horaFormatada ? `às ${horaFormatada}` : ""}
                         </Typography>
                       </Box>
                     }
                     secondary={
                       <React.Fragment>
                         <Typography variant="body2" color="text.primary" component="span">
-                          {consulta.especialidade} - {consulta.motivoConsulta}
+                          {consulta.especialidade} - {consulta.motivoConsulta || consulta.tipo}
                         </Typography>
                         <br />
                         <Typography variant="caption" color="text.secondary">
-                          {consulta.hipoteseDiagnostica}
+                          {consulta.hipoteseDiagnostica || consulta.diagnostico || ""}
                         </Typography>
                       </React.Fragment>
                     }

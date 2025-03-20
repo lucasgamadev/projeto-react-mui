@@ -62,6 +62,62 @@ export const ProntuarioProvider = ({ children }) => {
     }
   }, []);
 
+  // Função para carregar consultas de exemplo para o prontuário atual
+  const carregarConsultasExemplo = useCallback(async () => {
+    if (!prontuarioAtual?.id) {
+      setError("Nenhum prontuário selecionado");
+      return null;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      // Se já existem consultas, não adiciona novas
+      if (prontuarioAtual.consultas && prontuarioAtual.consultas.length > 0) {
+        console.log("O prontuário já possui consultas registradas");
+        return prontuarioAtual;
+      }
+
+      // Busca o prontuário novamente para garantir dados atualizados
+      const prontuarioOriginal = getProntuarioById(prontuarioAtual.id);
+      if (!prontuarioOriginal) {
+        throw new Error("Prontuário não encontrado");
+      }
+
+      // Verifica se o JSON tem consultas para este paciente
+      if (prontuarioOriginal.consultas && prontuarioOriginal.consultas.length > 0) {
+        // Converte as datas de string para objeto Date
+        const consultasAtualizadas = prontuarioOriginal.consultas.map((consulta) => {
+          if (typeof consulta.data === "string") {
+            return {
+              ...consulta,
+              data: new Date(consulta.data)
+            };
+          }
+          return consulta;
+        });
+
+        const prontuarioAtualizado = {
+          ...prontuarioOriginal,
+          consultas: consultasAtualizadas
+        };
+
+        // Atualiza o prontuário no localStorage e no estado
+        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+        setProntuarioAtual(prontuarioAtualizado);
+        return prontuarioAtualizado;
+      } else {
+        throw new Error("Não há consultas de exemplo disponíveis para este paciente");
+      }
+    } catch (err) {
+      console.error("Erro ao carregar consultas de exemplo:", err);
+      setError(err.message || "Erro ao carregar consultas de exemplo");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [prontuarioAtual]);
+
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
     setError(null);
@@ -228,7 +284,8 @@ export const ProntuarioProvider = ({ children }) => {
         adicionarAlergia,
         adicionarMedicamento,
         adicionarAnexo,
-        limparProntuario
+        limparProntuario,
+        carregarConsultasExemplo
       }}
     >
       {children}
