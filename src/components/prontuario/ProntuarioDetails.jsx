@@ -797,11 +797,32 @@ HistoricoFamiliar.propTypes = {
 
 // Componente para exibir anexos
 const Anexos = ({ prontuario }) => {
+  const { carregarAnexosExemplo, loading } = useProntuario();
+
+  const handleCarregarExemplos = async () => {
+    try {
+      await carregarAnexosExemplo();
+      alert("Anexos de exemplo carregados com sucesso!");
+    } catch (error) {
+      alert(`Erro ao carregar anexos: ${error.message}`);
+    }
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Documentos e Anexos
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" gutterBottom>
+          Documentos e Anexos
+        </Typography>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleCarregarExemplos}
+          disabled={loading}
+        >
+          {loading ? "Carregando..." : "Carregar Exemplos"}
+        </Button>
+      </Box>
       {prontuario.anexos.length === 0 ? (
         <Alert severity="info">Não há anexos disponíveis para este paciente.</Alert>
       ) : (

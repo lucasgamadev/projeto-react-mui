@@ -229,6 +229,35 @@ export const ProntuarioProvider = ({ children }) => {
     }
   };
 
+  const carregarAnexosExemplo = async () => {
+    try {
+      setLoading(true);
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+
+      if (pacienteAtual && pacienteAtual.anexos) {
+        const anexosAtualizados = pacienteAtual.anexos.map((anexo) => ({
+          ...anexo,
+          dataUpload: new Date(anexo.data),
+          categoria: anexo.tipo,
+          descricao: `Arquivo ${anexo.nome} (${anexo.tipo})`
+        }));
+
+        const prontuarioAtualizado = {
+          ...prontuarioAtual,
+          anexos: anexosAtualizados
+        };
+
+        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+        setProntuarioAtual(prontuarioAtualizado);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar anexos:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
     setError(null);
@@ -400,7 +429,8 @@ export const ProntuarioProvider = ({ children }) => {
         carregarMedicamentosExemplo,
         carregarAlergiasExemplo,
         carregarCirurgiasExemplo,
-        carregarHistoricoFamiliarExemplo
+        carregarHistoricoFamiliarExemplo,
+        carregarAnexosExemplo
       }}
     >
       {children}
