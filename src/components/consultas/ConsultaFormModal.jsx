@@ -21,7 +21,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import ptBR from "date-fns/locale/pt-BR";
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Lista de médicos para o sistema (em um sistema real, seria buscado do banco de dados)
 const medicos = [
@@ -35,6 +35,17 @@ const medicos = [
 const statusOptions = ["Agendada", "Confirmada", "Cancelada", "Realizada"];
 
 const ConsultaFormModal = ({ open, onClose, onSave }) => {
+  const pacienteInputRef = useRef(null);
+
+  useEffect(() => {
+    if (open) {
+      // Pequeno delay para garantir que o modal esteja completamente renderizado
+      setTimeout(() => {
+        pacienteInputRef.current?.focus();
+      }, 100);
+    }
+  }, [open]);
+
   const [consulta, setConsulta] = useState({
     paciente: "",
     data: null,
@@ -194,6 +205,7 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
         <Grid container spacing={2} sx={{ mt: 0.5 }}>
           <Grid item xs={12}>
             <TextField
+              inputRef={pacienteInputRef}
               name="paciente"
               label="Nome do Paciente"
               value={consulta.paciente}
@@ -203,7 +215,6 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
               error={errors.paciente}
               helperText={errors.paciente ? "Nome do paciente é obrigatório" : ""}
               margin="normal"
-              autoFocus
             />
           </Grid>
           <Grid item xs={12} sm={6}>

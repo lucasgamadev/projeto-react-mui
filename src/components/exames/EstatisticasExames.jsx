@@ -8,37 +8,8 @@ import {
   Grid,
   Typography
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ExameModel from "../../models/ExameModel";
-
-// Simulando os dados para os gráficos
-// Em uma implementação real, esses dados viriam do backend
-const gerarDadosExamesPorCategoria = () => {
-  const categorias = ["Hematologia", "Bioquímica", "Imagem", "Urinálise", "Microbiologia"];
-  return categorias.map((categoria) => ({
-    categoria,
-    solicitados: Math.floor(Math.random() * 30) + 5,
-    concluidos: Math.floor(Math.random() * 20) + 3
-  }));
-};
-
-const gerarDadosExamesPorStatus = () => {
-  return [
-    { status: "Solicitado", quantidade: 12 },
-    { status: "Em Andamento", quantidade: 8 },
-    { status: "Concluído", quantidade: 25 },
-    { status: "Cancelado", quantidade: 3 }
-  ];
-};
-
-const gerarDadosExamesPorPrioridade = () => {
-  return [
-    { prioridade: "Baixa", quantidade: 10 },
-    { prioridade: "Normal", quantidade: 20 },
-    { prioridade: "Alta", quantidade: 12 },
-    { prioridade: "Urgente", quantidade: 5 }
-  ];
-};
 
 const EstatisticasExames = ({ periodo = "mes" }) => {
   const [loading, setLoading] = useState(true);

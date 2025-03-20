@@ -20,7 +20,7 @@ import {
   Tooltip,
   Typography
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ExameModel from "../../models/ExameModel";
 
 const TabelaTiposExames = ({ onEdit, onDelete, onView }) => {
@@ -29,7 +29,6 @@ const TabelaTiposExames = ({ onEdit, onDelete, onView }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filtro, setFiltro] = useState("");
-  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     carregarTiposExames();
@@ -40,7 +39,6 @@ const TabelaTiposExames = ({ onEdit, onDelete, onView }) => {
       setLoading(true);
       const tipos = await ExameModel.listarTiposExames();
       setTiposExames(tipos);
-      setTotalItems(tipos.length);
       setLoading(false);
     } catch (error) {
       console.error("Erro ao carregar tipos de exames:", error);

@@ -2,7 +2,6 @@
   "name": "modern-login-mui",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@babel/runtime": "^7.26.10",
     "@emotion/react": "^11.11.1",
@@ -29,7 +28,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint --config eslint.config.js ./**/*.js"
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [

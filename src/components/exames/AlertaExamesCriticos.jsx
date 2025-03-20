@@ -17,9 +17,7 @@ import {
   TableRow,
   Typography
 } from "@mui/material";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ExameModel from "../../models/ExameModel";
 
 const AlertaExamesCriticos = ({ onVerExame, mostrarApenasResumo = false }) => {
@@ -43,51 +41,6 @@ const AlertaExamesCriticos = ({ onVerExame, mostrarApenasResumo = false }) => {
       setErro("Não foi possível carregar os exames críticos. Tente novamente mais tarde.");
       setLoading(false);
     }
-  };
-
-  const formatarData = (data) => {
-    if (!data) return "Data não disponível";
-
-    try {
-      const dataObj = typeof data === "string" ? new Date(data) : data;
-      return format(dataObj, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    } catch (error) {
-      console.error("Erro ao formatar data:", error);
-      return "Data inválida";
-    }
-  };
-
-  const verificarParametrosCriticos = (exame) => {
-    if (!exame.resultado || !exame.tipoExame || !exame.tipoExame.valoresReferencia) {
-      return [];
-    }
-
-    const parametrosCriticos = [];
-
-    Object.entries(exame.resultado.valores).forEach(([parametro, valor]) => {
-      const referencia = exame.tipoExame.valoresReferencia[parametro];
-      if (!referencia) return;
-
-      const valorNumerico = parseFloat(valor);
-      const minimo = parseFloat(referencia.minimo);
-      const maximo = parseFloat(referencia.maximo);
-
-      if (
-        !isNaN(valorNumerico) &&
-        !isNaN(minimo) &&
-        !isNaN(maximo) &&
-        (valorNumerico < minimo || valorNumerico > maximo)
-      ) {
-        parametrosCriticos.push({
-          nome: parametro,
-          valor: `${valor} ${referencia.unidade || ""}`,
-          referencia: `${referencia.minimo} - ${referencia.maximo} ${referencia.unidade || ""}`,
-          tipo: valorNumerico < minimo ? "abaixo" : "acima"
-        });
-      }
-    });
-
-    return parametrosCriticos;
   };
 
   if (loading) {
