@@ -494,20 +494,19 @@ const Medicamentos = ({ prontuario }) => {
       {prontuario.medicamentos.length === 0 ? (
         <Alert severity="info">Não há medicamentos registrados para este paciente.</Alert>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="stretch">
           {prontuario.medicamentos.map((medicamento) => {
             return (
-              <Grid item xs={12} sm={6} md={4} key={medicamento.id}>
+              <Grid item xs={12} sm={6} md={4} key={medicamento.id} style={{ display: "flex" }}>
                 <Paper
                   sx={{
                     p: 2,
                     border: 1,
                     borderColor: medicamento.continuo ? "success.main" : "primary.main",
                     bgcolor: medicamento.continuo ? "success.lighter" : "primary.lighter",
-                    minHeight: "120px",
-                    height: "auto",
                     display: "flex",
                     flexDirection: "column",
+                    width: "100%",
                     transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
                     "&:hover": {
                       transform: "translateY(-3px)",
@@ -590,9 +589,9 @@ const AlergiasEPrecaucoes = ({ prontuario }) => {
       {prontuario.alergias.length === 0 ? (
         <Alert severity="info">Não há alergias registradas para este paciente.</Alert>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="stretch">
           {prontuario.alergias.map((alergia, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} key={index} style={{ display: "flex" }}>
               <Paper
                 sx={{
                   p: 2,
@@ -609,10 +608,9 @@ const AlergiasEPrecaucoes = ({ prontuario }) => {
                       : alergia.gravidade === "Moderada"
                         ? "warning.lighter"
                         : "info.lighter",
-                  minHeight: "120px",
-                  height: "auto",
                   display: "flex",
                   flexDirection: "column",
+                  width: "100%",
                   transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-3px)",
@@ -716,19 +714,18 @@ const Cirurgias = ({ prontuario }) => {
       {prontuario.cirurgias.length === 0 ? (
         <Alert severity="info">Não há cirurgias registradas para este paciente.</Alert>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="stretch">
           {prontuario.cirurgias.map((cirurgia, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} key={index} style={{ display: "flex" }}>
               <Paper
                 sx={{
                   p: 2,
                   border: 1,
                   borderColor: "secondary.main",
                   bgcolor: "secondary.lighter",
-                  minHeight: "120px",
-                  height: "auto",
                   display: "flex",
                   flexDirection: "column",
+                  width: "100%",
                   transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
                   "&:hover": {
                     transform: "translateY(-3px)",
@@ -811,19 +808,18 @@ const HistoricoFamiliar = ({ prontuario }) => {
         <Alert severity="info">Não há doenças familiares registradas para este paciente.</Alert>
       ) : (
         <React.Fragment>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} alignItems="stretch">
             {prontuario.historicoFamiliar.doencas.map((doenca, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index} style={{ display: "flex" }}>
                 <Paper
                   sx={{
                     p: 2,
                     border: 1,
                     borderColor: "info.main",
                     bgcolor: "info.lighter",
-                    minHeight: "120px",
-                    height: "auto",
                     display: "flex",
                     flexDirection: "column",
+                    width: "100%",
                     transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
                     "&:hover": {
                       transform: "translateY(-3px)",
@@ -956,21 +952,29 @@ const Anexos = ({ prontuario }) => {
       {prontuario.anexos.length === 0 ? (
         <Alert severity="info">Não há anexos disponíveis para este paciente.</Alert>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="stretch" sx={{ alignContent: "flex-start" }}>
           {prontuario.anexos.map((anexo) => {
             const color = getColorByFileType(anexo.categoria);
             return (
-              <Grid item xs={12} sm={6} md={4} key={anexo.id}>
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={anexo.id}
+                style={{ display: "flex", height: "100%" }}
+              >
                 <Paper
                   sx={{
                     p: 2,
-                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
                     border: 1,
                     borderColor: `${color}.main`,
                     bgcolor: `${color}.lighter`,
-                    minHeight: "200px",
+                    width: "100%",
+                    height: "100%",
+                    minHeight: "160px",
                     transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
                     "&:hover": {
                       transform: "translateY(-3px)",
