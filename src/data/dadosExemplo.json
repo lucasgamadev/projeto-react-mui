@@ -717,6 +717,290 @@
           "autor": "Dra. Mariana Costa"
         }
       ]
+    },
+    {
+      "nomePaciente": "Fernanda Costa",
+      "dataNascimento": "05/12/1983",
+      "sexo": "F",
+      "cpf": "999.888.777-66",
+      "contatos": [
+        { "tipo": "Celular", "valor": "(11) 97777-6666", "principal": true },
+        { "tipo": "Email", "valor": "fernanda.costa@email.com", "principal": false },
+        { "tipo": "Trabalho", "valor": "(11) 3333-4444", "principal": false }
+      ],
+      "dadosPessoais": {
+        "estadoCivil": "Divorciada",
+        "profissao": "Psicóloga",
+        "nacionalidade": "Brasileira",
+        "naturalidade": "Rio de Janeiro - RJ",
+        "endereco": "Rua das Flores, 300 - Jardim América, São Paulo - SP",
+        "tipoSanguineo": "O+",
+        "convenio": "Saúde Total",
+        "numeroConvenio": "123456789"
+      },
+      "consultas": [
+        {
+          "id": 1,
+          "data": "2024-03-15T10:00:00",
+          "tipo": "Consulta de Rotina",
+          "medico": "Dra. Beatriz Santos",
+          "especialidade": "Ginecologia",
+          "diagnostico": "Síndrome dos Ovários Policísticos",
+          "prescricao": "Metformina 500mg",
+          "observacoes": "Paciente com irregularidade menstrual"
+        },
+        {
+          "id": 2,
+          "data": "2024-02-20T14:30:00",
+          "tipo": "Consulta Especializada",
+          "medico": "Dr. Ricardo Mendes",
+          "especialidade": "Endocrinologia",
+          "diagnostico": "Hipotireoidismo",
+          "prescricao": "Levotiroxina 50mcg",
+          "observacoes": "Início do tratamento para hipotireoidismo"
+        }
+      ],
+      "medicamentos": [
+        {
+          "id": 1,
+          "nome": "Metformina",
+          "dosagem": "500mg",
+          "frequencia": "2x ao dia",
+          "dataInicio": "2024-03-15",
+          "dataFim": null,
+          "observacoes": "Tomar durante as refeições"
+        },
+        {
+          "id": 2,
+          "nome": "Levotiroxina",
+          "dosagem": "50mcg",
+          "frequencia": "1x ao dia",
+          "dataInicio": "2024-02-20",
+          "dataFim": null,
+          "observacoes": "Tomar em jejum"
+        }
+      ],
+      "exames": [
+        {
+          "id": 1,
+          "tipo": "Ultrassom Pélvico",
+          "data": "2024-03-15",
+          "resultado": "Ovários policísticos",
+          "laboratorio": "Imagem Diagnósticos",
+          "observacoes": "Presença de múltiplos cistos nos ovários"
+        },
+        {
+          "id": 2,
+          "tipo": "TSH e T4 Livre",
+          "data": "2024-02-20",
+          "resultado": "TSH: 8.5 mUI/L, T4: 0.8 ng/dL",
+          "laboratorio": "Lab Saúde",
+          "observacoes": "Valores indicativos de hipotireoidismo"
+        }
+      ],
+      "alergias": [
+        {
+          "id": 1,
+          "substancia": "Penicilina",
+          "gravidade": "Grave",
+          "observacoes": "Reação anafilática"
+        }
+      ],
+      "cirurgias": [
+        {
+          "id": 1,
+          "tipo": "Apêndice",
+          "data": "2015-08-10",
+          "medico": "Dr. Carlos Silva",
+          "hospital": "Hospital São Francisco",
+          "observacoes": "Cirurgia de emergência por apendicite aguda"
+        }
+      ],
+      "historicoFamiliar": {
+        "doencas": [
+          {
+            "doenca": "Diabetes Tipo 2",
+            "parente": "Mãe",
+            "observacoes": "Diagnosticada aos 45 anos"
+          },
+          {
+            "doenca": "Câncer de Mama",
+            "parente": "Tia",
+            "observacoes": "Diagnosticada aos 50 anos"
+          }
+        ],
+        "observacoes": "Histórico de diabetes e câncer na família"
+      },
+      "anexos": [
+        {
+          "id": 1,
+          "tipo": "Exame",
+          "nome": "Ultrassom_Pelvico_15_03_2024.pdf",
+          "data": "2024-03-15",
+          "url": "/uploads/ultrassom_pelvico.pdf"
+        },
+        {
+          "id": 2,
+          "tipo": "Receita",
+          "nome": "Receita_Levotiroxina_20_02_2024.pdf",
+          "data": "2024-02-20",
+          "url": "/uploads/receita_levotiroxina.pdf"
+        }
+      ],
+      "observacoes": [
+        {
+          "id": 1,
+          "data": "2024-03-15T10:30:00",
+          "tipo": "Observação Clínica",
+          "conteudo": "Paciente com SOP. Recomendado controle hormonal e dieta",
+          "autor": "Dra. Beatriz Santos"
+        },
+        {
+          "id": 2,
+          "data": "2024-02-20T15:00:00",
+          "tipo": "Observação Clínica",
+          "conteudo": "Início do tratamento para hipotireoidismo. Acompanhamento mensal",
+          "autor": "Dr. Ricardo Mendes"
+        }
+      ]
+    },
+    {
+      "nomePaciente": "Pedro Santos",
+      "dataNascimento": "28/09/1975",
+      "sexo": "M",
+      "cpf": "777.888.999-00",
+      "contatos": [
+        { "tipo": "Celular", "valor": "(11) 98888-7777", "principal": true },
+        { "tipo": "Email", "valor": "pedro.santos@email.com", "principal": false }
+      ],
+      "dadosPessoais": {
+        "estadoCivil": "Casado",
+        "profissao": "Engenheiro Civil",
+        "nacionalidade": "Brasileira",
+        "naturalidade": "Belo Horizonte - MG",
+        "endereco": "Av. Paulista, 1000 - Bela Vista, São Paulo - SP",
+        "tipoSanguineo": "A+",
+        "convenio": "Saúde Premium",
+        "numeroConvenio": "987654321"
+      },
+      "consultas": [
+        {
+          "id": 1,
+          "data": "2024-03-01T09:00:00",
+          "tipo": "Consulta de Rotina",
+          "medico": "Dr. Marcelo Oliveira",
+          "especialidade": "Cardiologia",
+          "diagnostico": "Hipertensão estágio 1",
+          "prescricao": "Losartana 50mg",
+          "observacoes": "Paciente com pressão arterial elevada"
+        },
+        {
+          "id": 2,
+          "data": "2024-01-15T11:30:00",
+          "tipo": "Consulta Especializada",
+          "medico": "Dra. Ana Paula Lima",
+          "especialidade": "Ortopedia",
+          "diagnostico": "Artrose de Joelho",
+          "prescricao": "Anti-inflamatório",
+          "observacoes": "Paciente com dor no joelho direito"
+        }
+      ],
+      "medicamentos": [
+        {
+          "id": 1,
+          "nome": "Losartana",
+          "dosagem": "50mg",
+          "frequencia": "1x ao dia",
+          "dataInicio": "2024-03-01",
+          "dataFim": null,
+          "observacoes": "Tomar pela manhã"
+        },
+        {
+          "id": 2,
+          "nome": "Diclofenaco",
+          "dosagem": "50mg",
+          "frequencia": "3x ao dia",
+          "dataInicio": "2024-01-15",
+          "dataFim": "2024-01-22",
+          "observacoes": "Tomar após as refeições"
+        }
+      ],
+      "exames": [
+        {
+          "id": 1,
+          "tipo": "Eletrocardiograma",
+          "data": "2024-03-01",
+          "resultado": "Normal",
+          "laboratorio": "Cardio Diagnósticos",
+          "observacoes": "Ritmo sinusal normal"
+        },
+        {
+          "id": 2,
+          "tipo": "Radiografia do Joelho",
+          "data": "2024-01-15",
+          "resultado": "Artrose grau 2",
+          "laboratorio": "Imagem Diagnósticos",
+          "observacoes": "Desgaste articular moderado"
+        }
+      ],
+      "alergias": [],
+      "cirurgias": [
+        {
+          "id": 1,
+          "tipo": "Artroscopia de Joelho",
+          "data": "2019-05-20",
+          "medico": "Dr. João Silva",
+          "hospital": "Hospital Ortopédico",
+          "observacoes": "Cirurgia para menisco"
+        }
+      ],
+      "historicoFamiliar": {
+        "doencas": [
+          {
+            "doenca": "Infarto Agudo do Miocárdio",
+            "parente": "Pai",
+            "observacoes": "Aos 60 anos"
+          },
+          {
+            "doenca": "Hipertensão",
+            "parente": "Mãe",
+            "observacoes": "Diagnosticada aos 55 anos"
+          }
+        ],
+        "observacoes": "Histórico de doenças cardiovasculares na família"
+      },
+      "anexos": [
+        {
+          "id": 1,
+          "tipo": "Exame",
+          "nome": "ECG_01_03_2024.pdf",
+          "data": "2024-03-01",
+          "url": "/uploads/ecg.pdf"
+        },
+        {
+          "id": 2,
+          "tipo": "Receita",
+          "nome": "Receita_Losartana_01_03_2024.pdf",
+          "data": "2024-03-01",
+          "url": "/uploads/receita_losartana.pdf"
+        }
+      ],
+      "observacoes": [
+        {
+          "id": 1,
+          "data": "2024-03-01T09:30:00",
+          "tipo": "Observação Clínica",
+          "conteudo": "Paciente com hipertensão. Recomendado controle de pressão e dieta",
+          "autor": "Dr. Marcelo Oliveira"
+        },
+        {
+          "id": 2,
+          "data": "2024-01-15T12:00:00",
+          "tipo": "Observação Clínica",
+          "conteudo": "Paciente com artrose. Recomendado fisioterapia e exercícios",
+          "autor": "Dra. Ana Paula Lima"
+        }
+      ]
     }
   ]
 }

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import dadosExemplo from "../data/dadosExemplo.json";
 import {
   addProntuario,
   getProntuarioById,
@@ -64,51 +65,44 @@ export const ProntuarioProvider = ({ children }) => {
 
   // Função para carregar consultas de exemplo para o prontuário atual
   const carregarConsultasExemplo = useCallback(async () => {
-    if (!prontuarioAtual?.id) {
-      setError("Nenhum prontuário selecionado");
-      return null;
+    if (!prontuarioAtual) {
+      throw new Error("Nenhum prontuário selecionado");
     }
 
     setLoading(true);
     setError(null);
     try {
-      // Se já existem consultas, não adiciona novas
-      if (prontuarioAtual.consultas && prontuarioAtual.consultas.length > 0) {
-        console.log("O prontuário já possui consultas registradas");
-        return prontuarioAtual;
-      }
+      // Busca o paciente correspondente no arquivo de exemplo
+      const pacienteExemplo = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual.cpf);
 
-      // Busca o prontuário novamente para garantir dados atualizados
-      const prontuarioOriginal = getProntuarioById(prontuarioAtual.id);
-      if (!prontuarioOriginal) {
-        throw new Error("Prontuário não encontrado");
-      }
-
-      // Verifica se o JSON tem consultas para este paciente
-      if (prontuarioOriginal.consultas && prontuarioOriginal.consultas.length > 0) {
-        // Converte as datas de string para objeto Date
-        const consultasAtualizadas = prontuarioOriginal.consultas.map((consulta) => {
-          if (typeof consulta.data === "string") {
-            return {
-              ...consulta,
-              data: new Date(consulta.data)
-            };
-          }
-          return consulta;
-        });
-
-        const prontuarioAtualizado = {
-          ...prontuarioOriginal,
-          consultas: consultasAtualizadas
-        };
-
-        // Atualiza o prontuário no localStorage e no estado
-        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
-        setProntuarioAtual(prontuarioAtualizado);
-        return prontuarioAtualizado;
-      } else {
+      if (
+        !pacienteExemplo ||
+        !pacienteExemplo.consultas ||
+        pacienteExemplo.consultas.length === 0
+      ) {
         throw new Error("Não há consultas de exemplo disponíveis para este paciente");
       }
+
+      // Converte as datas de string para objeto Date
+      const consultasAtualizadas = pacienteExemplo.consultas.map((consulta) => {
+        if (typeof consulta.data === "string") {
+          return {
+            ...consulta,
+            data: new Date(consulta.data)
+          };
+        }
+        return consulta;
+      });
+
+      const prontuarioAtualizado = {
+        ...prontuarioAtual,
+        consultas: consultasAtualizadas
+      };
+
+      // Atualiza o prontuário no localStorage e no estado
+      updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+      setProntuarioAtual(prontuarioAtualizado);
+      return prontuarioAtualizado;
     } catch (err) {
       console.error("Erro ao carregar consultas de exemplo:", err);
       setError(err.message || "Erro ao carregar consultas de exemplo");

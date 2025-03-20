@@ -298,39 +298,49 @@ const HistoricoMedico = ({ prontuario }) => {
                           Sinais Vitais
                         </Typography>
                         <Grid container spacing={1}>
-                          <Grid item xs={6} sm={3}>
-                            <Typography variant="caption" display="block">
-                              Pressão Arterial
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.sinaisVitais.pressaoArterialSistolica}/
-                              {consulta.sinaisVitais.pressaoArterialDiastolica} mmHg
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6} sm={3}>
-                            <Typography variant="caption" display="block">
-                              Freq. Cardíaca
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.sinaisVitais.frequenciaCardiaca} bpm
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6} sm={3}>
-                            <Typography variant="caption" display="block">
-                              Temperatura
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.sinaisVitais.temperatura} °C
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6} sm={3}>
-                            <Typography variant="caption" display="block">
-                              SatO2
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.sinaisVitais.saturacaoOxigenio}%
-                            </Typography>
-                          </Grid>
+                          {consulta.sinaisVitais ? (
+                            <>
+                              <Grid item xs={6} sm={3}>
+                                <Typography variant="caption" display="block">
+                                  Pressão Arterial
+                                </Typography>
+                                <Typography variant="body2">
+                                  {consulta.sinaisVitais.pressaoArterialSistolica || "-"}/
+                                  {consulta.sinaisVitais.pressaoArterialDiastolica || "-"} mmHg
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Typography variant="caption" display="block">
+                                  Freq. Cardíaca
+                                </Typography>
+                                <Typography variant="body2">
+                                  {consulta.sinaisVitais.frequenciaCardiaca || "-"} bpm
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Typography variant="caption" display="block">
+                                  Temperatura
+                                </Typography>
+                                <Typography variant="body2">
+                                  {consulta.sinaisVitais.temperatura || "-"} °C
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Typography variant="caption" display="block">
+                                  SatO2
+                                </Typography>
+                                <Typography variant="body2">
+                                  {consulta.sinaisVitais.saturacaoOxigenio || "-"}%
+                                </Typography>
+                              </Grid>
+                            </>
+                          ) : (
+                            <Grid item xs={12}>
+                              <Typography variant="body2" color="text.secondary">
+                                Sinais vitais não registrados
+                              </Typography>
+                            </Grid>
+                          )}
                         </Grid>
                       </Grid>
 
@@ -351,7 +361,7 @@ const HistoricoMedico = ({ prontuario }) => {
                         </Grid>
                       )}
 
-                      {consulta.codigosCID.length > 0 && (
+                      {consulta.codigosCID && consulta.codigosCID.length > 0 && (
                         <Grid item xs={12}>
                           <Typography variant="subtitle2" color="text.secondary">
                             CID
@@ -371,7 +381,7 @@ const HistoricoMedico = ({ prontuario }) => {
                         <Typography variant="body2">{consulta.conduta}</Typography>
                       </Grid>
 
-                      {consulta.prescricoes.length > 0 && (
+                      {consulta.prescricoes && consulta.prescricoes.length > 0 && (
                         <Grid item xs={12}>
                           <Typography variant="subtitle2" color="text.secondary">
                             Prescrições
@@ -392,7 +402,7 @@ const HistoricoMedico = ({ prontuario }) => {
                         </Grid>
                       )}
 
-                      {consulta.examesSolicitados.length > 0 && (
+                      {consulta.examesSolicitados && consulta.examesSolicitados.length > 0 && (
                         <Grid item xs={12}>
                           <Typography variant="subtitle2" color="text.secondary">
                             Exames Solicitados
@@ -448,54 +458,60 @@ const Medicamentos = ({ prontuario }) => {
         <Alert severity="info">Não há medicamentos registrados para este paciente.</Alert>
       ) : (
         <Grid container spacing={2}>
-          {prontuario.medicamentos.map((medicamento) => (
-            <Grid item xs={12} md={6} key={medicamento.id}>
-              <Card sx={{ display: "flex", height: "100%" }}>
-                <Box
-                  sx={{
-                    width: 8,
-                    bgcolor: medicamento.continuo ? "success.main" : "primary.main"
-                  }}
-                />
-                <CardContent sx={{ flex: 1 }}>
-                  <Box display="flex" justifyContent="space-between">
-                    <Typography variant="h6">{medicamento.nome}</Typography>
-                    <Chip
-                      label={medicamento.continuo ? "Contínuo" : "Temporário"}
-                      size="small"
-                      color={medicamento.continuo ? "success" : "primary"}
-                    />
-                  </Box>
-                  <Typography color="text.secondary" variant="subtitle2">
-                    {medicamento.principioAtivo} - {medicamento.concentracao}
-                  </Typography>
-                  <Divider sx={{ my: 1 }} />
+          {prontuario.medicamentos.map((medicamento) => {
+            // Converter datas de string para objeto Date
+            const dataInicio = new Date(medicamento.dataInicio);
+            const dataFim = medicamento.dataFim ? new Date(medicamento.dataFim) : null;
 
-                  <Typography variant="body2">
-                    <strong>Posologia:</strong> {medicamento.posologia}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Forma:</strong> {medicamento.formaFarmaceutica}
-                  </Typography>
-                  <Box sx={{ mt: 1 }}>
-                    <Typography variant="caption" display="block">
-                      <strong>Início:</strong> {medicamento.dataInicio.toLocaleDateString("pt-BR")}
+            return (
+              <Grid item xs={12} md={6} key={medicamento.id}>
+                <Card sx={{ display: "flex", height: "100%" }}>
+                  <Box
+                    sx={{
+                      width: 8,
+                      bgcolor: medicamento.continuo ? "success.main" : "primary.main"
+                    }}
+                  />
+                  <CardContent sx={{ flex: 1 }}>
+                    <Box display="flex" justifyContent="space-between">
+                      <Typography variant="h6">{medicamento.nome}</Typography>
+                      <Chip
+                        label={medicamento.continuo ? "Contínuo" : "Temporário"}
+                        size="small"
+                        color={medicamento.continuo ? "success" : "primary"}
+                      />
+                    </Box>
+                    <Typography color="text.secondary" variant="subtitle2">
+                      {medicamento.principioAtivo} - {medicamento.concentracao}
                     </Typography>
-                    {!medicamento.continuo && medicamento.dataFim && (
+                    <Divider sx={{ my: 1 }} />
+
+                    <Typography variant="body2">
+                      <strong>Posologia:</strong> {medicamento.posologia}
+                    </Typography>
+                    <Typography variant="body2">
+                      <strong>Forma:</strong> {medicamento.formaFarmaceutica}
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
                       <Typography variant="caption" display="block">
-                        <strong>Término:</strong> {medicamento.dataFim.toLocaleDateString("pt-BR")}
+                        <strong>Início:</strong> {dataInicio.toLocaleDateString("pt-BR")}
+                      </Typography>
+                      {!medicamento.continuo && dataFim && (
+                        <Typography variant="caption" display="block">
+                          <strong>Término:</strong> {dataFim.toLocaleDateString("pt-BR")}
+                        </Typography>
+                      )}
+                    </Box>
+                    {medicamento.observacoes && (
+                      <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                        <strong>Obs:</strong> {medicamento.observacoes}
                       </Typography>
                     )}
-                  </Box>
-                  {medicamento.observacoes && (
-                    <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                      <strong>Obs:</strong> {medicamento.observacoes}
-                    </Typography>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
         </Grid>
       )}
     </Box>
