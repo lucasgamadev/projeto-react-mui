@@ -112,6 +112,34 @@ export const ProntuarioProvider = ({ children }) => {
     }
   }, [prontuarioAtual]);
 
+  const carregarMedicamentosExemplo = async () => {
+    try {
+      setLoading(true);
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+
+      if (pacienteAtual) {
+        const medicamentosAtualizados = pacienteAtual.medicamentos.map((medicamento) => ({
+          ...medicamento,
+          dataInicio: new Date(medicamento.dataInicio),
+          dataFim: medicamento.dataFim ? new Date(medicamento.dataFim) : null
+        }));
+
+        const prontuarioAtualizado = {
+          ...prontuarioAtual,
+          medicamentos: medicamentosAtualizados
+        };
+
+        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+        setProntuarioAtual(prontuarioAtualizado);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar medicamentos:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
     setError(null);
@@ -279,7 +307,8 @@ export const ProntuarioProvider = ({ children }) => {
         adicionarMedicamento,
         adicionarAnexo,
         limparProntuario,
-        carregarConsultasExemplo
+        carregarConsultasExemplo,
+        carregarMedicamentosExemplo
       }}
     >
       {children}

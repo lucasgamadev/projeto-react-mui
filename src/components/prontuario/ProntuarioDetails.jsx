@@ -449,11 +449,30 @@ HistoricoMedico.propTypes = {
 
 // Componente para exibir medicamentos do paciente
 const Medicamentos = ({ prontuario }) => {
+  const { carregarMedicamentosExemplo, loading } = useProntuario();
+
+  const handleCarregarExemplos = async () => {
+    try {
+      await carregarMedicamentosExemplo();
+      alert("Medicamentos de exemplo carregados com sucesso!");
+    } catch (error) {
+      alert(`Erro ao carregar medicamentos: ${error.message}`);
+    }
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Medicamentos em Uso
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Medicamentos em Uso</Typography>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleCarregarExemplos}
+          disabled={loading}
+        >
+          {loading ? "Carregando..." : "Carregar Exemplos"}
+        </Button>
+      </Box>
       {prontuario.medicamentos.length === 0 ? (
         <Alert severity="info">Não há medicamentos registrados para este paciente.</Alert>
       ) : (
