@@ -140,6 +140,33 @@ export const ProntuarioProvider = ({ children }) => {
     }
   };
 
+  const carregarAlergiasExemplo = async () => {
+    try {
+      setLoading(true);
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+
+      if (pacienteAtual) {
+        const alergiasAtualizadas = pacienteAtual.alergias.map((alergia) => ({
+          ...alergia,
+          dataIdentificacao: new Date(alergia.dataIdentificacao || new Date())
+        }));
+
+        const prontuarioAtualizado = {
+          ...prontuarioAtual,
+          alergias: alergiasAtualizadas
+        };
+
+        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+        setProntuarioAtual(prontuarioAtualizado);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar alergias:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
     setError(null);
@@ -308,7 +335,8 @@ export const ProntuarioProvider = ({ children }) => {
         adicionarAnexo,
         limparProntuario,
         carregarConsultasExemplo,
-        carregarMedicamentosExemplo
+        carregarMedicamentosExemplo,
+        carregarAlergiasExemplo
       }}
     >
       {children}

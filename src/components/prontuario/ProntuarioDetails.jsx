@@ -543,11 +543,30 @@ Medicamentos.propTypes = {
 
 // Componente para exibir alergias e precauções
 const AlergiasEPrecaucoes = ({ prontuario }) => {
+  const { carregarAlergiasExemplo, loading } = useProntuario();
+
+  const handleCarregarExemplos = async () => {
+    try {
+      await carregarAlergiasExemplo();
+      alert("Alergias de exemplo carregadas com sucesso!");
+    } catch (error) {
+      alert(`Erro ao carregar alergias: ${error.message}`);
+    }
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom color="error">
-        Alergias e Reações Adversas
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Alergias</Typography>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleCarregarExemplos}
+          disabled={loading}
+        >
+          {loading ? "Carregando..." : "Carregar Exemplos"}
+        </Button>
+      </Box>
       {prontuario.alergias.length === 0 ? (
         <Alert severity="info">Não há alergias registradas para este paciente.</Alert>
       ) : (
@@ -600,7 +619,10 @@ const AlergiasEPrecaucoes = ({ prontuario }) => {
                   </Typography>
                 )}
                 <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                  Identificada em: {alergia.dataIdentificacao.toLocaleDateString("pt-BR")}
+                  Identificada em:{" "}
+                  {alergia.dataIdentificacao
+                    ? new Date(alergia.dataIdentificacao).toLocaleDateString("pt-BR")
+                    : "Data não informada"}
                 </Typography>
               </Paper>
             </Grid>
@@ -846,7 +868,7 @@ const ProntuarioDetails = ({ prontuario }) => {
           </Box>
         </Box>
 
-        {prontuario.alergias.length > 0 && (
+        {prontuario.alergias && prontuario.alergias.length > 0 && (
           <Box
             sx={{
               bgcolor: "error.lighter",
@@ -861,7 +883,7 @@ const ProntuarioDetails = ({ prontuario }) => {
             <Typography variant="body2" color="error">
               <strong>Alerta de Alergias:</strong>{" "}
               {prontuario.alergias
-                .map((a) => a.agente + (a.gravidade === "Grave" ? " (Grave)" : ""))
+                .map((a) => `${a.agente}${a.gravidade === "Grave" ? " (Grave)" : ""}`)
                 .join(", ")}
             </Typography>
           </Box>
