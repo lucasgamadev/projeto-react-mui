@@ -723,11 +723,32 @@ Cirurgias.propTypes = {
 
 // Componente para exibir histórico familiar
 const HistoricoFamiliar = ({ prontuario }) => {
+  const { carregarHistoricoFamiliarExemplo, loading } = useProntuario();
+
+  const handleCarregarExemplos = async () => {
+    try {
+      await carregarHistoricoFamiliarExemplo();
+      alert("Histórico familiar de exemplo carregado com sucesso!");
+    } catch (error) {
+      alert(`Erro ao carregar histórico familiar: ${error.message}`);
+    }
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Histórico Familiar
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" gutterBottom>
+          Histórico Familiar
+        </Typography>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleCarregarExemplos}
+          disabled={loading}
+        >
+          {loading ? "Carregando..." : "Carregar Exemplos"}
+        </Button>
+      </Box>
       {prontuario.historicoFamiliar.doencas.length === 0 ? (
         <Alert severity="info">Não há doenças familiares registradas para este paciente.</Alert>
       ) : (

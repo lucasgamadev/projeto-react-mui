@@ -199,6 +199,36 @@ export const ProntuarioProvider = ({ children }) => {
     }
   };
 
+  const carregarHistoricoFamiliarExemplo = async () => {
+    try {
+      setLoading(true);
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+
+      if (pacienteAtual && pacienteAtual.historicoFamiliar) {
+        const historicoFamiliarAtualizado = {
+          doencas: pacienteAtual.historicoFamiliar.doencas.map((doenca) => ({
+            ...doenca,
+            parentesco: doenca.parente
+          })),
+          observacoes: pacienteAtual.historicoFamiliar.observacoes
+        };
+
+        const prontuarioAtualizado = {
+          ...prontuarioAtual,
+          historicoFamiliar: historicoFamiliarAtualizado
+        };
+
+        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+        setProntuarioAtual(prontuarioAtualizado);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar histórico familiar:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
     setError(null);
@@ -369,7 +399,8 @@ export const ProntuarioProvider = ({ children }) => {
         carregarConsultasExemplo,
         carregarMedicamentosExemplo,
         carregarAlergiasExemplo,
-        carregarCirurgiasExemplo
+        carregarCirurgiasExemplo,
+        carregarHistoricoFamiliarExemplo
       }}
     >
       {children}
