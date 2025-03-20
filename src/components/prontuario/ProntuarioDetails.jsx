@@ -792,7 +792,13 @@ const HistoricoFamiliar = ({ prontuario }) => {
                     p: 2,
                     border: 1,
                     borderColor: "info.main",
-                    bgcolor: "info.lighter"
+                    bgcolor: "info.lighter",
+                    minHeight: "140px",
+                    transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-3px)",
+                      boxShadow: 3
+                    }
                   }}
                 >
                   <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -812,9 +818,22 @@ const HistoricoFamiliar = ({ prontuario }) => {
           </Grid>
 
           {prontuario.historicoFamiliar.observacoes && (
-            <Paper sx={{ mt: 3, p: 2, bgcolor: "background.paper" }}>
-              <Typography variant="subtitle2" gutterBottom color="text.secondary">
-                Observações Gerais:
+            <Paper
+              sx={{
+                mt: 3,
+                p: 2,
+                border: 1,
+                borderColor: "info.main",
+                bgcolor: "info.lighter",
+                transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                "&:hover": {
+                  transform: "translateY(-3px)",
+                  boxShadow: 3
+                }
+              }}
+            >
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                Observações Gerais
               </Typography>
               <Typography variant="body2">{prontuario.historicoFamiliar.observacoes}</Typography>
             </Paper>
