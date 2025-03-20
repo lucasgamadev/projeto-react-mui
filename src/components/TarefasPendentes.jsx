@@ -25,7 +25,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Estilização para o cartão
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -251,7 +251,10 @@ const TarefasPendentes = ({
                 <StyledListItem
                   key={tarefa.id}
                   disablePadding
-                  completed={tarefa.concluida}
+                  data-completed={tarefa.concluida ? "true" : "false"}
+                  sx={{
+                    opacity: tarefa.concluida ? 0.7 : 1
+                  }}
                   secondaryAction={
                     <Chip
                       label={texto}

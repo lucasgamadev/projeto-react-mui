@@ -17,7 +17,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { ptBR } from "date-fns/locale";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ConsultaFormModal = ({ open, onClose, onSave }) => {
   const [consulta, setConsulta] = useState({
@@ -173,8 +173,12 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
               <DateTimePicker
                 label="Data e Hora"
                 value={consulta.data}
-                onChange={(newValue) => handleChange("data", newValue)}
-                renderInput={(params) => <TextField {...params} fullWidth required />}
+                onChange={(newValue) => {
+                  setConsulta((prev) => ({ ...prev, data: newValue }));
+                }}
+                slots={{
+                  textField: (params) => <TextField {...params} fullWidth required />
+                }}
               />
             </LocalizationProvider>
           </Grid>

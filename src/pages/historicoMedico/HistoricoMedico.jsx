@@ -38,7 +38,7 @@ import {
   Typography
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HistoricoTimeline from "../../components/historicoMedico/HistoricoTimeline";
 import { historicoExemplo } from "../../models/HistoricoMedicoModel";
 
@@ -731,7 +731,11 @@ const HistoricoMedico = () => {
                             label="Data Inicial"
                             value={filtros.dataInicio}
                             onChange={(newValue) => handleFiltroChange("dataInicio", newValue)}
-                            slotProps={{ textField: { size: "small", fullWidth: true } }}
+                            slots={{
+                              textField: (params) => (
+                                <TextField {...params} size="small" fullWidth />
+                              )
+                            }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -739,7 +743,11 @@ const HistoricoMedico = () => {
                             label="Data Final"
                             value={filtros.dataFim}
                             onChange={(newValue) => handleFiltroChange("dataFim", newValue)}
-                            slotProps={{ textField: { size: "small", fullWidth: true } }}
+                            slots={{
+                              textField: (params) => (
+                                <TextField {...params} size="small" fullWidth />
+                              )
+                            }}
                           />
                         </Grid>
                       </Grid>

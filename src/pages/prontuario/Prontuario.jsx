@@ -20,7 +20,7 @@ import {
   Typography
 } from "@mui/material";
 import debounce from "lodash/debounce";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProntuarioDetails from "../../components/prontuario/ProntuarioDetails";
 import { useProntuario } from "../../contexts/ProntuarioContext";
 
@@ -219,6 +219,33 @@ const Prontuario = () => {
                 : "Nenhum paciente encontrado"
             }
             loadingText="Buscando pacientes..."
+            slots={{
+              textField: (params) => (
+                <TextField
+                  {...params}
+                  label="Nome ou CPF do paciente"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  InputProps={{
+                    ...params.InputProps,
+                    startAdornment: (
+                      <>
+                        <InputAdornment position="start">
+                          <SearchIcon color="action" />
+                        </InputAdornment>
+                        {params.InputProps.startAdornment}
+                      </>
+                    )
+                  }}
+                  helperText={
+                    searchResults.length === 0
+                      ? "Digite pelo menos 3 caracteres para buscar ou use o botão 'Carregar Exemplos'"
+                      : ""
+                  }
+                />
+              )
+            }}
           />
 
           {error && (

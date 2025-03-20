@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-import React from "react";
 
 // Estilização para o card
 const StyledCard = styled(Card)(({ theme, color }) => ({
@@ -88,7 +87,10 @@ const CardEstatistico = ({
                 <Tooltip
                   title={`${isPositive ? "Aumento" : "Diminuição"} de ${Math.abs(diferenca)}%`}
                 >
-                  <Difference isPositive={isPositive}>
+                  <Difference
+                    data-is-positive={isPositive ? "true" : "false"}
+                    sx={{ "&": isPositive ? {} : {} }}
+                  >
                     {isPositive ? "+" : ""}
                     {diferenca}%
                   </Difference>

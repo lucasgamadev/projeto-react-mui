@@ -17,7 +17,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { ptBR } from "date-fns/locale";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { criarTratamento } from "../../models/TratamentoModel";
 
 const TratamentoFormModal = ({ open, onClose, pacienteId, pacienteNome, onSave, medicos = [] }) => {
@@ -197,15 +197,17 @@ const TratamentoFormModal = ({ open, onClose, pacienteId, pacienteNome, onSave, 
                     }));
                   }
                 }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    required
-                    error={!!errors.dataInicio}
-                    helperText={errors.dataInicio}
-                  />
-                )}
+                slots={{
+                  textField: (params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      required
+                      error={!!errors.dataInicio}
+                      helperText={errors.dataInicio}
+                    />
+                  )
+                }}
               />
             </LocalizationProvider>
           </Grid>
@@ -221,7 +223,9 @@ const TratamentoFormModal = ({ open, onClose, pacienteId, pacienteNome, onSave, 
                     dataFim: newValue
                   }));
                 }}
-                renderInput={(params) => <TextField {...params} fullWidth />}
+                slots={{
+                  textField: (params) => <TextField {...params} fullWidth />
+                }}
               />
             </LocalizationProvider>
           </Grid>
@@ -232,15 +236,17 @@ const TratamentoFormModal = ({ open, onClose, pacienteId, pacienteNome, onSave, 
               getOptionLabel={(option) => `${option.nome} (${option.especialidade})`}
               value={medicoSelecionado}
               onChange={handleMedicoChange}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Médico Responsável"
-                  required
-                  error={!!errors.medicoId}
-                  helperText={errors.medicoId}
-                />
-              )}
+              slots={{
+                textField: (params) => (
+                  <TextField
+                    {...params}
+                    label="Médico Responsável"
+                    required
+                    error={!!errors.medicoId}
+                    helperText={errors.medicoId}
+                  />
+                )
+              }}
             />
           </Grid>
 

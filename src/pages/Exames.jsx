@@ -24,7 +24,7 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AlertaExamesCriticos from "../components/exames/AlertaExamesCriticos";
 import DetalhePaciente from "../components/exames/DetalhePaciente";
 import EstatisticasExames from "../components/exames/EstatisticasExames";
@@ -299,34 +299,36 @@ const Exames = () => {
                 value={pacienteSelecionado}
                 onChange={handleFiltrarPaciente}
                 loading={carregandoPacientes}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    placeholder="Selecionar paciente..."
-                    variant="outlined"
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: (
-                        <>
-                          <InputAdornment position="start">
-                            <SearchIcon />
-                          </InputAdornment>
-                          {params.InputProps.startAdornment}
-                        </>
-                      ),
-                      endAdornment: (
-                        <>
-                          {carregandoPacientes ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      )
-                    }}
-                    sx={{ mb: 3 }}
-                  />
-                )}
+                slots={{
+                  textField: (params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      placeholder="Selecionar paciente..."
+                      variant="outlined"
+                      InputProps={{
+                        ...params.InputProps,
+                        startAdornment: (
+                          <>
+                            <InputAdornment position="start">
+                              <SearchIcon />
+                            </InputAdornment>
+                            {params.InputProps.startAdornment}
+                          </>
+                        ),
+                        endAdornment: (
+                          <>
+                            {carregandoPacientes ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        )
+                      }}
+                      sx={{ mb: 3 }}
+                    />
+                  )
+                }}
               />
 
               {pacienteSelecionado ? (
@@ -456,25 +458,27 @@ const Exames = () => {
                 getOptionLabel={(option) => option.nome}
                 onChange={(e, novoPaciente) => setPacienteSelecionado(novoPaciente)}
                 loading={carregandoPacientes}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    fullWidth
-                    placeholder="Buscar paciente..."
-                    variant="outlined"
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <>
-                          {carregandoPacientes ? (
-                            <CircularProgress color="inherit" size={20} />
-                          ) : null}
-                          {params.InputProps.endAdornment}
-                        </>
-                      )
-                    }}
-                  />
-                )}
+                slots={{
+                  textField: (params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      placeholder="Buscar paciente..."
+                      variant="outlined"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {carregandoPacientes ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        )
+                      }}
+                    />
+                  )
+                }}
               />
             </Box>
           ) : (

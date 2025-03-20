@@ -377,7 +377,10 @@ const MiniCalendario = ({
                         key={evento.id}
                         button
                         onClick={() => handleClickEvento(evento)}
-                        isCompleted={evento.concluido}
+                        data-is-completed={evento.concluido ? "true" : "false"}
+                        sx={{
+                          opacity: evento.concluido ? 0.7 : 1
+                        }}
                         disablePadding
                       >
                         <ListItemIcon sx={{ minWidth: 40 }}>
@@ -472,7 +475,10 @@ const MiniCalendario = ({
                     <EventItem
                       button
                       onClick={() => handleClickEvento(evento)}
-                      isCompleted={evento.concluido}
+                      data-is-completed={evento.concluido ? "true" : "false"}
+                      sx={{
+                        opacity: evento.concluido ? 0.7 : 1
+                      }}
                       disablePadding
                     >
                       <ListItemIcon sx={{ minWidth: 40 }}>
