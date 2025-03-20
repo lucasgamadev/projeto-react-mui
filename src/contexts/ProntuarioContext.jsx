@@ -167,6 +167,38 @@ export const ProntuarioProvider = ({ children }) => {
     }
   };
 
+  const carregarCirurgiasExemplo = async () => {
+    try {
+      setLoading(true);
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+
+      if (pacienteAtual) {
+        const cirurgiasAtualizadas = pacienteAtual.cirurgias.map((cirurgia) => ({
+          ...cirurgia,
+          data: new Date(cirurgia.data),
+          hospital: cirurgia.hospital,
+          medicoResponsavel: cirurgia.medico,
+          descricao: cirurgia.tipo,
+          resultado: cirurgia.observacoes,
+          complicacoes: "Nenhuma"
+        }));
+
+        const prontuarioAtualizado = {
+          ...prontuarioAtual,
+          cirurgias: cirurgiasAtualizadas
+        };
+
+        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+        setProntuarioAtual(prontuarioAtualizado);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar cirurgias:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
     setError(null);
@@ -336,7 +368,8 @@ export const ProntuarioProvider = ({ children }) => {
         limparProntuario,
         carregarConsultasExemplo,
         carregarMedicamentosExemplo,
-        carregarAlergiasExemplo
+        carregarAlergiasExemplo,
+        carregarCirurgiasExemplo
       }}
     >
       {children}

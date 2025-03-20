@@ -639,11 +639,32 @@ AlergiasEPrecaucoes.propTypes = {
 
 // Componente para exibir cirurgias
 const Cirurgias = ({ prontuario }) => {
+  const { carregarCirurgiasExemplo, loading } = useProntuario();
+
+  const handleCarregarExemplos = async () => {
+    try {
+      await carregarCirurgiasExemplo();
+      alert("Cirurgias de exemplo carregadas com sucesso!");
+    } catch (error) {
+      alert(`Erro ao carregar cirurgias: ${error.message}`);
+    }
+  };
+
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Histórico de Cirurgias
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" gutterBottom>
+          Histórico de Cirurgias
+        </Typography>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleCarregarExemplos}
+          disabled={loading}
+        >
+          {loading ? "Carregando..." : "Carregar Exemplos"}
+        </Button>
+      </Box>
       {prontuario.cirurgias.length === 0 ? (
         <Alert severity="info">Não há cirurgias registradas para este paciente.</Alert>
       ) : (
