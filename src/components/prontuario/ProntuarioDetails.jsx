@@ -22,7 +22,6 @@ import {
   Collapse,
   Divider,
   Grid,
-  IconButton,
   List,
   ListItem,
   ListItemAvatar,
@@ -460,6 +459,25 @@ const Medicamentos = ({ prontuario }) => {
     }
   };
 
+  // Função para formatar a data de forma segura
+  const formatarData = (dataOriginal) => {
+    try {
+      // Verificar se já é um objeto Date
+      if (dataOriginal instanceof Date) {
+        return dataOriginal.toLocaleDateString("pt-BR");
+      }
+      // Se for string, converter para Date
+      else if (typeof dataOriginal === "string") {
+        return new Date(dataOriginal).toLocaleDateString("pt-BR");
+      }
+      // Caso não seja possível converter
+      return "Data não disponível";
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return "Data não disponível";
+    }
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -478,56 +496,49 @@ const Medicamentos = ({ prontuario }) => {
       ) : (
         <Grid container spacing={2}>
           {prontuario.medicamentos.map((medicamento) => {
-            // Converter datas de string para objeto Date
-            const dataInicio = new Date(medicamento.dataInicio);
-            const dataFim = medicamento.dataFim ? new Date(medicamento.dataFim) : null;
-
             return (
-              <Grid item xs={12} md={6} key={medicamento.id}>
-                <Card sx={{ display: "flex", height: "100%" }}>
-                  <Box
-                    sx={{
-                      width: 8,
-                      bgcolor: medicamento.continuo ? "success.main" : "primary.main"
-                    }}
-                  />
-                  <CardContent sx={{ flex: 1 }}>
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography variant="h6">{medicamento.nome}</Typography>
-                      <Chip
-                        label={medicamento.continuo ? "Contínuo" : "Temporário"}
-                        size="small"
-                        color={medicamento.continuo ? "success" : "primary"}
-                      />
-                    </Box>
-                    <Typography color="text.secondary" variant="subtitle2">
-                      {medicamento.principioAtivo} - {medicamento.concentracao}
+              <Grid item xs={12} sm={6} md={4} key={medicamento.id}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    border: 1,
+                    borderColor: medicamento.continuo ? "success.main" : "primary.main",
+                    bgcolor: medicamento.continuo ? "success.lighter" : "primary.lighter"
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {medicamento.nome}
                     </Typography>
-                    <Divider sx={{ my: 1 }} />
-
-                    <Typography variant="body2">
-                      <strong>Posologia:</strong> {medicamento.posologia}
-                    </Typography>
-                    <Typography variant="body2">
+                    <Chip
+                      label={medicamento.continuo ? "Contínuo" : "Temporário"}
+                      size="small"
+                      color={medicamento.continuo ? "success" : "primary"}
+                    />
+                  </Box>
+                  <Typography variant="caption" display="block">
+                    {medicamento.principioAtivo} - {medicamento.concentracao}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    <strong>Posologia:</strong> {medicamento.posologia}
+                  </Typography>
+                  {medicamento.formaFarmaceutica && (
+                    <Typography variant="body2" sx={{ mt: 0.5 }}>
                       <strong>Forma:</strong> {medicamento.formaFarmaceutica}
                     </Typography>
-                    <Box sx={{ mt: 1 }}>
-                      <Typography variant="caption" display="block">
-                        <strong>Início:</strong> {dataInicio.toLocaleDateString("pt-BR")}
-                      </Typography>
-                      {!medicamento.continuo && dataFim && (
-                        <Typography variant="caption" display="block">
-                          <strong>Término:</strong> {dataFim.toLocaleDateString("pt-BR")}
-                        </Typography>
-                      )}
-                    </Box>
-                    {medicamento.observacoes && (
-                      <Typography variant="caption" display="block" sx={{ mt: 1 }}>
-                        <strong>Obs:</strong> {medicamento.observacoes}
-                      </Typography>
+                  )}
+                  <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                    Início: {formatarData(medicamento.dataInicio)}
+                    {!medicamento.continuo && medicamento.dataFim && (
+                      <span> • Término: {formatarData(medicamento.dataFim)}</span>
                     )}
-                  </CardContent>
-                </Card>
+                  </Typography>
+                  {medicamento.observacoes && (
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      <strong>Observações:</strong> {medicamento.observacoes}
+                    </Typography>
+                  )}
+                </Paper>
               </Grid>
             );
           })}
@@ -650,6 +661,25 @@ const Cirurgias = ({ prontuario }) => {
     }
   };
 
+  // Função para formatar a data de forma segura
+  const formatarData = (dataOriginal) => {
+    try {
+      // Verificar se já é um objeto Date
+      if (dataOriginal instanceof Date) {
+        return dataOriginal.toLocaleDateString("pt-BR");
+      }
+      // Se for string, converter para Date
+      else if (typeof dataOriginal === "string") {
+        return new Date(dataOriginal).toLocaleDateString("pt-BR");
+      }
+      // Caso não seja possível converter
+      return "Data não disponível";
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return "Data não disponível";
+    }
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -668,50 +698,51 @@ const Cirurgias = ({ prontuario }) => {
       {prontuario.cirurgias.length === 0 ? (
         <Alert severity="info">Não há cirurgias registradas para este paciente.</Alert>
       ) : (
-        <List>
+        <Grid container spacing={2}>
           {prontuario.cirurgias.map((cirurgia, index) => (
-            <Paper elevation={1} sx={{ mb: 2 }} key={index}>
-              <ListItem alignItems="flex-start">
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: "secondary.main" }}>
-                    <LocalHospitalIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography variant="subtitle1">{cirurgia.tipo}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {cirurgia.data.toLocaleDateString("pt-BR")}
-                      </Typography>
-                    </Box>
-                  }
-                  secondary={
-                    <React.Fragment>
-                      <Typography variant="body2" color="text.primary">
-                        {cirurgia.descricao}
-                      </Typography>
-                      <Typography variant="caption" display="block">
-                        <strong>Hospital:</strong> {cirurgia.hospital}
-                      </Typography>
-                      <Typography variant="caption" display="block">
-                        <strong>Médico:</strong> {cirurgia.medicoResponsavel}
-                      </Typography>
-                      <Typography variant="caption" display="block">
-                        <strong>Resultado:</strong> {cirurgia.resultado}
-                      </Typography>
-                      {cirurgia.complicacoes && cirurgia.complicacoes !== "Nenhuma" && (
-                        <Typography variant="caption" display="block" color="error">
-                          <strong>Complicações:</strong> {cirurgia.complicacoes}
-                        </Typography>
-                      )}
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-            </Paper>
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Paper
+                sx={{
+                  p: 2,
+                  border: 1,
+                  borderColor: "secondary.main",
+                  bgcolor: "secondary.lighter"
+                }}
+              >
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {cirurgia.tipo}
+                  </Typography>
+                  <Chip
+                    label={formatarData(cirurgia.data)}
+                    size="small"
+                    color="secondary"
+                    variant="outlined"
+                  />
+                </Box>
+                <Typography variant="caption" display="block">
+                  {cirurgia.hospital}
+                </Typography>
+                {cirurgia.descricao && (
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    <strong>Descrição:</strong> {cirurgia.descricao}
+                  </Typography>
+                )}
+                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                  <strong>Médico:</strong> {cirurgia.medicoResponsavel}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                  <strong>Resultado:</strong> {cirurgia.resultado}
+                </Typography>
+                {cirurgia.complicacoes && cirurgia.complicacoes !== "Nenhuma" && (
+                  <Typography variant="body2" color="error" sx={{ mt: 0.5 }}>
+                    <strong>Complicações:</strong> {cirurgia.complicacoes}
+                  </Typography>
+                )}
+              </Paper>
+            </Grid>
           ))}
-        </List>
+        </Grid>
       )}
     </Box>
   );
@@ -753,37 +784,40 @@ const HistoricoFamiliar = ({ prontuario }) => {
         <Alert severity="info">Não há doenças familiares registradas para este paciente.</Alert>
       ) : (
         <React.Fragment>
-          <List>
+          <Grid container spacing={2}>
             {prontuario.historicoFamiliar.doencas.map((doenca, index) => (
-              <ListItem key={index}>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: "info.light" }}>
-                    <HealingIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={doenca.doenca}
-                  secondary={
-                    <React.Fragment>
-                      <Typography variant="body2" color="text.primary">
-                        Parentesco: {doenca.parentesco}
-                      </Typography>
-                      {doenca.observacoes && (
-                        <Typography variant="caption" display="block">
-                          {doenca.observacoes}
-                        </Typography>
-                      )}
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    border: 1,
+                    borderColor: "info.main",
+                    bgcolor: "info.lighter"
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {doenca.doenca}
+                    </Typography>
+                    <Chip label={doenca.parentesco} size="small" color="info" />
+                  </Box>
+                  {doenca.observacoes && (
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      <strong>Observações:</strong> {doenca.observacoes}
+                    </Typography>
+                  )}
+                </Paper>
+              </Grid>
             ))}
-          </List>
+          </Grid>
+
           {prontuario.historicoFamiliar.observacoes && (
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="subtitle2">Observações Gerais:</Typography>
+            <Paper sx={{ mt: 3, p: 2, bgcolor: "background.paper" }}>
+              <Typography variant="subtitle2" gutterBottom color="text.secondary">
+                Observações Gerais:
+              </Typography>
               <Typography variant="body2">{prontuario.historicoFamiliar.observacoes}</Typography>
-            </Box>
+            </Paper>
           )}
         </React.Fragment>
       )}
@@ -808,6 +842,53 @@ const Anexos = ({ prontuario }) => {
     }
   };
 
+  // Função para formatar a data de forma segura
+  const formatarData = (dataOriginal) => {
+    try {
+      // Verificar se já é um objeto Date
+      if (dataOriginal instanceof Date) {
+        return dataOriginal.toLocaleDateString("pt-BR");
+      }
+      // Se for string, converter para Date
+      else if (typeof dataOriginal === "string") {
+        return new Date(dataOriginal).toLocaleDateString("pt-BR");
+      }
+      // Caso não seja possível converter
+      return "Data não disponível";
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return "Data não disponível";
+    }
+  };
+
+  // Função para obter o ícone baseado no tipo de documento
+  const getIconByFileType = (tipo) => {
+    switch (tipo?.toLowerCase()) {
+      case "exame":
+        return <ScienceIcon />;
+      case "receita":
+        return <MedicalServicesIcon />;
+      case "laudo":
+        return <ReportIcon />;
+      default:
+        return <DocumentScannerIcon />;
+    }
+  };
+
+  // Função para obter a cor de acordo com o tipo de documento
+  const getColorByFileType = (tipo) => {
+    switch (tipo?.toLowerCase()) {
+      case "exame":
+        return "primary";
+      case "receita":
+        return "success";
+      case "laudo":
+        return "secondary";
+      default:
+        return "info";
+    }
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -827,34 +908,109 @@ const Anexos = ({ prontuario }) => {
         <Alert severity="info">Não há anexos disponíveis para este paciente.</Alert>
       ) : (
         <Grid container spacing={2}>
-          {prontuario.anexos.map((anexo) => (
-            <Grid item xs={12} sm={6} md={4} key={anexo.id}>
-              <Card>
-                <CardContent>
-                  <Box display="flex" alignItems="center" mb={1}>
-                    <DocumentScannerIcon color="primary" sx={{ mr: 1 }} />
-                    <Typography variant="subtitle1">{anexo.nome}</Typography>
+          {prontuario.anexos.map((anexo) => {
+            const color = getColorByFileType(anexo.categoria);
+            return (
+              <Grid item xs={12} sm={6} md={4} key={anexo.id}>
+                <Paper
+                  sx={{
+                    p: 2,
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    border: 1,
+                    borderColor: `${color}.main`,
+                    bgcolor: `${color}.lighter`,
+                    minHeight: "200px",
+                    transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-3px)",
+                      boxShadow: 3
+                    }
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                    <Box display="flex" alignItems="center" overflow="hidden" flex={1} mr={1}>
+                      <Avatar
+                        sx={{
+                          bgcolor: `${color}.main`,
+                          mr: 1.5,
+                          width: 32,
+                          height: 32,
+                          flexShrink: 0
+                        }}
+                      >
+                        {getIconByFileType(anexo.categoria)}
+                      </Avatar>
+                      <Box>
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          noWrap
+                          title={anexo.nome}
+                          sx={{ lineHeight: 1.2 }}
+                        >
+                          {`Arquivo ${anexo.categoria}`}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Chip
+                      label={anexo.categoria}
+                      size="small"
+                      color={color}
+                      sx={{ flexShrink: 0 }}
+                    />
                   </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {anexo.descricao}
-                  </Typography>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-                    <Chip label={anexo.categoria} size="small" />
-                    <Typography variant="caption">
-                      {anexo.dataUpload.toLocaleDateString("pt-BR")}
+
+                  <Box sx={{ mt: 1.5, flex: 1, minHeight: 0 }}>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical"
+                      }}
+                      title={anexo.descricao}
+                    >
+                      {anexo.descricao}
                     </Typography>
                   </Box>
-                  <Box display="flex" justifyContent="flex-end" mt={1}>
-                    <IconButton size="small" color="primary">
-                      <Tooltip title="Visualizar documento">
-                        <ReceiptLongIcon fontSize="small" />
-                      </Tooltip>
-                    </IconButton>
+
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mt="auto"
+                    pt={1.5}
+                    borderTop={1}
+                    borderColor="divider"
+                  >
+                    <Box display="flex" alignItems="center">
+                      <EventIcon
+                        fontSize="small"
+                        sx={{ color: "text.secondary", fontSize: 16, mr: 0.5 }}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        {formatarData(anexo.dataUpload)}
+                      </Typography>
+                    </Box>
+                    <Button
+                      size="small"
+                      color={color}
+                      variant="outlined"
+                      startIcon={<ReceiptLongIcon fontSize="small" />}
+                      sx={{ height: 28, fontSize: "0.75rem" }}
+                    >
+                      Visualizar
+                    </Button>
                   </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+                </Paper>
+              </Grid>
+            );
+          })}
         </Grid>
       )}
     </Box>

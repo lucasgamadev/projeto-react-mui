@@ -173,15 +173,31 @@ export const ProntuarioProvider = ({ children }) => {
       const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
 
       if (pacienteAtual) {
-        const cirurgiasAtualizadas = pacienteAtual.cirurgias.map((cirurgia) => ({
-          ...cirurgia,
-          data: new Date(cirurgia.data),
-          hospital: cirurgia.hospital,
-          medicoResponsavel: cirurgia.medico,
-          descricao: cirurgia.tipo,
-          resultado: cirurgia.observacoes,
-          complicacoes: "Nenhuma"
-        }));
+        const cirurgiasAtualizadas = pacienteAtual.cirurgias.map((cirurgia) => {
+          // Garantir que a data seja convertida para objeto Date
+          let dataConvertida;
+          try {
+            dataConvertida = new Date(cirurgia.data);
+            // Verificar se a data é válida
+            if (isNaN(dataConvertida.getTime())) {
+              console.warn(`Data inválida para cirurgia: ${cirurgia.data}`);
+              dataConvertida = new Date(); // Usar data atual como fallback
+            }
+          } catch (error) {
+            console.error(`Erro ao converter data da cirurgia: ${cirurgia.data}`, error);
+            dataConvertida = new Date(); // Usar data atual como fallback
+          }
+
+          return {
+            ...cirurgia,
+            data: dataConvertida,
+            hospital: cirurgia.hospital || "Hospital não informado",
+            medicoResponsavel: cirurgia.medico || "Médico não informado",
+            descricao: cirurgia.descricao || cirurgia.tipo,
+            resultado: cirurgia.resultado || cirurgia.observacoes || "Resultado não informado",
+            complicacoes: cirurgia.complicacoes || "Nenhuma"
+          };
+        });
 
         const prontuarioAtualizado = {
           ...prontuarioAtual,
@@ -235,12 +251,28 @@ export const ProntuarioProvider = ({ children }) => {
       const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
 
       if (pacienteAtual && pacienteAtual.anexos) {
-        const anexosAtualizados = pacienteAtual.anexos.map((anexo) => ({
-          ...anexo,
-          dataUpload: new Date(anexo.data),
-          categoria: anexo.tipo,
-          descricao: `Arquivo ${anexo.nome} (${anexo.tipo})`
-        }));
+        const anexosAtualizados = pacienteAtual.anexos.map((anexo) => {
+          // Garantir que a data seja convertida para objeto Date
+          let dataConvertida;
+          try {
+            dataConvertida = new Date(anexo.data);
+            // Verificar se a data é válida
+            if (isNaN(dataConvertida.getTime())) {
+              console.warn(`Data inválida para anexo: ${anexo.data}`);
+              dataConvertida = new Date(); // Usar data atual como fallback
+            }
+          } catch (error) {
+            console.error(`Erro ao converter data do anexo: ${anexo.data}`, error);
+            dataConvertida = new Date(); // Usar data atual como fallback
+          }
+
+          return {
+            ...anexo,
+            dataUpload: dataConvertida,
+            categoria: anexo.tipo || "Documento",
+            descricao: anexo.descricao || `Arquivo ${anexo.nome} (${anexo.tipo || "Documento"})`
+          };
+        });
 
         const prontuarioAtualizado = {
           ...prontuarioAtual,
