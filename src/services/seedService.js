@@ -101,72 +101,52 @@ const pacientesExemplo = [
 ];
 
 export const popularPacientes = async () => {
+  console.log("Verificando dados de exemplo...");
   try {
-    console.log("Iniciando população de pacientes...");
-    const resultados = [];
+    let prontuariosCriados = 0;
 
+    // Verifica cada paciente de exemplo
     for (const paciente of pacientesExemplo) {
-      try {
-        // Verifica se já existe um prontuário com este CPF
-        const existentes = getProntuariosByCPF(paciente.cpf);
+      // Verifica se já existe um prontuário para este paciente
+      const existentes = getProntuariosByCPF(paciente.cpf);
 
-        if (existentes.length === 0) {
-          // Adiciona o novo prontuário
-          const novoProntuario = addProntuario({
-            ...paciente,
-            consultas: [],
-            medicamentos: [],
-            exames: [],
-            alergias: [],
-            cirurgias: [],
-            historicoFamiliar: {
-              doencas: [],
-              observacoes: ""
-            },
-            anexos: [],
-            observacoes: []
-          });
+      if (existentes.length === 0) {
+        console.log(`Criando prontuário para ${paciente.nomePaciente}`);
 
-          resultados.push({
-            nome: paciente.nomePaciente,
-            id: novoProntuario.id,
-            sucesso: true
-          });
-
-          console.log(
-            `✓ Paciente ${paciente.nomePaciente} adicionado com sucesso (ID: ${novoProntuario.id})`
-          );
-        } else {
-          console.log(`⚠ Paciente com CPF ${paciente.cpf} já existe. Ignorando...`);
-          resultados.push({
-            nome: paciente.nomePaciente,
-            erro: "CPF já cadastrado",
-            sucesso: false
-          });
-        }
-      } catch (error) {
-        console.error(`✗ Erro ao adicionar paciente ${paciente.nomePaciente}:`, error);
-        resultados.push({
-          nome: paciente.nomePaciente,
-          erro: error.message,
-          sucesso: false
+        // Cria um novo prontuário
+        const novoProntuario = addProntuario({
+          nomePaciente: paciente.nomePaciente,
+          dataNascimento: paciente.dataNascimento,
+          sexo: paciente.sexo,
+          cpf: paciente.cpf,
+          contatos: paciente.contatos || [],
+          dadosPessoais: paciente.dadosPessoais || {},
+          consultas: [],
+          medicamentos: [],
+          exames: [],
+          alergias: [],
+          cirurgias: [],
+          historicoFamiliar: {
+            doencas: [],
+            observacoes: ""
+          },
+          anexos: [],
+          observacoes: []
         });
+
+        prontuariosCriados++;
+        console.log(
+          `✓ Paciente ${paciente.nomePaciente} adicionado com sucesso (ID: ${novoProntuario.id})`
+        );
+      } else {
+        console.log(`Paciente ${paciente.nomePaciente} já existe no sistema`);
       }
     }
 
-    const sucessos = resultados.filter((r) => r.sucesso).length;
-    const falhas = resultados.filter((r) => !r.sucesso).length;
-
-    console.log(`\nPopulação de pacientes concluída!`);
-    console.log(`Sucesso: ${sucessos} | Falhas: ${falhas}`);
-
-    if (falhas === resultados.length) {
-      throw new Error(`Nenhum paciente foi adicionado (${falhas} falhas)`);
-    }
-
-    return resultados;
+    console.log(`Total de ${prontuariosCriados} prontuários criados`);
+    return prontuariosCriados;
   } catch (error) {
-    console.error("Erro ao popular pacientes:", error);
+    console.error("Erro ao popular dados de exemplo:", error);
     throw error;
   }
 };

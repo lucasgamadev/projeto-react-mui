@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import {
   addProntuario,
   getProntuarioById,
@@ -7,6 +7,7 @@ import {
   getProntuariosByNome,
   updateProntuario
 } from "../services/localStorageService";
+import { popularPacientes } from "../services/seedService";
 
 const ProntuarioContext = createContext();
 
@@ -14,16 +15,47 @@ export const ProntuarioProvider = ({ children }) => {
   const [prontuarioAtual, setProntuarioAtual] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [dadosInicializados, setDadosInicializados] = useState(false);
+
+  // Inicializa dados de exemplo
+  useEffect(() => {
+    const inicializarDados = async () => {
+      if (!dadosInicializados) {
+        try {
+          console.log("Inicializando dados de exemplo...");
+          await popularPacientes();
+          setDadosInicializados(true);
+        } catch (error) {
+          console.error("Erro ao inicializar dados:", error);
+        }
+      }
+    };
+
+    inicializarDados();
+  }, [dadosInicializados]);
 
   const buscarProntuario = useCallback(async (id) => {
+    if (!id) {
+      setError("ID do prontuário não fornecido");
+      return null;
+    }
+
     setLoading(true);
     setError(null);
     try {
+      console.log(`Buscando prontuário com ID: ${id}`);
       const prontuario = getProntuarioById(id);
+
+      if (!prontuario) {
+        throw new Error("Prontuário não encontrado");
+      }
+
       setProntuarioAtual(prontuario);
       return prontuario;
     } catch (err) {
-      setError(err.message);
+      console.error("Erro ao buscar prontuário:", err);
+      setError(err.message || "Erro ao buscar prontuário");
+      setProntuarioAtual(null);
       throw err;
     } finally {
       setLoading(false);

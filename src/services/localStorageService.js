@@ -41,12 +41,31 @@ const getNextId = () => {
 
 // Buscar prontuário por ID
 export const getProntuarioById = (id) => {
-  const data = getStorageData();
-  const prontuario = data.prontuarios.find((p) => p.id === id);
-  if (!prontuario) {
-    throw new Error("Prontuário não encontrado");
+  try {
+    const data = getStorageData();
+
+    // Converte o ID para número se for uma string
+    const prontuarioId = typeof id === "string" ? parseInt(id, 10) : id;
+
+    // Verifica se temos prontuários
+    if (!data.prontuarios || !Array.isArray(data.prontuarios)) {
+      console.error("Estrutura de prontuários inválida no localStorage");
+      throw new Error("Estrutura de dados do prontuário inválida");
+    }
+
+    // Encontra o prontuário com o ID específico
+    const prontuario = data.prontuarios.find((p) => p.id === prontuarioId);
+
+    if (!prontuario) {
+      console.error(`Prontuário com ID ${prontuarioId} não encontrado`);
+      throw new Error("Prontuário não encontrado");
+    }
+
+    return prontuario;
+  } catch (error) {
+    console.error("Erro ao buscar prontuário:", error);
+    throw new Error(`Não foi possível carregar o prontuário: ${error.message}`);
   }
-  return prontuario;
 };
 
 // Buscar prontuários por CPF
