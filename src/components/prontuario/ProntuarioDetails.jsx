@@ -1,6 +1,7 @@
 import {
   AccessTime as AccessTimeIcon,
   Add as AddIcon,
+  AttachFile as AttachFileIcon,
   DocumentScanner as DocumentScannerIcon,
   Event as EventIcon,
   Healing as HealingIcon,
@@ -33,7 +34,7 @@ import {
   Typography
 } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useProntuario } from "../../contexts/ProntuarioContext";
 import ConsultaFormModal from "./ConsultaFormModal";
 
@@ -213,7 +214,13 @@ DadosPessoais.propTypes = {
 const HistoricoMedico = ({ prontuario }) => {
   const [expandedItem, setExpandedItem] = useState(null);
   const [consultaModalOpen, setConsultaModalOpen] = useState(false);
-  const { carregarConsultasExemplo, loading } = useProntuario();
+  const { carregarConsultasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
+  const [exemploCarregado, setExemploCarregado] = useState(false);
+
+  // Verificar se exemplos já foram carregados
+  useEffect(() => {
+    setExemploCarregado(verificarExemploJaCarregado("consultas"));
+  }, [verificarExemploJaCarregado]);
 
   const handleExpandClick = (consultaId) => {
     setExpandedItem(expandedItem === consultaId ? null : consultaId);
@@ -228,6 +235,7 @@ const HistoricoMedico = ({ prontuario }) => {
   const handleCarregarExemplos = async () => {
     try {
       await carregarConsultasExemplo();
+      setExemploCarregado(true);
       alert("Consultas de exemplo carregadas com sucesso!");
     } catch (error) {
       alert(`Erro ao carregar consultas: ${error.message}`);
@@ -250,14 +258,16 @@ const HistoricoMedico = ({ prontuario }) => {
           >
             Nova Consulta
           </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleCarregarExemplos}
-            disabled={loading}
-          >
-            {loading ? "Carregando..." : "Carregar Exemplos"}
-          </Button>
+          {!exemploCarregado && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCarregarExemplos}
+              disabled={loading}
+            >
+              {loading ? "Carregando..." : "Carregar Exemplos"}
+            </Button>
+          )}
         </Box>
       </Box>
 
@@ -498,11 +508,18 @@ HistoricoMedico.propTypes = {
 
 // Componente para exibir medicamentos do paciente
 const Medicamentos = ({ prontuario }) => {
-  const { carregarMedicamentosExemplo, loading } = useProntuario();
+  const { carregarMedicamentosExemplo, loading, verificarExemploJaCarregado } = useProntuario();
+  const [exemploCarregado, setExemploCarregado] = useState(false);
+
+  // Verificar se exemplos já foram carregados
+  useEffect(() => {
+    setExemploCarregado(verificarExemploJaCarregado("medicamentos"));
+  }, [verificarExemploJaCarregado]);
 
   const handleCarregarExemplos = async () => {
     try {
       await carregarMedicamentosExemplo();
+      setExemploCarregado(true);
       alert("Medicamentos de exemplo carregados com sucesso!");
     } catch (error) {
       alert(`Erro ao carregar medicamentos: ${error.message}`);
@@ -531,15 +548,22 @@ const Medicamentos = ({ prontuario }) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Medicamentos em Uso</Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleCarregarExemplos}
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Carregar Exemplos"}
-        </Button>
+        <Typography variant="h6">Medicamentos</Typography>
+        <Box>
+          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
+            Novo Medicamento
+          </Button>
+          {!exemploCarregado && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCarregarExemplos}
+              disabled={loading}
+            >
+              {loading ? "Carregando..." : "Carregar Exemplos"}
+            </Button>
+          )}
+        </Box>
       </Box>
       {prontuario.medicamentos.length === 0 ? (
         <Alert severity="info">Não há medicamentos registrados para este paciente.</Alert>
@@ -611,11 +635,18 @@ Medicamentos.propTypes = {
 
 // Componente para exibir alergias e precauções
 const AlergiasEPrecaucoes = ({ prontuario }) => {
-  const { carregarAlergiasExemplo, loading } = useProntuario();
+  const { carregarAlergiasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
+  const [exemploCarregado, setExemploCarregado] = useState(false);
+
+  // Verificar se exemplos já foram carregados
+  useEffect(() => {
+    setExemploCarregado(verificarExemploJaCarregado("alergias"));
+  }, [verificarExemploJaCarregado]);
 
   const handleCarregarExemplos = async () => {
     try {
       await carregarAlergiasExemplo();
+      setExemploCarregado(true);
       alert("Alergias de exemplo carregadas com sucesso!");
     } catch (error) {
       alert(`Erro ao carregar alergias: ${error.message}`);
@@ -625,15 +656,22 @@ const AlergiasEPrecaucoes = ({ prontuario }) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Alergias</Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleCarregarExemplos}
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Carregar Exemplos"}
-        </Button>
+        <Typography variant="h6">Alergias e Precauções</Typography>
+        <Box>
+          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
+            Nova Alergia
+          </Button>
+          {!exemploCarregado && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCarregarExemplos}
+              disabled={loading}
+            >
+              {loading ? "Carregando..." : "Carregar Exemplos"}
+            </Button>
+          )}
+        </Box>
       </Box>
       {prontuario.alergias.length === 0 ? (
         <Alert severity="info">Não há alergias registradas para este paciente.</Alert>
@@ -714,11 +752,18 @@ AlergiasEPrecaucoes.propTypes = {
 
 // Componente para exibir cirurgias
 const Cirurgias = ({ prontuario }) => {
-  const { carregarCirurgiasExemplo, loading } = useProntuario();
+  const { carregarCirurgiasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
+  const [exemploCarregado, setExemploCarregado] = useState(false);
+
+  // Verificar se exemplos já foram carregados
+  useEffect(() => {
+    setExemploCarregado(verificarExemploJaCarregado("cirurgias"));
+  }, [verificarExemploJaCarregado]);
 
   const handleCarregarExemplos = async () => {
     try {
       await carregarCirurgiasExemplo();
+      setExemploCarregado(true);
       alert("Cirurgias de exemplo carregadas com sucesso!");
     } catch (error) {
       alert(`Erro ao carregar cirurgias: ${error.message}`);
@@ -747,17 +792,22 @@ const Cirurgias = ({ prontuario }) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" gutterBottom>
-          Histórico de Cirurgias
-        </Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleCarregarExemplos}
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Carregar Exemplos"}
-        </Button>
+        <Typography variant="h6">Procedimentos Cirúrgicos</Typography>
+        <Box>
+          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
+            Nova Cirurgia
+          </Button>
+          {!exemploCarregado && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCarregarExemplos}
+              disabled={loading}
+            >
+              {loading ? "Carregando..." : "Carregar Exemplos"}
+            </Button>
+          )}
+        </Box>
       </Box>
       {prontuario.cirurgias.length === 0 ? (
         <Alert severity="info">Não há cirurgias registradas para este paciente.</Alert>
@@ -825,11 +875,19 @@ Cirurgias.propTypes = {
 
 // Componente para exibir histórico familiar
 const HistoricoFamiliar = ({ prontuario }) => {
-  const { carregarHistoricoFamiliarExemplo, loading } = useProntuario();
+  const { carregarHistoricoFamiliarExemplo, loading, verificarExemploJaCarregado } =
+    useProntuario();
+  const [exemploCarregado, setExemploCarregado] = useState(false);
+
+  // Verificar se exemplos já foram carregados
+  useEffect(() => {
+    setExemploCarregado(verificarExemploJaCarregado("historicoFamiliar"));
+  }, [verificarExemploJaCarregado]);
 
   const handleCarregarExemplos = async () => {
     try {
       await carregarHistoricoFamiliarExemplo();
+      setExemploCarregado(true);
       alert("Histórico familiar de exemplo carregado com sucesso!");
     } catch (error) {
       alert(`Erro ao carregar histórico familiar: ${error.message}`);
@@ -839,17 +897,22 @@ const HistoricoFamiliar = ({ prontuario }) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" gutterBottom>
-          Histórico Familiar
-        </Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleCarregarExemplos}
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Carregar Exemplos"}
-        </Button>
+        <Typography variant="h6">Histórico Familiar</Typography>
+        <Box>
+          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
+            Adicionar Histórico
+          </Button>
+          {!exemploCarregado && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCarregarExemplos}
+              disabled={loading}
+            >
+              {loading ? "Carregando..." : "Carregar Exemplos"}
+            </Button>
+          )}
+        </Box>
       </Box>
       {prontuario.historicoFamiliar.doencas.length === 0 ? (
         <Alert severity="info">Não há doenças familiares registradas para este paciente.</Alert>
@@ -921,11 +984,18 @@ HistoricoFamiliar.propTypes = {
 
 // Componente para exibir anexos
 const Anexos = ({ prontuario }) => {
-  const { carregarAnexosExemplo, loading } = useProntuario();
+  const { carregarAnexosExemplo, loading, verificarExemploJaCarregado } = useProntuario();
+  const [exemploCarregado, setExemploCarregado] = useState(false);
+
+  // Verificar se exemplos já foram carregados
+  useEffect(() => {
+    setExemploCarregado(verificarExemploJaCarregado("anexos"));
+  }, [verificarExemploJaCarregado]);
 
   const handleCarregarExemplos = async () => {
     try {
       await carregarAnexosExemplo();
+      setExemploCarregado(true);
       alert("Anexos de exemplo carregados com sucesso!");
     } catch (error) {
       alert(`Erro ao carregar anexos: ${error.message}`);
@@ -982,17 +1052,22 @@ const Anexos = ({ prontuario }) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" gutterBottom>
-          Documentos e Anexos
-        </Typography>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleCarregarExemplos}
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Carregar Exemplos"}
-        </Button>
+        <Typography variant="h6">Anexos e Documentos</Typography>
+        <Box>
+          <Button variant="contained" color="primary" startIcon={<AttachFileIcon />} sx={{ mr: 1 }}>
+            Anexar Documento
+          </Button>
+          {!exemploCarregado && (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleCarregarExemplos}
+              disabled={loading}
+            >
+              {loading ? "Carregando..." : "Carregar Exemplos"}
+            </Button>
+          )}
+        </Box>
       </Box>
       {prontuario.anexos.length === 0 ? (
         <Alert severity="info">Não há anexos disponíveis para este paciente.</Alert>

@@ -12,6 +12,16 @@ import { popularPacientes } from "../services/seedService";
 
 const ProntuarioContext = createContext();
 
+// Chaves para armazenar estados de exemplos no localStorage
+const EXEMPLOS_STORAGE_KEYS = {
+  consultas: "prontuario-exemplos-consultas",
+  medicamentos: "prontuario-exemplos-medicamentos",
+  alergias: "prontuario-exemplos-alergias",
+  cirurgias: "prontuario-exemplos-cirurgias",
+  historicoFamiliar: "prontuario-exemplos-historico-familiar",
+  anexos: "prontuario-exemplos-anexos"
+};
+
 export const ProntuarioProvider = ({ children }) => {
   const [prontuarioAtual, setProntuarioAtual] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,6 +73,16 @@ export const ProntuarioProvider = ({ children }) => {
     }
   }, []);
 
+  // Função auxiliar para salvar estado de exemplo carregado
+  const salvarEstadoExemploCarregado = (tipo) => {
+    localStorage.setItem(EXEMPLOS_STORAGE_KEYS[tipo], "true");
+  };
+
+  // Função auxiliar para verificar se exemplo já foi carregado
+  const verificarExemploJaCarregado = (tipo) => {
+    return localStorage.getItem(EXEMPLOS_STORAGE_KEYS[tipo]) === "true";
+  };
+
   // Função para carregar consultas de exemplo para o prontuário atual
   const carregarConsultasExemplo = useCallback(async () => {
     if (!prontuarioAtual) {
@@ -102,6 +122,10 @@ export const ProntuarioProvider = ({ children }) => {
       // Atualiza o prontuário no localStorage e no estado
       updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
       setProntuarioAtual(prontuarioAtualizado);
+
+      // Salvar que exemplos foram carregados
+      salvarEstadoExemploCarregado("consultas");
+
       return prontuarioAtualizado;
     } catch (err) {
       console.error("Erro ao carregar consultas de exemplo:", err);
@@ -131,6 +155,9 @@ export const ProntuarioProvider = ({ children }) => {
 
         updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
         setProntuarioAtual(prontuarioAtualizado);
+
+        // Salvar que exemplos foram carregados
+        salvarEstadoExemploCarregado("medicamentos");
       }
     } catch (error) {
       console.error("Erro ao carregar medicamentos:", error);
@@ -158,6 +185,9 @@ export const ProntuarioProvider = ({ children }) => {
 
         updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
         setProntuarioAtual(prontuarioAtualizado);
+
+        // Salvar que exemplos foram carregados
+        salvarEstadoExemploCarregado("alergias");
       }
     } catch (error) {
       console.error("Erro ao carregar alergias:", error);
@@ -206,6 +236,9 @@ export const ProntuarioProvider = ({ children }) => {
 
         updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
         setProntuarioAtual(prontuarioAtualizado);
+
+        // Salvar que exemplos foram carregados
+        salvarEstadoExemploCarregado("cirurgias");
       }
     } catch (error) {
       console.error("Erro ao carregar cirurgias:", error);
@@ -236,6 +269,9 @@ export const ProntuarioProvider = ({ children }) => {
 
         updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
         setProntuarioAtual(prontuarioAtualizado);
+
+        // Salvar que exemplos foram carregados
+        salvarEstadoExemploCarregado("historicoFamiliar");
       }
     } catch (error) {
       console.error("Erro ao carregar histórico familiar:", error);
@@ -281,6 +317,9 @@ export const ProntuarioProvider = ({ children }) => {
 
         updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
         setProntuarioAtual(prontuarioAtualizado);
+
+        // Salvar que exemplos foram carregados
+        salvarEstadoExemploCarregado("anexos");
       }
     } catch (error) {
       console.error("Erro ao carregar anexos:", error);
@@ -289,6 +328,42 @@ export const ProntuarioProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Função para carregar automaticamente exemplos ao selecionar um prontuário
+  const carregarExemplosSalvosAutomaticamente = useCallback(async () => {
+    if (!prontuarioAtual) return;
+
+    try {
+      // Verificar cada tipo de exemplo e carregar se já foi carregado antes
+      if (verificarExemploJaCarregado("consultas")) {
+        await carregarConsultasExemplo();
+      }
+      if (verificarExemploJaCarregado("medicamentos")) {
+        await carregarMedicamentosExemplo();
+      }
+      if (verificarExemploJaCarregado("alergias")) {
+        await carregarAlergiasExemplo();
+      }
+      if (verificarExemploJaCarregado("cirurgias")) {
+        await carregarCirurgiasExemplo();
+      }
+      if (verificarExemploJaCarregado("historicoFamiliar")) {
+        await carregarHistoricoFamiliarExemplo();
+      }
+      if (verificarExemploJaCarregado("anexos")) {
+        await carregarAnexosExemplo();
+      }
+    } catch (error) {
+      console.error("Erro ao carregar exemplos automaticamente:", error);
+    }
+  }, [prontuarioAtual, carregarConsultasExemplo]);
+
+  // Carregar exemplos automaticamente quando um prontuário for selecionado
+  useEffect(() => {
+    if (prontuarioAtual) {
+      carregarExemplosSalvosAutomaticamente();
+    }
+  }, [prontuarioAtual, carregarExemplosSalvosAutomaticamente]);
 
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
@@ -462,7 +537,8 @@ export const ProntuarioProvider = ({ children }) => {
         carregarAlergiasExemplo,
         carregarCirurgiasExemplo,
         carregarHistoricoFamiliarExemplo,
-        carregarAnexosExemplo
+        carregarAnexosExemplo,
+        verificarExemploJaCarregado
       }}
     >
       {children}

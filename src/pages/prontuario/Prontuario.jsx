@@ -58,6 +58,9 @@ const pacientesExemplo = [
   }
 ];
 
+// Chave para armazenar exemplos carregados no localStorage
+const EXEMPLOS_STORAGE_KEY = "prontuario-exemplos-carregados";
+
 const Prontuario = () => {
   const {
     prontuarioAtual,
@@ -78,10 +81,23 @@ const Prontuario = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [buscando, setBuscando] = useState(false);
+  const [exemplosCarregados, setExemplosCarregados] = useState(false);
+
+  // Verificar se os exemplos já estão carregados ao iniciar
+  useEffect(() => {
+    const exemplosSalvos = localStorage.getItem(EXEMPLOS_STORAGE_KEY);
+    if (exemplosSalvos === "true") {
+      setSearchResults(pacientesExemplo);
+      setExemplosCarregados(true);
+    }
+  }, []);
 
   // Função para carregar pacientes de exemplo na busca
   const handleCarregarExemplos = () => {
     setSearchResults(pacientesExemplo);
+    setExemplosCarregados(true);
+    // Salvar no localStorage que os exemplos foram carregados
+    localStorage.setItem(EXEMPLOS_STORAGE_KEY, "true");
     setSnackbar({
       open: true,
       message: "Pacientes de exemplo carregados na busca",
@@ -150,7 +166,13 @@ const Prontuario = () => {
     setPacienteSelecionado(null);
     limparProntuario();
     setSearchTerm("");
-    setSearchResults([]);
+
+    // Verificar se devemos carregar os exemplos novamente ao voltar
+    if (exemplosCarregados) {
+      setSearchResults(pacientesExemplo);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   const handleCloseSnackbar = () => {
