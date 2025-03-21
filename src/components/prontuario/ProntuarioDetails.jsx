@@ -1198,8 +1198,9 @@ const ProntuarioDetails = ({ prontuario }) => {
             alignItems: "center",
             bgcolor: "error.lighter",
             p: 1,
+            px: 2,
             borderRadius: 1,
-            mb: 2
+            my: 1
           }}
         >
           <SecurityUpdateWarningIcon color="error" sx={{ mr: 1 }} />
@@ -1217,6 +1218,8 @@ const ProntuarioDetails = ({ prontuario }) => {
               : "Nenhuma alergia registrada"}
           </Typography>
         </Box>
+
+        <Divider />
 
         <Tabs
           value={tabValue}
