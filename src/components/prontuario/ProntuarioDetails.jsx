@@ -16,7 +16,6 @@ import {
   Avatar,
   Box,
   Button,
-  Card,
   CardContent,
   Chip,
   Collapse,
@@ -64,65 +63,97 @@ TabPanel.propTypes = {
 // Componente para exibir dados pessoais do paciente
 const DadosPessoais = ({ paciente }) => {
   return (
-    <Card>
-      <CardContent>
+    <Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6" gutterBottom>
           Informações Pessoais
         </Typography>
+      </Box>
+
+      <Paper
+        sx={{
+          p: 3,
+          mb: 3,
+          border: 1,
+          borderColor: "primary.main",
+          bgcolor: "primary.lighter",
+          transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+          "&:hover": {
+            transform: "translateY(-3px)",
+            boxShadow: 3
+          }
+        }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Nome Completo
             </Typography>
-            <Typography variant="body1">{paciente.nomePaciente}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.nomePaciente}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               CPF
             </Typography>
-            <Typography variant="body1">{paciente.cpf}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.cpf}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Data de Nascimento
             </Typography>
-            <Typography variant="body1">{paciente.dataNascimento}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.dataNascimento}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Sexo
             </Typography>
-            <Typography variant="body1">{paciente.sexo}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.sexo}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Estado Civil
             </Typography>
-            <Typography variant="body1">{paciente.dadosPessoais.estadoCivil}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.dadosPessoais.estadoCivil}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Profissão
             </Typography>
-            <Typography variant="body1">{paciente.dadosPessoais.profissao}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.dadosPessoais.profissao}
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle2" color="text.secondary">
               Endereço
             </Typography>
-            <Typography variant="body1">{paciente.dadosPessoais.endereco}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.dadosPessoais.endereco}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Tipo Sanguíneo
             </Typography>
-            <Typography variant="body1">{paciente.dadosPessoais.tipoSanguineo}</Typography>
+            <Typography variant="body1" fontWeight="medium">
+              {paciente.dadosPessoais.tipoSanguineo}
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" color="text.secondary">
               Convênio
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" fontWeight="medium">
               {paciente.dadosPessoais.convenio}
               {paciente.dadosPessoais.numeroConvenio
                 ? ` - ${paciente.dadosPessoais.numeroConvenio}`
@@ -130,17 +161,38 @@ const DadosPessoais = ({ paciente }) => {
             </Typography>
           </Grid>
         </Grid>
+      </Paper>
 
-        <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6" gutterBottom>
           Contatos
         </Typography>
+      </Box>
+
+      <Paper
+        sx={{
+          p: 3,
+          border: 1,
+          borderColor: "info.main",
+          bgcolor: "info.lighter",
+          transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+          "&:hover": {
+            transform: "translateY(-3px)",
+            boxShadow: 3
+          }
+        }}
+      >
         <List>
           {paciente.contatos.map((contato, index) => (
-            <ListItem key={index}>
+            <ListItem key={index} sx={{ px: 0 }}>
               <ListItemText
                 primary={contato.valor}
                 secondary={contato.tipo}
-                primaryTypographyProps={{ fontWeight: contato.principal ? "bold" : "normal" }}
+                primaryTypographyProps={{
+                  fontWeight: contato.principal ? "bold" : "medium",
+                  color: contato.principal ? "primary" : "initial"
+                }}
+                secondaryTypographyProps={{ color: "text.secondary" }}
               />
               {contato.principal && (
                 <ListItemSecondaryAction>
@@ -150,8 +202,8 @@ const DadosPessoais = ({ paciente }) => {
             </ListItem>
           ))}
         </List>
-      </CardContent>
-    </Card>
+      </Paper>
+    </Box>
   );
 };
 
