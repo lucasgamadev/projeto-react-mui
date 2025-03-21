@@ -267,49 +267,88 @@ export const ProntuarioProvider = ({ children }) => {
       let doencasProcessadas = [];
       let observacoesGerais = "";
 
+      // Dados de exemplo padrão caso ocorra erro
+      const doencasPadrao = [
+        { doenca: "Hipertensão", parentesco: "Pai", observacoes: "Diagnosticada aos 45 anos" },
+        {
+          doenca: "Diabetes Tipo 2",
+          parentesco: "Avô",
+          observacoes: "Diagnosticado aos 60 anos"
+        },
+        { doenca: "Câncer de Mama", parentesco: "Tia", observacoes: "Diagnosticado aos 55 anos" }
+      ];
+
+      // Mapear parentescos padrão por nome de doença para recuperação fácil
+      const parentescoPorDoenca = {
+        Hipertensão: "Pai",
+        "Diabetes Tipo 2": "Avô",
+        "Câncer de Mama": "Tia"
+      };
+
       // Buscar dados de exemplo com segurança
       try {
-        const historicoFamiliarExemplo = dadosExemplo.historicoFamiliar || [];
+        // Forçar o uso dos dados padrão para garantir consistência
+        doencasProcessadas = [...doencasPadrao];
 
-        // Processar as doenças com limite
-        if (Array.isArray(historicoFamiliarExemplo) && historicoFamiliarExemplo.length > 0) {
-          // Se for um array direto de doenças
-          doencasProcessadas = historicoFamiliarExemplo.slice(0, maxDoencas).map((doenca) => ({
-            doenca: doenca.doenca || doenca.nome || "Doença não especificada",
-            parentesco: doenca.parentesco || doenca.parente || "Não informado",
-            observacoes: doenca.observacoes || ""
-          }));
-        } else {
-          // Tentar buscar do paciente
-          const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual.cpf);
+        // Adicionalmente, podemos tentar obter dados específicos do paciente
+        const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual.cpf);
+        if (
+          pacienteAtual &&
+          pacienteAtual.historicoFamiliar &&
+          Array.isArray(pacienteAtual.historicoFamiliar.doencas) &&
+          pacienteAtual.historicoFamiliar.doencas.length > 0
+        ) {
+          // Processamos, mas manteremos os parentescos padrão para as doenças conhecidas
+          const doencastmp = pacienteAtual.historicoFamiliar.doencas
+            .slice(0, maxDoencas)
+            .map((doenca) => {
+              const nomeDoenca = doenca.doenca || doenca.nome || "Doença não especificada";
 
-          if (pacienteAtual && pacienteAtual.historicoFamiliar) {
-            if (Array.isArray(pacienteAtual.historicoFamiliar.doencas)) {
-              doencasProcessadas = pacienteAtual.historicoFamiliar.doencas
-                .slice(0, maxDoencas)
-                .map((doenca) => ({
-                  doenca: doenca.doenca || doenca.nome || "Doença não especificada",
-                  parentesco: doenca.parentesco || doenca.parente || "Não informado",
-                  observacoes: doenca.observacoes || ""
-                }));
-            }
+              // Se for uma doença padrão, manter o parentesco padrão conhecido
+              const parentescoPadrao = parentescoPorDoenca[nomeDoenca];
 
-            observacoesGerais = pacienteAtual.historicoFamiliar.observacoes || "";
+              return {
+                doenca: nomeDoenca,
+                parentesco:
+                  parentescoPadrao || doenca.parentesco || doenca.parente || "Não informado",
+                observacoes: doenca.observacoes || ""
+              };
+            });
+
+          // Substitui apenas se conseguirmos processar
+          if (doencastmp.length > 0) {
+            doencasProcessadas = doencastmp;
           }
+
+          observacoesGerais = pacienteAtual.historicoFamiliar.observacoes || "";
         }
       } catch (processError) {
         console.error("Erro ao processar histórico familiar:", processError);
-        // Em caso de erro, usar um conjunto padrão de doenças
-        doencasProcessadas = [
-          { doenca: "Hipertensão", parentesco: "Pai", observacoes: "Diagnosticada aos 45 anos" },
-          {
-            doenca: "Diabetes Tipo 2",
-            parentesco: "Avô",
-            observacoes: "Diagnosticado aos 60 anos"
-          },
-          { doenca: "Câncer de Mama", parentesco: "Tia", observacoes: "Diagnosticado aos 55 anos" }
-        ];
+        // Em caso de erro, usar o conjunto padrão de doenças
+        doencasProcessadas = [...doencasPadrao];
       }
+
+      // Garantindo explicitamente os parentescos para as doenças padrão
+      doencasProcessadas = doencasProcessadas.map((doenca) => {
+        // Para as doenças conhecidas, forçar os parentescos corretos
+        if (doenca.doenca === "Hipertensão") {
+          return { ...doenca, parentesco: "Pai" };
+        } else if (doenca.doenca === "Diabetes Tipo 2") {
+          return { ...doenca, parentesco: "Avô" };
+        } else if (doenca.doenca === "Câncer de Mama") {
+          return { ...doenca, parentesco: "Tia" };
+        }
+        // Para outras doenças, manter o que já existe ou usar "Não informado"
+        return {
+          ...doenca,
+          parentesco:
+            doenca.parentesco && doenca.parentesco !== "Não informado"
+              ? doenca.parentesco
+              : "Familiar"
+        };
+      });
+
+      console.log("Histórico familiar processado:", doencasProcessadas);
 
       // Atualizar o prontuário com dados processados
       const historicoFamiliarAtualizado = {
@@ -413,69 +452,119 @@ export const ProntuarioProvider = ({ children }) => {
     }
   }, [prontuarioAtual]);
 
-  // Função para carregar automaticamente exemplos ao selecionar um prontuário
-  const carregarExemplosSalvosAutomaticamente = useCallback(async () => {
-    if (!prontuarioAtual) return;
-
+  // Função para reinicializar o banco de dados (útil em caso de problemas)
+  const reinicializarDados = useCallback(async () => {
     try {
-      // Verificar cada tipo de exemplo e carregar se já foi carregado antes
-      if (verificarExemploJaCarregado("consultas")) {
-        await carregarConsultasExemplo();
-      }
-      if (verificarExemploJaCarregado("medicamentos")) {
-        await carregarMedicamentosExemplo();
-      }
-      if (verificarExemploJaCarregado("alergias")) {
-        await carregarAlergiasExemplo();
-      }
-      if (verificarExemploJaCarregado("cirurgias")) {
-        await carregarCirurgiasExemplo();
-      }
-      if (verificarExemploJaCarregado("historicoFamiliar")) {
-        await carregarHistoricoFamiliarExemplo();
-      }
-      if (verificarExemploJaCarregado("anexos")) {
-        await carregarAnexosExemplo();
-      }
+      setLoading(true);
+      // Limpa todos os dados do localStorage
+      clearAllData();
+      // Reinicia a inicialização
+      setDadosInicializados(false);
+      // Limpa o prontuário atual
+      setProntuarioAtual(null);
+      // Limpa as chaves de exemplos carregados
+      Object.values(EXEMPLOS_STORAGE_KEYS).forEach((key) => {
+        localStorage.removeItem(key);
+      });
+      // Reinicializa os dados
+      await popularPacientes();
+      setDadosInicializados(true);
+      return true;
     } catch (error) {
-      console.error("Erro ao carregar exemplos automaticamente:", error);
+      console.error("Erro ao reinicializar dados:", error);
+      setError("Erro ao reinicializar dados");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Função para carregar todos os exemplos de uma vez para o prontuário atual
+  const carregarTodosExemplos = useCallback(async () => {
+    if (!prontuarioAtual) {
+      throw new Error("Nenhum prontuário selecionado");
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      // Array para armazenar promessas de carregamento
+      const promessasCarregamento = [];
+
+      // Adicionar cada função de carregamento ao array
+      // Checamos se os exemplos já foram carregados ou se os dados já existem
+      if (
+        !verificarExemploJaCarregado("consultas") ||
+        !prontuarioAtual.consultas ||
+        prontuarioAtual.consultas.length === 0
+      ) {
+        promessasCarregamento.push(carregarConsultasExemplo());
+      }
+
+      if (
+        !verificarExemploJaCarregado("medicamentos") ||
+        !prontuarioAtual.medicamentos ||
+        prontuarioAtual.medicamentos.length === 0
+      ) {
+        promessasCarregamento.push(carregarMedicamentosExemplo());
+      }
+
+      if (
+        !verificarExemploJaCarregado("alergias") ||
+        !prontuarioAtual.alergias ||
+        prontuarioAtual.alergias.length === 0
+      ) {
+        promessasCarregamento.push(carregarAlergiasExemplo());
+      }
+
+      if (
+        !verificarExemploJaCarregado("cirurgias") ||
+        !prontuarioAtual.cirurgias ||
+        prontuarioAtual.cirurgias.length === 0
+      ) {
+        promessasCarregamento.push(carregarCirurgiasExemplo());
+      }
+
+      if (
+        !verificarExemploJaCarregado("historicoFamiliar") ||
+        !prontuarioAtual.historicoFamiliar ||
+        !prontuarioAtual.historicoFamiliar.doencas ||
+        prontuarioAtual.historicoFamiliar.doencas.length === 0
+      ) {
+        promessasCarregamento.push(carregarHistoricoFamiliarExemplo());
+      }
+
+      if (
+        !verificarExemploJaCarregado("anexos") ||
+        !prontuarioAtual.anexos ||
+        prontuarioAtual.anexos.length === 0
+      ) {
+        promessasCarregamento.push(carregarAnexosExemplo());
+      }
+
+      // Executar todas as promessas em paralelo
+      if (promessasCarregamento.length > 0) {
+        await Promise.all(promessasCarregamento);
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Erro ao carregar todos os exemplos:", error);
+      setError("Erro ao carregar dados de exemplo. Tente novamente.");
+      throw error;
+    } finally {
+      setLoading(false);
     }
   }, [
     prontuarioAtual,
+    verificarExemploJaCarregado,
     carregarConsultasExemplo,
     carregarMedicamentosExemplo,
     carregarAlergiasExemplo,
     carregarCirurgiasExemplo,
     carregarHistoricoFamiliarExemplo,
-    carregarAnexosExemplo,
-    verificarExemploJaCarregado
+    carregarAnexosExemplo
   ]);
-
-  // Carregar exemplos automaticamente quando um prontuário for selecionado
-  useEffect(() => {
-    if (prontuarioAtual) {
-      // Apenas carregar dados essenciais para evitar travamento
-      const carregarDadosEssenciais = async () => {
-        try {
-          // Apenas verificar se há dados, sem carregar tudo de uma vez
-          console.log("Prontuário selecionado:", prontuarioAtual.nomePaciente);
-
-          // Se não tiver consultas básicas, podemos carregar apenas esse componente essencial
-          if (!prontuarioAtual.consultas || prontuarioAtual.consultas.length === 0) {
-            if (verificarExemploJaCarregado("consultas")) {
-              await carregarConsultasExemplo();
-            }
-          }
-
-          // Outros dados serão carregados sob demanda quando o usuário acessar abas específicas
-        } catch (error) {
-          console.error("Erro ao carregar dados essenciais:", error);
-        }
-      };
-
-      carregarDadosEssenciais();
-    }
-  }, [prontuarioAtual, carregarConsultasExemplo, verificarExemploJaCarregado]);
 
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);
@@ -629,33 +718,6 @@ export const ProntuarioProvider = ({ children }) => {
     setError(null);
   }, []);
 
-  // Função para reinicializar o banco de dados (útil em caso de problemas)
-  const reinicializarDados = useCallback(async () => {
-    try {
-      setLoading(true);
-      // Limpa todos os dados do localStorage
-      clearAllData();
-      // Reinicia a inicialização
-      setDadosInicializados(false);
-      // Limpa o prontuário atual
-      setProntuarioAtual(null);
-      // Limpa as chaves de exemplos carregados
-      Object.values(EXEMPLOS_STORAGE_KEYS).forEach((key) => {
-        localStorage.removeItem(key);
-      });
-      // Reinicializa os dados
-      await popularPacientes();
-      setDadosInicializados(true);
-      return true;
-    } catch (error) {
-      console.error("Erro ao reinicializar dados:", error);
-      setError("Erro ao reinicializar dados");
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   return (
     <ProntuarioContext.Provider
       value={{
@@ -677,6 +739,7 @@ export const ProntuarioProvider = ({ children }) => {
         carregarCirurgiasExemplo,
         carregarHistoricoFamiliarExemplo,
         carregarAnexosExemplo,
+        carregarTodosExemplos,
         verificarExemploJaCarregado,
         reinicializarDados
       }}

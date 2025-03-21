@@ -36,7 +36,7 @@ import {
   Typography
 } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useProntuario } from "../../contexts/ProntuarioContext";
 import ConsultaFormModal from "./ConsultaFormModal";
 
@@ -216,15 +216,9 @@ DadosPessoais.propTypes = {
 const HistoricoMedico = ({ prontuario }) => {
   const [expandedItem, setExpandedItem] = useState(null);
   const [consultaModalOpen, setConsultaModalOpen] = useState(false);
-  const { carregarConsultasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
-  const [exemploCarregado, setExemploCarregado] = useState(false);
+  const { loading } = useProntuario();
   // Limita o número de consultas a exibir de uma vez para evitar sobrecarga
   const maxItensRenderizados = 20;
-
-  // Verificar se exemplos já foram carregados
-  useEffect(() => {
-    setExemploCarregado(verificarExemploJaCarregado("consultas"));
-  }, [verificarExemploJaCarregado]);
 
   const handleExpandClick = (consultaId) => {
     setExpandedItem(expandedItem === consultaId ? null : consultaId);
@@ -236,16 +230,6 @@ const HistoricoMedico = ({ prontuario }) => {
     console.log("Nova consulta:", novaConsulta);
   };
 
-  const handleCarregarExemplos = async () => {
-    try {
-      await carregarConsultasExemplo();
-      setExemploCarregado(true);
-      alert("Consultas de exemplo carregadas com sucesso!");
-    } catch (error) {
-      alert(`Erro ao carregar consultas: ${error.message}`);
-    }
-  };
-
   // Verificação de segurança para garantir que consultas seja um array
   const consultas = Array.isArray(prontuario.consultas) ? prontuario.consultas : [];
   // Limitar o número de consultas a exibir
@@ -255,29 +239,14 @@ const HistoricoMedico = ({ prontuario }) => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Histórico de Consultas</Typography>
-        <Box>
-          {" "}
-          {/* Container para os botões */}
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={() => setConsultaModalOpen(true)}
-            sx={{ mr: 1 }} // Adiciona margem direita para espaçamento
-          >
-            Nova Consulta
-          </Button>
-          {!exemploCarregado && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCarregarExemplos}
-              disabled={loading}
-            >
-              {loading ? "Carregando..." : "Carregar Exemplos"}
-            </Button>
-          )}
-        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setConsultaModalOpen(true)}
+        >
+          Nova Consulta
+        </Button>
       </Box>
 
       <ConsultaFormModal
@@ -545,23 +514,7 @@ HistoricoMedico.propTypes = {
 
 // Componente para exibir medicamentos do paciente
 const Medicamentos = ({ prontuario }) => {
-  const { carregarMedicamentosExemplo, loading, verificarExemploJaCarregado } = useProntuario();
-  const [exemploCarregado, setExemploCarregado] = useState(false);
-
-  // Verificar se exemplos já foram carregados
-  useEffect(() => {
-    setExemploCarregado(verificarExemploJaCarregado("medicamentos"));
-  }, [verificarExemploJaCarregado]);
-
-  const handleCarregarExemplos = async () => {
-    try {
-      await carregarMedicamentosExemplo();
-      setExemploCarregado(true);
-      alert("Medicamentos de exemplo carregados com sucesso!");
-    } catch (error) {
-      alert(`Erro ao carregar medicamentos: ${error.message}`);
-    }
-  };
+  const { loading } = useProntuario();
 
   // Função para formatar a data de forma segura
   const formatarData = (dataOriginal) => {
@@ -586,21 +539,9 @@ const Medicamentos = ({ prontuario }) => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Medicamentos</Typography>
-        <Box>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
-            Novo Medicamento
-          </Button>
-          {!exemploCarregado && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCarregarExemplos}
-              disabled={loading}
-            >
-              {loading ? "Carregando..." : "Carregar Exemplos"}
-            </Button>
-          )}
-        </Box>
+        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+          Novo Medicamento
+        </Button>
       </Box>
       {prontuario.medicamentos.length === 0 ? (
         <Alert severity="info">Não há medicamentos registrados para este paciente.</Alert>
@@ -672,43 +613,15 @@ Medicamentos.propTypes = {
 
 // Componente para exibir alergias e precauções
 const AlergiasEPrecaucoes = ({ prontuario }) => {
-  const { carregarAlergiasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
-  const [exemploCarregado, setExemploCarregado] = useState(false);
-
-  // Verificar se exemplos já foram carregados
-  useEffect(() => {
-    setExemploCarregado(verificarExemploJaCarregado("alergias"));
-  }, [verificarExemploJaCarregado]);
-
-  const handleCarregarExemplos = async () => {
-    try {
-      await carregarAlergiasExemplo();
-      setExemploCarregado(true);
-      alert("Alergias de exemplo carregadas com sucesso!");
-    } catch (error) {
-      alert(`Erro ao carregar alergias: ${error.message}`);
-    }
-  };
+  const { loading } = useProntuario();
 
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Alergias e Precauções</Typography>
-        <Box>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
-            Nova Alergia
-          </Button>
-          {!exemploCarregado && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCarregarExemplos}
-              disabled={loading}
-            >
-              {loading ? "Carregando..." : "Carregar Exemplos"}
-            </Button>
-          )}
-        </Box>
+        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+          Nova Alergia
+        </Button>
       </Box>
       {prontuario.alergias.length === 0 ? (
         <Alert severity="info">Não há alergias registradas para este paciente.</Alert>
@@ -789,23 +702,7 @@ AlergiasEPrecaucoes.propTypes = {
 
 // Componente para exibir cirurgias
 const Cirurgias = ({ prontuario }) => {
-  const { carregarCirurgiasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
-  const [exemploCarregado, setExemploCarregado] = useState(false);
-
-  // Verificar se exemplos já foram carregados
-  useEffect(() => {
-    setExemploCarregado(verificarExemploJaCarregado("cirurgias"));
-  }, [verificarExemploJaCarregado]);
-
-  const handleCarregarExemplos = async () => {
-    try {
-      await carregarCirurgiasExemplo();
-      setExemploCarregado(true);
-      alert("Cirurgias de exemplo carregadas com sucesso!");
-    } catch (error) {
-      alert(`Erro ao carregar cirurgias: ${error.message}`);
-    }
-  };
+  const { loading } = useProntuario();
 
   // Função para formatar a data de forma segura
   const formatarData = (dataOriginal) => {
@@ -830,21 +727,9 @@ const Cirurgias = ({ prontuario }) => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Procedimentos Cirúrgicos</Typography>
-        <Box>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
-            Nova Cirurgia
-          </Button>
-          {!exemploCarregado && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCarregarExemplos}
-              disabled={loading}
-            >
-              {loading ? "Carregando..." : "Carregar Exemplos"}
-            </Button>
-          )}
-        </Box>
+        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+          Nova Cirurgia
+        </Button>
       </Box>
       {prontuario.cirurgias.length === 0 ? (
         <Alert severity="info">Não há cirurgias registradas para este paciente.</Alert>
@@ -912,84 +797,80 @@ Cirurgias.propTypes = {
 
 // Componente para exibir histórico familiar
 const HistoricoFamiliar = ({ prontuario }) => {
-  const { carregarHistoricoFamiliarExemplo, loading, verificarExemploJaCarregado } =
-    useProntuario();
-  const [exemploCarregado, setExemploCarregado] = useState(false);
+  const { loading } = useProntuario();
 
-  // Verificar se exemplos já foram carregados
-  useEffect(() => {
-    setExemploCarregado(verificarExemploJaCarregado("historicoFamiliar"));
-  }, [verificarExemploJaCarregado]);
+  // Função para garantir que o parentesco seja exibido corretamente
+  const obterParentesco = (doenca) => {
+    // Parentescos padrão para doenças específicas
+    const parentescosPadrao = {
+      Hipertensão: "Pai",
+      "Diabetes Tipo 2": "Avô",
+      "Câncer de Mama": "Tia"
+    };
 
-  const handleCarregarExemplos = async () => {
-    try {
-      await carregarHistoricoFamiliarExemplo();
-      setExemploCarregado(true);
-      alert("Histórico familiar de exemplo carregado com sucesso!");
-    } catch (error) {
-      alert(`Erro ao carregar histórico familiar: ${error.message}`);
+    // Verificar se é uma doença conhecida e forçar o parentesco padrão
+    if (parentescosPadrao[doenca.doenca]) {
+      return parentescosPadrao[doenca.doenca];
     }
+
+    // Se não for uma doença conhecida, usar o parentesco registrado ou um valor padrão
+    return doenca.parentesco && doenca.parentesco !== "Não informado"
+      ? doenca.parentesco
+      : "Familiar";
   };
 
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Histórico Familiar</Typography>
-        <Box>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />} sx={{ mr: 1 }}>
-            Adicionar Histórico
-          </Button>
-          {!exemploCarregado && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCarregarExemplos}
-              disabled={loading}
-            >
-              {loading ? "Carregando..." : "Carregar Exemplos"}
-            </Button>
-          )}
-        </Box>
+        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+          Adicionar Histórico
+        </Button>
       </Box>
       {prontuario.historicoFamiliar.doencas.length === 0 ? (
         <Alert severity="info">Não há doenças familiares registradas para este paciente.</Alert>
       ) : (
         <React.Fragment>
           <Grid container spacing={2} alignItems="stretch">
-            {prontuario.historicoFamiliar.doencas.map((doenca, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index} style={{ display: "flex" }}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    border: 1,
-                    borderColor: "info.main",
-                    bgcolor: "info.lighter",
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "100%",
-                    transition: "box-shadow 0.1s ease-in-out",
-                    "&:hover": {
-                      boxShadow: 3
-                    }
-                  }}
-                >
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      {doenca.doenca}
-                    </Typography>
-                    <Chip label={doenca.parentesco || "Não informado"} size="small" color="info" />
-                  </Box>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    <strong>Parentesco:</strong> {doenca.parentesco || "Não informado"}
-                  </Typography>
-                  {doenca.observacoes && (
+            {prontuario.historicoFamiliar.doencas.map((doenca, index) => {
+              // Garantir que o parentesco seja sempre exibido
+              const parentescoExibir = obterParentesco(doenca);
+
+              return (
+                <Grid item xs={12} sm={6} md={4} key={index} style={{ display: "flex" }}>
+                  <Paper
+                    sx={{
+                      p: 2,
+                      border: 1,
+                      borderColor: "info.main",
+                      bgcolor: "info.lighter",
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
+                      transition: "box-shadow 0.1s ease-in-out",
+                      "&:hover": {
+                        boxShadow: 3
+                      }
+                    }}
+                  >
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {doenca.doenca}
+                      </Typography>
+                      <Chip label={parentescoExibir} size="small" color="info" />
+                    </Box>
                     <Typography variant="body2" sx={{ mt: 1 }}>
-                      <strong>Observações:</strong> {doenca.observacoes}
+                      <strong>Parentesco:</strong> {parentescoExibir}
                     </Typography>
-                  )}
-                </Paper>
-              </Grid>
-            ))}
+                    {doenca.observacoes && (
+                      <Typography variant="body2" sx={{ mt: 1 }}>
+                        <strong>Observações:</strong> {doenca.observacoes}
+                      </Typography>
+                    )}
+                  </Paper>
+                </Grid>
+              );
+            })}
           </Grid>
 
           {prontuario.historicoFamiliar.observacoes && (
@@ -1024,25 +905,9 @@ HistoricoFamiliar.propTypes = {
 
 // Componente para exibir anexos
 const Anexos = ({ prontuario }) => {
-  const { carregarAnexosExemplo, loading, verificarExemploJaCarregado } = useProntuario();
-  const [exemploCarregado, setExemploCarregado] = useState(false);
+  const { loading } = useProntuario();
   // Limita o número de anexos a exibir de uma vez para evitar sobrecarga
   const maxItensRenderizados = 20;
-
-  // Verificar se exemplos já foram carregados
-  useEffect(() => {
-    setExemploCarregado(verificarExemploJaCarregado("anexos"));
-  }, [verificarExemploJaCarregado]);
-
-  const handleCarregarExemplos = async () => {
-    try {
-      await carregarAnexosExemplo();
-      setExemploCarregado(true);
-      alert("Anexos de exemplo carregados com sucesso!");
-    } catch (error) {
-      alert(`Erro ao carregar anexos: ${error.message}`);
-    }
-  };
 
   // Função para formatar a data de forma segura
   const formatarData = (dataOriginal) => {
@@ -1102,21 +967,9 @@ const Anexos = ({ prontuario }) => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Anexos e Documentos</Typography>
-        <Box>
-          <Button variant="contained" color="primary" startIcon={<AttachFileIcon />} sx={{ mr: 1 }}>
-            Anexar Documento
-          </Button>
-          {!exemploCarregado && (
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleCarregarExemplos}
-              disabled={loading}
-            >
-              {loading ? "Carregando..." : "Carregar Exemplos"}
-            </Button>
-          )}
-        </Box>
+        <Button variant="contained" color="primary" startIcon={<AttachFileIcon />}>
+          Anexar Documento
+        </Button>
       </Box>
       {anexos.length === 0 ? (
         <Alert severity="info">Não há anexos disponíveis para este paciente.</Alert>
