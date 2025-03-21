@@ -77,9 +77,8 @@ const DadosPessoais = ({ paciente }) => {
           border: 1,
           borderColor: "primary.main",
           bgcolor: "primary.lighter",
-          transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+          transition: "box-shadow 0.1s ease-in-out",
           "&:hover": {
-            transform: "translateY(-3px)",
             boxShadow: 3
           }
         }}
@@ -175,9 +174,8 @@ const DadosPessoais = ({ paciente }) => {
           border: 1,
           borderColor: "info.main",
           bgcolor: "info.lighter",
-          transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+          transition: "box-shadow 0.1s ease-in-out",
           "&:hover": {
-            transform: "translateY(-3px)",
             boxShadow: 3
           }
         }}
@@ -559,9 +557,8 @@ const Medicamentos = ({ prontuario }) => {
                     display: "flex",
                     flexDirection: "column",
                     width: "100%",
-                    transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                    transition: "box-shadow 0.1s ease-in-out",
                     "&:hover": {
-                      transform: "translateY(-3px)",
                       boxShadow: 3
                     }
                   }}
@@ -663,9 +660,8 @@ const AlergiasEPrecaucoes = ({ prontuario }) => {
                   display: "flex",
                   flexDirection: "column",
                   width: "100%",
-                  transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                  transition: "box-shadow 0.1s ease-in-out",
                   "&:hover": {
-                    transform: "translateY(-3px)",
                     boxShadow: 3
                   }
                 }}
@@ -778,9 +774,8 @@ const Cirurgias = ({ prontuario }) => {
                   display: "flex",
                   flexDirection: "column",
                   width: "100%",
-                  transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                  transition: "box-shadow 0.1s ease-in-out",
                   "&:hover": {
-                    transform: "translateY(-3px)",
                     boxShadow: 3
                   }
                 }}
@@ -872,9 +867,8 @@ const HistoricoFamiliar = ({ prontuario }) => {
                     display: "flex",
                     flexDirection: "column",
                     width: "100%",
-                    transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                    transition: "box-shadow 0.1s ease-in-out",
                     "&:hover": {
-                      transform: "translateY(-3px)",
                       boxShadow: 3
                     }
                   }}
@@ -903,9 +897,8 @@ const HistoricoFamiliar = ({ prontuario }) => {
                 border: 1,
                 borderColor: "info.main",
                 bgcolor: "info.lighter",
-                transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                transition: "box-shadow 0.1s ease-in-out",
                 "&:hover": {
-                  transform: "translateY(-3px)",
                   boxShadow: 3
                 }
               }}
@@ -1027,9 +1020,8 @@ const Anexos = ({ prontuario }) => {
                     width: "100%",
                     height: "100%",
                     minHeight: "160px",
-                    transition: "transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out",
+                    transition: "box-shadow 0.1s ease-in-out",
                     "&:hover": {
-                      transform: "translateY(-3px)",
                       boxShadow: 3
                     }
                   }}
