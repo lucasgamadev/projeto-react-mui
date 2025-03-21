@@ -11,7 +11,7 @@ const initializeStorage = () => {
 };
 
 // Função para obter os dados do storage
-const getStorageData = () => {
+export const getStorageData = () => {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : initializeStorage();
@@ -22,7 +22,7 @@ const getStorageData = () => {
 };
 
 // Função para salvar dados no storage
-const saveStorageData = (data) => {
+export const saveStorageData = (data) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
@@ -140,5 +140,7 @@ export default {
   addProntuario,
   updateProntuario,
   deleteProntuario,
-  clearAllData
+  clearAllData,
+  getStorageData,
+  saveStorageData
 };

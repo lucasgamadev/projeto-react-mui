@@ -2,6 +2,7 @@ import {
   AddCircle as AddCircleIcon,
   ArrowBack as ArrowBackIcon,
   PersonSearch as PersonSearchIcon,
+  RestartAlt as RestartAltIcon,
   Search as SearchIcon
 } from "@mui/icons-material";
 import {
@@ -69,7 +70,8 @@ const Prontuario = () => {
     buscarProntuario,
     buscarProntuarioPorCPF,
     buscarProntuarioPorNome,
-    limparProntuario
+    limparProntuario,
+    reinicializarDados
   } = useProntuario();
 
   const [pacienteSelecionado, setPacienteSelecionado] = useState(null);
@@ -144,16 +146,24 @@ const Prontuario = () => {
     setPacienteSelecionado(paciente);
     if (paciente) {
       try {
-        await buscarProntuario(paciente.id);
-        setSnackbar({
-          open: true,
-          message: "Prontuário carregado com sucesso",
-          severity: "success"
-        });
+        // Buscar o prontuário pelo CPF em vez do ID
+        const prontuariosPorCPF = await buscarProntuarioPorCPF(paciente.cpf);
+        if (prontuariosPorCPF && prontuariosPorCPF.length > 0) {
+          // Use o primeiro prontuário encontrado com o CPF
+          await buscarProntuario(prontuariosPorCPF[0].id);
+          setSnackbar({
+            open: true,
+            message: "Prontuário carregado com sucesso",
+            severity: "success"
+          });
+        } else {
+          throw new Error("Prontuário não encontrado para este CPF");
+        }
       } catch (error) {
+        console.error("Erro ao carregar prontuário:", error);
         setSnackbar({
           open: true,
-          message: "Erro ao carregar prontuário. Tente novamente.",
+          message: `Erro ao carregar prontuário: ${error.message}`,
           severity: "error"
         });
       }
@@ -179,6 +189,35 @@ const Prontuario = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  // Função para reinicializar os dados do sistema
+  const handleReinicializarDados = async () => {
+    try {
+      if (
+        window.confirm(
+          "Tem certeza que deseja reinicializar todos os dados? Esta ação não pode ser desfeita."
+        )
+      ) {
+        setBuscando(true);
+        await reinicializarDados();
+        setSearchResults([]);
+        setPacienteSelecionado(null);
+        setSnackbar({
+          open: true,
+          message: "Dados reinicializados com sucesso. Os exemplos foram recarregados.",
+          severity: "success"
+        });
+      }
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: `Erro ao reinicializar dados: ${error.message}`,
+        severity: "error"
+      });
+    } finally {
+      setBuscando(false);
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       {!pacienteSelecionado ? (
@@ -194,14 +233,25 @@ const Prontuario = () => {
 
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h6">Buscar Paciente</Typography>
-            <Button
-              variant="outlined"
-              color="primary"
-              startIcon={<AddCircleIcon />}
-              onClick={handleCarregarExemplos}
-            >
-              Carregar Exemplos
-            </Button>
+            <Box>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<AddCircleIcon />}
+                onClick={handleCarregarExemplos}
+                sx={{ mr: 1 }}
+              >
+                Carregar Exemplos
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                startIcon={<RestartAltIcon />}
+                onClick={handleReinicializarDados}
+              >
+                Reinicializar Dados
+              </Button>
+            </Box>
           </Box>
 
           <Autocomplete
@@ -304,10 +354,14 @@ const Prontuario = () => {
             <ProntuarioDetails prontuario={prontuarioAtual} />
           ) : (
             <Alert severity="error">
-              Não foi possível carregar o prontuário. Tente novamente.
-              <Box mt={2}>
+              Não foi possível carregar o prontuário. O sistema pode estar com problemas de
+              inicialização.
+              <Box mt={2} display="flex" gap={2}>
                 <Button variant="outlined" onClick={handleVoltar}>
                   Voltar à busca
+                </Button>
+                <Button variant="contained" color="error" onClick={handleReinicializarDados}>
+                  Reinicializar Dados
                 </Button>
               </Box>
             </Alert>

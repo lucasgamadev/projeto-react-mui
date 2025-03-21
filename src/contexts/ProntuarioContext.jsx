@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import dadosExemplo from "../data/dadosExemplo.json";
 import {
   addProntuario,
+  clearAllData,
   getProntuarioById,
   getProntuariosByCPF,
   getProntuariosByNome,
@@ -34,10 +35,12 @@ export const ProntuarioProvider = ({ children }) => {
       if (!dadosInicializados) {
         try {
           console.log("Inicializando dados de exemplo...");
-          await popularPacientes();
+          const pacientesCriados = await popularPacientes();
+          console.log(`${pacientesCriados} pacientes inicializados no sistema`);
           setDadosInicializados(true);
         } catch (error) {
           console.error("Erro ao inicializar dados:", error);
+          setError("Erro ao inicializar dados de exemplo. Tente recarregar a página.");
         }
       }
     };
@@ -92,31 +95,31 @@ export const ProntuarioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      // Busca o paciente correspondente no arquivo de exemplo
-      const pacienteExemplo = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual.cpf);
-
-      if (
-        !pacienteExemplo ||
-        !pacienteExemplo.consultas ||
-        pacienteExemplo.consultas.length === 0
-      ) {
-        throw new Error("Não há consultas de exemplo disponíveis para este paciente");
-      }
-
-      // Converte as datas de string para objeto Date
-      const consultasAtualizadas = pacienteExemplo.consultas.map((consulta) => {
-        if (typeof consulta.data === "string") {
-          return {
-            ...consulta,
-            data: new Date(consulta.data)
-          };
+      // Limitar a quantidade de consultas para evitar sobrecarga
+      const maxConsultas = 20;
+      const consultasProcessadas = dadosExemplo.consultas.slice(0, maxConsultas).map((consulta) => {
+        // Processamento seguro das datas
+        let dataConsulta;
+        try {
+          dataConsulta = new Date(consulta.data);
+          if (isNaN(dataConsulta.getTime())) {
+            dataConsulta = new Date();
+          }
+        } catch (error) {
+          console.error("Erro ao processar data da consulta:", error);
+          dataConsulta = new Date();
         }
-        return consulta;
+
+        return {
+          ...consulta,
+          id: consulta.id || `consulta-${Math.random().toString(36).substr(2, 9)}`,
+          data: dataConsulta
+        };
       });
 
       const prontuarioAtualizado = {
         ...prontuarioAtual,
-        consultas: consultasAtualizadas
+        consultas: consultasProcessadas
       };
 
       // Atualiza o prontuário no localStorage e no estado
@@ -126,7 +129,7 @@ export const ProntuarioProvider = ({ children }) => {
       // Salvar que exemplos foram carregados
       salvarEstadoExemploCarregado("consultas");
 
-      return prontuarioAtualizado;
+      return consultasProcessadas;
     } catch (err) {
       console.error("Erro ao carregar consultas de exemplo:", err);
       setError(err.message || "Erro ao carregar consultas de exemplo");
@@ -281,53 +284,82 @@ export const ProntuarioProvider = ({ children }) => {
     }
   };
 
-  const carregarAnexosExemplo = async () => {
+  const carregarAnexosExemplo = useCallback(async () => {
     try {
       setLoading(true);
-      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+      // Encontrar o paciente atual pelo CPF
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual.cpf);
 
-      if (pacienteAtual && pacienteAtual.anexos) {
-        const anexosAtualizados = pacienteAtual.anexos.map((anexo) => {
-          // Garantir que a data seja convertida para objeto Date
-          let dataConvertida;
+      if (!pacienteAtual) {
+        throw new Error("Paciente não encontrado");
+      }
+
+      // Processamento seguro de anexos
+      const anexosProcessados = [];
+      // Limitar a quantidade de anexos para evitar sobrecarga
+      const maxAnexos = 20;
+      let contador = 0;
+
+      // Processar cada anexo com tratamento de exceções
+      for (const anexo of dadosExemplo.anexos) {
+        try {
+          if (contador >= maxAnexos) break;
+          contador++;
+
+          // Converter data para objeto Date, com validação
+          let dataUpload;
           try {
-            dataConvertida = new Date(anexo.data);
+            dataUpload = new Date(anexo.data);
             // Verificar se a data é válida
-            if (isNaN(dataConvertida.getTime())) {
-              console.warn(`Data inválida para anexo: ${anexo.data}`);
-              dataConvertida = new Date(); // Usar data atual como fallback
+            if (isNaN(dataUpload.getTime())) {
+              dataUpload = new Date(); // Utilizar data atual como fallback
             }
           } catch (error) {
-            console.error(`Erro ao converter data do anexo: ${anexo.data}`, error);
-            dataConvertida = new Date(); // Usar data atual como fallback
+            console.error("Erro ao processar data:", error);
+            dataUpload = new Date();
           }
 
-          return {
-            ...anexo,
-            dataUpload: dataConvertida,
-            categoria: anexo.tipo || "Documento",
-            descricao: anexo.descricao || `Arquivo ${anexo.nome} (${anexo.tipo || "Documento"})`
+          // Criar o anexo com as propriedades esperadas
+          const anexoProcessado = {
+            id: anexo.id || `anexo-${Math.random().toString(36).substr(2, 9)}`,
+            nome: anexo.titulo || "Anexo sem título",
+            categoria: anexo.tipo || "Documento", // Usar tipo como categoria
+            tipo: anexo.tipo || "Documento",
+            dataUpload: dataUpload,
+            url: anexo.url || "#",
+            descricao:
+              anexo.descricao || `${anexo.titulo || "Anexo"} (${anexo.tipo || "Documento"})`,
+            tamanho: anexo.tamanho || "1 MB"
           };
-        });
 
-        const prontuarioAtualizado = {
-          ...prontuarioAtual,
-          anexos: anexosAtualizados
-        };
-
-        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
-        setProntuarioAtual(prontuarioAtualizado);
-
-        // Salvar que exemplos foram carregados
-        salvarEstadoExemploCarregado("anexos");
+          anexosProcessados.push(anexoProcessado);
+        } catch (error) {
+          console.error("Erro ao processar anexo individual:", error);
+          // Continuar com o próximo anexo
+        }
       }
+
+      // Atualizar o prontuário atual com os anexos processados
+      const prontuarioAtualizado = {
+        ...prontuarioAtual,
+        anexos: anexosProcessados
+      };
+
+      updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+      setProntuarioAtual(prontuarioAtualizado);
+
+      // Atualizar o registro de exemplos carregados
+      salvarEstadoExemploCarregado("anexos");
+
+      console.log("Anexos de exemplo atualizados:", anexosProcessados);
+      return anexosProcessados;
     } catch (error) {
-      console.error("Erro ao carregar anexos:", error);
+      console.error("Erro ao carregar anexos de exemplo:", error);
       throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, [prontuarioAtual]);
 
   // Função para carregar automaticamente exemplos ao selecionar um prontuário
   const carregarExemplosSalvosAutomaticamente = useCallback(async () => {
@@ -517,6 +549,33 @@ export const ProntuarioProvider = ({ children }) => {
     setError(null);
   }, []);
 
+  // Função para reinicializar o banco de dados (útil em caso de problemas)
+  const reinicializarDados = useCallback(async () => {
+    try {
+      setLoading(true);
+      // Limpa todos os dados do localStorage
+      clearAllData();
+      // Reinicia a inicialização
+      setDadosInicializados(false);
+      // Limpa o prontuário atual
+      setProntuarioAtual(null);
+      // Limpa as chaves de exemplos carregados
+      Object.values(EXEMPLOS_STORAGE_KEYS).forEach((key) => {
+        localStorage.removeItem(key);
+      });
+      // Reinicializa os dados
+      await popularPacientes();
+      setDadosInicializados(true);
+      return true;
+    } catch (error) {
+      console.error("Erro ao reinicializar dados:", error);
+      setError("Erro ao reinicializar dados");
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <ProntuarioContext.Provider
       value={{
@@ -538,7 +597,8 @@ export const ProntuarioProvider = ({ children }) => {
         carregarCirurgiasExemplo,
         carregarHistoricoFamiliarExemplo,
         carregarAnexosExemplo,
-        verificarExemploJaCarregado
+        verificarExemploJaCarregado,
+        reinicializarDados
       }}
     >
       {children}

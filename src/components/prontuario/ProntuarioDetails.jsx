@@ -3,15 +3,16 @@ import {
   Add as AddIcon,
   AttachFile as AttachFileIcon,
   DocumentScanner as DocumentScannerIcon,
+  Download as DownloadIcon,
   Event as EventIcon,
   Healing as HealingIcon,
-  LocalHospital as LocalHospitalIcon,
   MedicalServices as MedicalServicesIcon,
-  ReceiptLong as ReceiptLongIcon,
   Report as ReportIcon,
   Science as ScienceIcon,
-  SecurityUpdateWarning as SecurityUpdateWarningIcon
+  SecurityUpdateWarning as SecurityUpdateWarningIcon,
+  Visibility as VisibilityIcon
 } from "@mui/icons-material";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import {
   Alert,
   Avatar,
@@ -216,6 +217,8 @@ const HistoricoMedico = ({ prontuario }) => {
   const [consultaModalOpen, setConsultaModalOpen] = useState(false);
   const { carregarConsultasExemplo, loading, verificarExemploJaCarregado } = useProntuario();
   const [exemploCarregado, setExemploCarregado] = useState(false);
+  // Limita o número de consultas a exibir de uma vez para evitar sobrecarga
+  const maxItensRenderizados = 20;
 
   // Verificar se exemplos já foram carregados
   useEffect(() => {
@@ -241,6 +244,11 @@ const HistoricoMedico = ({ prontuario }) => {
       alert(`Erro ao carregar consultas: ${error.message}`);
     }
   };
+
+  // Verificação de segurança para garantir que consultas seja um array
+  const consultas = Array.isArray(prontuario.consultas) ? prontuario.consultas : [];
+  // Limitar o número de consultas a exibir
+  const consultasLimitadas = consultas.slice(0, maxItensRenderizados);
 
   return (
     <Box>
@@ -276,227 +284,255 @@ const HistoricoMedico = ({ prontuario }) => {
         onClose={() => setConsultaModalOpen(false)}
         onSave={handleAddConsulta}
       />
-      {!prontuario.consultas || prontuario.consultas.length === 0 ? (
+      {consultas.length === 0 ? (
         <Alert severity="info">Não há consultas registradas para este paciente.</Alert>
       ) : (
-        <List>
-          {prontuario.consultas.map((consulta) => {
-            const isExpanded = expandedItem === consulta.id;
+        <>
+          <List>
+            {consultasLimitadas.map((consulta) => {
+              if (!consulta) return null; // Proteção contra consultas nulas
 
-            // Formatar data para exibição
-            let dataFormatada, horaFormatada;
-            try {
-              // Verifica se consulta.data é uma string ou objeto Date
-              const dataConsulta =
-                typeof consulta.data === "string" ? new Date(consulta.data) : consulta.data;
+              const isExpanded = expandedItem === consulta.id;
+              const consultaId = consulta.id || `consulta-${Math.random()}`;
 
-              dataFormatada = dataConsulta.toLocaleDateString("pt-BR");
-              horaFormatada = dataConsulta.toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit"
-              });
-            } catch (error) {
-              console.error("Erro ao formatar data:", error);
-              dataFormatada = consulta.data || "Data não disponível";
-              horaFormatada = "";
-            }
+              // Formatar data para exibição
+              let dataFormatada, horaFormatada;
+              try {
+                // Verifica se consulta.data é uma string ou objeto Date
+                const dataConsulta =
+                  typeof consulta.data === "string" ? new Date(consulta.data) : consulta.data;
 
-            return (
-              <Paper
-                key={consulta.id}
-                elevation={1}
-                sx={{ mb: 2, borderLeft: 4, borderColor: "primary.main" }}
-              >
-                <ListItem
-                  button
-                  onClick={() => handleExpandClick(consulta.id)}
-                  alignItems="flex-start"
+                if (isNaN(dataConsulta?.getTime())) {
+                  dataFormatada = "Data inválida";
+                  horaFormatada = "";
+                } else {
+                  dataFormatada = dataConsulta.toLocaleDateString("pt-BR");
+                  horaFormatada = dataConsulta.toLocaleTimeString("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                  });
+                }
+              } catch (error) {
+                console.error("Erro ao formatar data:", error);
+                dataFormatada = consulta.data || "Data não disponível";
+                horaFormatada = "";
+              }
+
+              return (
+                <Paper
+                  key={consultaId}
+                  elevation={1}
+                  sx={{ mb: 2, borderLeft: 4, borderColor: "primary.main" }}
                 >
-                  <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: "primary.main" }}>
-                      <MedicalServicesIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Box display="flex" justifyContent="space-between">
-                        <Typography variant="subtitle1">
-                          {consulta.medico || consulta.medicoNome}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {dataFormatada} {horaFormatada ? `às ${horaFormatada}` : ""}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={
-                      <React.Fragment>
-                        <Typography variant="body2" color="text.primary" component="span">
-                          {consulta.especialidade} - {consulta.motivoConsulta || consulta.tipo}
-                        </Typography>
-                        <br />
-                        <Typography variant="caption" color="text.secondary">
-                          {consulta.hipoteseDiagnostica || consulta.diagnostico || ""}
-                        </Typography>
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
+                  <ListItem
+                    button
+                    onClick={() => handleExpandClick(consultaId)}
+                    alignItems="flex-start"
+                  >
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: "primary.main" }}>
+                        <MedicalServicesIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Box display="flex" justifyContent="space-between">
+                          <Typography variant="subtitle1">
+                            {consulta.medico || consulta.medicoNome || "Médico não informado"}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {dataFormatada} {horaFormatada ? `às ${horaFormatada}` : ""}
+                          </Typography>
+                        </Box>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          <Typography variant="body2" color="text.primary" component="span">
+                            {consulta.especialidade || "Especialidade não informada"} -{" "}
+                            {consulta.motivoConsulta || consulta.tipo || "Consulta médica"}
+                          </Typography>
+                          <br />
+                          <Typography variant="caption" color="text.secondary">
+                            {consulta.hipoteseDiagnostica ||
+                              consulta.diagnostico ||
+                              "Sem diagnóstico"}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
 
-                <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                  <CardContent>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          Queixa Principal
-                        </Typography>
-                        <Typography variant="body2">{consulta.descricaoQueixa}</Typography>
-                      </Grid>
+                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                    <CardContent>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                          <Typography variant="subtitle2" color="text.secondary">
+                            Queixa Principal
+                          </Typography>
+                          <Typography variant="body2">
+                            {consulta.descricaoQueixa || "Não informada"}
+                          </Typography>
+                        </Grid>
 
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          Sinais Vitais
-                        </Typography>
-                        <Grid container spacing={1}>
-                          {consulta.sinaisVitais ? (
-                            <>
-                              <Grid item xs={6} sm={3}>
-                                <Typography variant="caption" display="block">
-                                  Pressão Arterial
-                                </Typography>
-                                <Typography variant="body2">
-                                  {consulta.sinaisVitais.pressaoArterialSistolica || "-"}/
-                                  {consulta.sinaisVitais.pressaoArterialDiastolica || "-"} mmHg
+                        <Grid item xs={12}>
+                          <Typography variant="subtitle2" color="text.secondary">
+                            Sinais Vitais
+                          </Typography>
+                          <Grid container spacing={1}>
+                            {consulta.sinaisVitais ? (
+                              <>
+                                <Grid item xs={6} sm={3}>
+                                  <Typography variant="caption" display="block">
+                                    Pressão Arterial
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {consulta.sinaisVitais.pressaoArterialSistolica || "-"}/
+                                    {consulta.sinaisVitais.pressaoArterialDiastolica || "-"} mmHg
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={6} sm={3}>
+                                  <Typography variant="caption" display="block">
+                                    Freq. Cardíaca
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {consulta.sinaisVitais.frequenciaCardiaca || "-"} bpm
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={6} sm={3}>
+                                  <Typography variant="caption" display="block">
+                                    Temperatura
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {consulta.sinaisVitais.temperatura || "-"} °C
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={6} sm={3}>
+                                  <Typography variant="caption" display="block">
+                                    SatO2
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {consulta.sinaisVitais.saturacaoOxigenio || "-"}%
+                                  </Typography>
+                                </Grid>
+                              </>
+                            ) : (
+                              <Grid item xs={12}>
+                                <Typography variant="body2" color="text.secondary">
+                                  Sinais vitais não registrados
                                 </Typography>
                               </Grid>
-                              <Grid item xs={6} sm={3}>
-                                <Typography variant="caption" display="block">
-                                  Freq. Cardíaca
-                                </Typography>
-                                <Typography variant="body2">
-                                  {consulta.sinaisVitais.frequenciaCardiaca || "-"} bpm
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={6} sm={3}>
-                                <Typography variant="caption" display="block">
-                                  Temperatura
-                                </Typography>
-                                <Typography variant="body2">
-                                  {consulta.sinaisVitais.temperatura || "-"} °C
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={6} sm={3}>
-                                <Typography variant="caption" display="block">
-                                  SatO2
-                                </Typography>
-                                <Typography variant="body2">
-                                  {consulta.sinaisVitais.saturacaoOxigenio || "-"}%
-                                </Typography>
-                              </Grid>
-                            </>
-                          ) : (
-                            <Grid item xs={12}>
-                              <Typography variant="body2" color="text.secondary">
-                                Sinais vitais não registrados
-                              </Typography>
-                            </Grid>
-                          )}
+                            )}
+                          </Grid>
                         </Grid>
+
+                        <Grid item xs={12}>
+                          <Divider sx={{ my: 1 }} />
+                          <Typography variant="subtitle2" color="text.secondary">
+                            Hipótese Diagnóstica
+                          </Typography>
+                          <Typography variant="body2">
+                            {consulta.hipoteseDiagnostica || "Não informada"}
+                          </Typography>
+                        </Grid>
+
+                        {consulta.diagnosticoDefinitivo && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                              Diagnóstico Definitivo
+                            </Typography>
+                            <Typography variant="body2">
+                              {consulta.diagnosticoDefinitivo}
+                            </Typography>
+                          </Grid>
+                        )}
+
+                        {consulta.codigosCID && consulta.codigosCID.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                              CID
+                            </Typography>
+                            <Box display="flex" gap={1}>
+                              {consulta.codigosCID.map((cid, index) => (
+                                <Chip key={index} label={cid} size="small" />
+                              ))}
+                            </Box>
+                          </Grid>
+                        )}
+
+                        <Grid item xs={12}>
+                          <Typography variant="subtitle2" color="text.secondary">
+                            Conduta
+                          </Typography>
+                          <Typography variant="body2">
+                            {consulta.conduta || "Não informada"}
+                          </Typography>
+                        </Grid>
+
+                        {consulta.prescricoes && consulta.prescricoes.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                              Prescrições
+                            </Typography>
+                            <List dense disablePadding>
+                              {consulta.prescricoes.map((prescricao, index) => (
+                                <ListItem key={index} disablePadding sx={{ py: 0.5 }}>
+                                  <ListItemAvatar sx={{ minWidth: 36 }}>
+                                    <MedicalServicesIcon fontSize="small" color="primary" />
+                                  </ListItemAvatar>
+                                  <ListItemText
+                                    primary={`${prescricao.medicamento || "Medicamento"} ${prescricao.concentracao || ""}`}
+                                    secondary={prescricao.posologia || "Posologia não informada"}
+                                  />
+                                </ListItem>
+                              ))}
+                            </List>
+                          </Grid>
+                        )}
+
+                        {consulta.examesSolicitados && consulta.examesSolicitados.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                              Exames Solicitados
+                            </Typography>
+                            <List dense disablePadding>
+                              {consulta.examesSolicitados.map((exame, index) => (
+                                <ListItem key={index} disablePadding sx={{ py: 0.5 }}>
+                                  <ListItemAvatar sx={{ minWidth: 36 }}>
+                                    <ScienceIcon fontSize="small" color="primary" />
+                                  </ListItemAvatar>
+                                  <ListItemText
+                                    primary={exame.exame || "Exame"}
+                                    secondary={exame.justificativa || "Sem justificativa"}
+                                  />
+                                </ListItem>
+                              ))}
+                            </List>
+                          </Grid>
+                        )}
+
+                        {consulta.observacoes && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                              Observações
+                            </Typography>
+                            <Typography variant="body2">{consulta.observacoes}</Typography>
+                          </Grid>
+                        )}
                       </Grid>
-
-                      <Grid item xs={12}>
-                        <Divider sx={{ my: 1 }} />
-                        <Typography variant="subtitle2" color="text.secondary">
-                          Hipótese Diagnóstica
-                        </Typography>
-                        <Typography variant="body2">{consulta.hipoteseDiagnostica}</Typography>
-                      </Grid>
-
-                      {consulta.diagnosticoDefinitivo && (
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Diagnóstico Definitivo
-                          </Typography>
-                          <Typography variant="body2">{consulta.diagnosticoDefinitivo}</Typography>
-                        </Grid>
-                      )}
-
-                      {consulta.codigosCID && consulta.codigosCID.length > 0 && (
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            CID
-                          </Typography>
-                          <Box display="flex" gap={1}>
-                            {consulta.codigosCID.map((cid, index) => (
-                              <Chip key={index} label={cid} size="small" />
-                            ))}
-                          </Box>
-                        </Grid>
-                      )}
-
-                      <Grid item xs={12}>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          Conduta
-                        </Typography>
-                        <Typography variant="body2">{consulta.conduta}</Typography>
-                      </Grid>
-
-                      {consulta.prescricoes && consulta.prescricoes.length > 0 && (
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Prescrições
-                          </Typography>
-                          <List dense disablePadding>
-                            {consulta.prescricoes.map((prescricao, index) => (
-                              <ListItem key={index} disablePadding sx={{ py: 0.5 }}>
-                                <ListItemAvatar sx={{ minWidth: 36 }}>
-                                  <MedicalServicesIcon fontSize="small" color="primary" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                  primary={`${prescricao.medicamento} ${prescricao.concentracao}`}
-                                  secondary={prescricao.posologia}
-                                />
-                              </ListItem>
-                            ))}
-                          </List>
-                        </Grid>
-                      )}
-
-                      {consulta.examesSolicitados && consulta.examesSolicitados.length > 0 && (
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Exames Solicitados
-                          </Typography>
-                          <List dense disablePadding>
-                            {consulta.examesSolicitados.map((exame, index) => (
-                              <ListItem key={index} disablePadding sx={{ py: 0.5 }}>
-                                <ListItemAvatar sx={{ minWidth: 36 }}>
-                                  <ScienceIcon fontSize="small" color="primary" />
-                                </ListItemAvatar>
-                                <ListItemText
-                                  primary={exame.exame}
-                                  secondary={exame.justificativa}
-                                />
-                              </ListItem>
-                            ))}
-                          </List>
-                        </Grid>
-                      )}
-
-                      {consulta.observacoes && (
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Observações
-                          </Typography>
-                          <Typography variant="body2">{consulta.observacoes}</Typography>
-                        </Grid>
-                      )}
-                    </Grid>
-                  </CardContent>
-                </Collapse>
-              </Paper>
-            );
-          })}
-        </List>
+                    </CardContent>
+                  </Collapse>
+                </Paper>
+              );
+            })}
+          </List>
+          {consultas.length > maxItensRenderizados && (
+            <Box mt={2} textAlign="center">
+              <Typography variant="body2" color="text.secondary">
+                Exibindo {maxItensRenderizados} de {consultas.length} consultas.
+              </Typography>
+            </Box>
+          )}
+        </>
       )}
     </Box>
   );
@@ -986,6 +1022,8 @@ HistoricoFamiliar.propTypes = {
 const Anexos = ({ prontuario }) => {
   const { carregarAnexosExemplo, loading, verificarExemploJaCarregado } = useProntuario();
   const [exemploCarregado, setExemploCarregado] = useState(false);
+  // Limita o número de anexos a exibir de uma vez para evitar sobrecarga
+  const maxItensRenderizados = 20;
 
   // Verificar se exemplos já foram carregados
   useEffect(() => {
@@ -1023,7 +1061,8 @@ const Anexos = ({ prontuario }) => {
 
   // Função para obter o ícone baseado no tipo de documento
   const getIconByFileType = (tipo) => {
-    switch (tipo?.toLowerCase()) {
+    const tipoDocumento = tipo?.toLowerCase() || "";
+    switch (tipoDocumento) {
       case "exame":
         return <ScienceIcon />;
       case "receita":
@@ -1037,7 +1076,8 @@ const Anexos = ({ prontuario }) => {
 
   // Função para obter a cor de acordo com o tipo de documento
   const getColorByFileType = (tipo) => {
-    switch (tipo?.toLowerCase()) {
+    const tipoDocumento = tipo?.toLowerCase() || "";
+    switch (tipoDocumento) {
       case "exame":
         return "primary";
       case "receita":
@@ -1048,6 +1088,11 @@ const Anexos = ({ prontuario }) => {
         return "info";
     }
   };
+
+  // Verificação de segurança para garantir que anexos seja um array
+  const anexos = Array.isArray(prontuario.anexos) ? prontuario.anexos : [];
+  // Limitar o número de anexos a exibir
+  const anexosLimitados = anexos.slice(0, maxItensRenderizados);
 
   return (
     <Box>
@@ -1069,121 +1114,137 @@ const Anexos = ({ prontuario }) => {
           )}
         </Box>
       </Box>
-      {prontuario.anexos.length === 0 ? (
+      {anexos.length === 0 ? (
         <Alert severity="info">Não há anexos disponíveis para este paciente.</Alert>
       ) : (
-        <Grid container spacing={2} alignItems="stretch" sx={{ alignContent: "flex-start" }}>
-          {prontuario.anexos.map((anexo) => {
-            const color = getColorByFileType(anexo.categoria);
-            return (
-              <Grid
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                key={anexo.id}
-                style={{ display: "flex", height: "100%" }}
-              >
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    border: 1,
-                    borderColor: `${color}.main`,
-                    bgcolor: `${color}.lighter`,
-                    width: "100%",
-                    height: "100%",
-                    minHeight: "160px",
-                    transition: "box-shadow 0.1s ease-in-out",
-                    "&:hover": {
-                      boxShadow: 3
-                    }
-                  }}
+        <>
+          <Grid container spacing={2} alignItems="stretch" sx={{ alignContent: "flex-start" }}>
+            {anexosLimitados.map((anexo) => {
+              if (!anexo) return null; // Proteção contra anexos nulos
+
+              // Usar tipo como fallback para categoria
+              const tipoAnexo = anexo.categoria || anexo.tipo || "Documento";
+              const nomeAnexo = anexo.nome || `Arquivo ${tipoAnexo}`;
+              const descricaoAnexo = anexo.descricao || `${nomeAnexo} (${tipoAnexo})`;
+              const dataAnexo = anexo.dataUpload || anexo.data;
+              const dataFormatada = dataAnexo ? formatarData(dataAnexo) : "Data não disponível";
+              const color = getColorByFileType(tipoAnexo);
+
+              return (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  key={anexo.id || `anexo-${Math.random()}`}
+                  style={{ display: "flex", height: "100%" }}
                 >
-                  <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                    <Box display="flex" alignItems="center" overflow="hidden" flex={1} mr={1}>
-                      <Avatar
-                        sx={{
-                          bgcolor: `${color}.main`,
-                          mr: 1.5,
-                          width: 32,
-                          height: 32,
-                          flexShrink: 0
-                        }}
-                      >
-                        {getIconByFileType(anexo.categoria)}
-                      </Avatar>
-                      <Box>
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight="bold"
-                          noWrap
-                          title={anexo.nome}
-                          sx={{ lineHeight: 1.2 }}
-                        >
-                          {`Arquivo ${anexo.categoria}`}
-                        </Typography>
-                      </Box>
-                    </Box>
-                    <Chip
-                      label={anexo.categoria}
-                      size="small"
-                      color={color}
-                      sx={{ flexShrink: 0 }}
-                    />
-                  </Box>
-
-                  <Box sx={{ mt: 1.5, flex: 1, minHeight: 0 }}>
-                    <Typography
-                      variant="caption"
-                      display="block"
-                      sx={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical"
-                      }}
-                      title={anexo.descricao}
-                    >
-                      {anexo.descricao}
-                    </Typography>
-                  </Box>
-
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mt="auto"
-                    pt={1.5}
-                    borderTop={1}
-                    borderColor="divider"
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      border: 1,
+                      borderColor: `${color}.main`,
+                      bgcolor: `${color}.lighter`,
+                      width: "100%",
+                      height: "100%",
+                      minHeight: "160px",
+                      transition: "box-shadow 0.1s ease-in-out",
+                      "&:hover": {
+                        boxShadow: 3
+                      }
+                    }}
                   >
-                    <Box display="flex" alignItems="center">
-                      <EventIcon
-                        fontSize="small"
-                        sx={{ color: "text.secondary", fontSize: 16, mr: 0.5 }}
-                      />
-                      <Typography variant="caption" color="text.secondary">
-                        {formatarData(anexo.dataUpload)}
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                      <Box display="flex" alignItems="center" overflow="hidden" flex={1} mr={1}>
+                        <Avatar
+                          sx={{
+                            bgcolor: `${color}.main`,
+                            mr: 1.5,
+                            width: 32,
+                            height: 32,
+                            flexShrink: 0
+                          }}
+                        >
+                          {getIconByFileType(tipoAnexo)}
+                        </Avatar>
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight="bold"
+                            noWrap
+                            title={nomeAnexo}
+                            sx={{ lineHeight: 1.2 }}
+                          >
+                            {nomeAnexo}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Adicionado em: {dataFormatada}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Chip label={tipoAnexo} size="small" color={color} sx={{ flexShrink: 0 }} />
+                    </Box>
+
+                    <Box sx={{ mt: 1.5, flex: 1, minHeight: 0 }}>
+                      <Typography
+                        variant="caption"
+                        display="block"
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical"
+                        }}
+                        title={descricaoAnexo}
+                      >
+                        {descricaoAnexo}
                       </Typography>
                     </Box>
-                    <Button
-                      size="small"
-                      color={color}
-                      variant="outlined"
-                      startIcon={<ReceiptLongIcon fontSize="small" />}
-                      sx={{ height: 28, fontSize: "0.75rem" }}
+
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        gap: 1,
+                        mt: "auto",
+                        pt: 2
+                      }}
                     >
-                      Visualizar
-                    </Button>
-                  </Box>
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color={color}
+                        startIcon={<VisibilityIcon />}
+                        onClick={() => alert(`Visualizando arquivo: ${nomeAnexo}`)}
+                      >
+                        Visualizar
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color={color}
+                        startIcon={<DownloadIcon />}
+                        onClick={() => alert(`Download iniciado: ${nomeAnexo}`)}
+                      >
+                        Baixar
+                      </Button>
+                    </Box>
+                  </Paper>
+                </Grid>
+              );
+            })}
+          </Grid>
+          {anexos.length > maxItensRenderizados && (
+            <Box mt={2} textAlign="center">
+              <Typography variant="body2" color="text.secondary">
+                Exibindo {maxItensRenderizados} de {anexos.length} anexos.
+              </Typography>
+            </Box>
+          )}
+        </>
       )}
     </Box>
   );
@@ -1205,8 +1266,57 @@ const ProntuarioDetails = ({ prontuario }) => {
     return <Alert severity="warning">Prontuário não encontrado</Alert>;
   }
 
-  console.log("ProntuarioDetails - prontuario:", prontuario);
-  console.log("ProntuarioDetails - prontuario.dataCriacao:", prontuario.dataCriacao);
+  // Função para formatação segura de datas
+  const formatarDataSegura = (dataString) => {
+    try {
+      if (!dataString) return "Data não disponível";
+
+      const data = new Date(dataString);
+      if (isNaN(data.getTime())) return "Data inválida";
+
+      return data.toLocaleDateString("pt-BR");
+    } catch (error) {
+      console.error("Erro ao formatar data:", error);
+      return "Data não disponível";
+    }
+  };
+
+  // Formatar alergias de forma segura para exibição
+  const formatarAlergias = () => {
+    try {
+      if (
+        !prontuario.alergias ||
+        !Array.isArray(prontuario.alergias) ||
+        prontuario.alergias.length === 0
+      ) {
+        return "Nenhuma alergia registrada";
+      }
+
+      // Limitar para as 3 primeiras alergias para evitar textos muito longos
+      const primeirasTresAlergias = prontuario.alergias.slice(0, 3);
+
+      const textoAlergias = primeirasTresAlergias
+        .map((a) => {
+          if (!a) return "Alergia não especificada";
+
+          const agente = a.agente || "Agente não especificado";
+          const gravidade = a.gravidade ? ` (${a.gravidade})` : "";
+          const reacao = a.reacao ? ` - ${a.reacao}` : "";
+
+          return `${agente}${gravidade}${reacao}`;
+        })
+        .join(", ");
+
+      if (prontuario.alergias.length > 3) {
+        return `${textoAlergias} e mais ${prontuario.alergias.length - 3} alergia(s)`;
+      }
+
+      return textoAlergias;
+    } catch (error) {
+      console.error("Erro ao formatar alergias:", error);
+      return "Erro ao processar alergias";
+    }
+  };
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -1223,18 +1333,18 @@ const ProntuarioDetails = ({ prontuario }) => {
         >
           <Box display="flex" alignItems="center">
             <Avatar sx={{ bgcolor: "primary.main", mr: 2 }}>
-              {prontuario.nomePaciente.charAt(0)}
+              {prontuario.nomePaciente?.charAt(0) || "P"}
             </Avatar>
             <Box>
-              <Typography variant="h5">{prontuario.nomePaciente}</Typography>
+              <Typography variant="h5">{prontuario.nomePaciente || "Paciente"}</Typography>
               <Typography variant="body2" color="text.secondary">
                 {prontuario.sexo === "M"
                   ? "Masculino"
                   : prontuario.sexo === "F"
                     ? "Feminino"
                     : "Outro"}{" "}
-                • {prontuario.dataNascimento} •{" "}
-                {prontuario.dadosPessoais.tipoSanguineo || "Tipo sanguíneo não informado"}
+                • {prontuario.dataNascimento || "Data não informada"} •{" "}
+                {prontuario.dadosPessoais?.tipoSanguineo || "Tipo sanguíneo não informado"}
               </Typography>
             </Box>
           </Box>
@@ -1243,7 +1353,7 @@ const ProntuarioDetails = ({ prontuario }) => {
               <Box display="flex" alignItems="center" mr={2}>
                 <EventIcon fontSize="small" color="disabled" sx={{ mr: 0.5 }} />
                 <Typography variant="caption" color="text.secondary">
-                  Criado em: {new Date(prontuario.dataCriacao).toLocaleDateString("pt-BR")}
+                  Criado em: {formatarDataSegura(prontuario.dataCriacao)}
                 </Typography>
               </Box>
             </Tooltip>
@@ -1251,8 +1361,7 @@ const ProntuarioDetails = ({ prontuario }) => {
               <Box display="flex" alignItems="center">
                 <AccessTimeIcon fontSize="small" color="disabled" sx={{ mr: 0.5 }} />
                 <Typography variant="caption" color="text.secondary">
-                  Atualizado em:{" "}
-                  {new Date(prontuario.ultimaAtualizacao).toLocaleDateString("pt-BR")}
+                  Atualizado em: {formatarDataSegura(prontuario.ultimaAtualizacao)}
                 </Typography>
               </Box>
             </Tooltip>
@@ -1272,17 +1381,7 @@ const ProntuarioDetails = ({ prontuario }) => {
         >
           <SecurityUpdateWarningIcon color="error" sx={{ mr: 1 }} />
           <Typography variant="body2" color="error">
-            <strong>Alerta de Alergias:</strong>{" "}
-            {prontuario.alergias && prontuario.alergias.length > 0
-              ? prontuario.alergias
-                  .map(
-                    (a) =>
-                      `${a.agente || "Não especificado"}${
-                        a.gravidade ? ` (${a.gravidade})` : ""
-                      } - ${a.reacao || "Reação não especificada"}`
-                  )
-                  .join(", ")
-              : "Nenhuma alergia registrada"}
+            <strong>Alerta de Alergias:</strong> {formatarAlergias()}
           </Typography>
         </Box>
 
