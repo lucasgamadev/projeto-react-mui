@@ -251,38 +251,90 @@ export const ProntuarioProvider = ({ children }) => {
     }
   };
 
-  const carregarHistoricoFamiliarExemplo = async () => {
+  const carregarHistoricoFamiliarExemplo = useCallback(async () => {
     try {
       setLoading(true);
-      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
 
-      if (pacienteAtual && pacienteAtual.historicoFamiliar) {
-        const historicoFamiliarAtualizado = {
-          doencas: pacienteAtual.historicoFamiliar.doencas.map((doenca) => ({
-            ...doenca,
-            parentesco: doenca.parente
-          })),
-          observacoes: pacienteAtual.historicoFamiliar.observacoes
-        };
-
-        const prontuarioAtualizado = {
-          ...prontuarioAtual,
-          historicoFamiliar: historicoFamiliarAtualizado
-        };
-
-        updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
-        setProntuarioAtual(prontuarioAtualizado);
-
-        // Salvar que exemplos foram carregados
-        salvarEstadoExemploCarregado("historicoFamiliar");
+      // Verificar se prontuarioAtual existe
+      if (!prontuarioAtual) {
+        throw new Error("Nenhum prontuário selecionado");
       }
+
+      // Limitar a quantidade de doencas para evitar sobrecarga
+      const maxDoencas = 10;
+
+      // Dados a serem processados
+      let doencasProcessadas = [];
+      let observacoesGerais = "";
+
+      // Buscar dados de exemplo com segurança
+      try {
+        const historicoFamiliarExemplo = dadosExemplo.historicoFamiliar || [];
+
+        // Processar as doenças com limite
+        if (Array.isArray(historicoFamiliarExemplo) && historicoFamiliarExemplo.length > 0) {
+          // Se for um array direto de doenças
+          doencasProcessadas = historicoFamiliarExemplo.slice(0, maxDoencas).map((doenca) => ({
+            doenca: doenca.doenca || doenca.nome || "Doença não especificada",
+            parentesco: doenca.parentesco || doenca.parente || "Não informado",
+            observacoes: doenca.observacoes || ""
+          }));
+        } else {
+          // Tentar buscar do paciente
+          const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual.cpf);
+
+          if (pacienteAtual && pacienteAtual.historicoFamiliar) {
+            if (Array.isArray(pacienteAtual.historicoFamiliar.doencas)) {
+              doencasProcessadas = pacienteAtual.historicoFamiliar.doencas
+                .slice(0, maxDoencas)
+                .map((doenca) => ({
+                  doenca: doenca.doenca || doenca.nome || "Doença não especificada",
+                  parentesco: doenca.parentesco || doenca.parente || "Não informado",
+                  observacoes: doenca.observacoes || ""
+                }));
+            }
+
+            observacoesGerais = pacienteAtual.historicoFamiliar.observacoes || "";
+          }
+        }
+      } catch (processError) {
+        console.error("Erro ao processar histórico familiar:", processError);
+        // Em caso de erro, usar um conjunto padrão de doenças
+        doencasProcessadas = [
+          { doenca: "Hipertensão", parentesco: "Pai", observacoes: "Diagnosticada aos 45 anos" },
+          {
+            doenca: "Diabetes Tipo 2",
+            parentesco: "Avô",
+            observacoes: "Diagnosticado aos 60 anos"
+          },
+          { doenca: "Câncer de Mama", parentesco: "Tia", observacoes: "Diagnosticado aos 55 anos" }
+        ];
+      }
+
+      // Atualizar o prontuário com dados processados
+      const historicoFamiliarAtualizado = {
+        doencas: doencasProcessadas,
+        observacoes: observacoesGerais
+      };
+
+      const prontuarioAtualizado = {
+        ...prontuarioAtual,
+        historicoFamiliar: historicoFamiliarAtualizado
+      };
+
+      updateProntuario(prontuarioAtual.id, prontuarioAtualizado);
+      setProntuarioAtual(prontuarioAtualizado);
+
+      // Salvar que exemplos foram carregados
+      salvarEstadoExemploCarregado("historicoFamiliar");
+      return prontuarioAtualizado;
     } catch (error) {
       console.error("Erro ao carregar histórico familiar:", error);
       throw error;
     } finally {
       setLoading(false);
     }
-  };
+  }, [prontuarioAtual]);
 
   const carregarAnexosExemplo = useCallback(async () => {
     try {
@@ -388,14 +440,42 @@ export const ProntuarioProvider = ({ children }) => {
     } catch (error) {
       console.error("Erro ao carregar exemplos automaticamente:", error);
     }
-  }, [prontuarioAtual, carregarConsultasExemplo]);
+  }, [
+    prontuarioAtual,
+    carregarConsultasExemplo,
+    carregarMedicamentosExemplo,
+    carregarAlergiasExemplo,
+    carregarCirurgiasExemplo,
+    carregarHistoricoFamiliarExemplo,
+    carregarAnexosExemplo,
+    verificarExemploJaCarregado
+  ]);
 
   // Carregar exemplos automaticamente quando um prontuário for selecionado
   useEffect(() => {
     if (prontuarioAtual) {
-      carregarExemplosSalvosAutomaticamente();
+      // Apenas carregar dados essenciais para evitar travamento
+      const carregarDadosEssenciais = async () => {
+        try {
+          // Apenas verificar se há dados, sem carregar tudo de uma vez
+          console.log("Prontuário selecionado:", prontuarioAtual.nomePaciente);
+
+          // Se não tiver consultas básicas, podemos carregar apenas esse componente essencial
+          if (!prontuarioAtual.consultas || prontuarioAtual.consultas.length === 0) {
+            if (verificarExemploJaCarregado("consultas")) {
+              await carregarConsultasExemplo();
+            }
+          }
+
+          // Outros dados serão carregados sob demanda quando o usuário acessar abas específicas
+        } catch (error) {
+          console.error("Erro ao carregar dados essenciais:", error);
+        }
+      };
+
+      carregarDadosEssenciais();
     }
-  }, [prontuarioAtual, carregarExemplosSalvosAutomaticamente]);
+  }, [prontuarioAtual, carregarConsultasExemplo, verificarExemploJaCarregado]);
 
   const buscarProntuarioPorCPF = useCallback(async (cpf) => {
     setLoading(true);

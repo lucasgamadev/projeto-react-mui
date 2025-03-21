@@ -20,6 +20,7 @@ import {
   Button,
   CardContent,
   Chip,
+  CircularProgress,
   Collapse,
   Divider,
   Grid,
@@ -976,8 +977,11 @@ const HistoricoFamiliar = ({ prontuario }) => {
                     <Typography variant="subtitle1" fontWeight="bold">
                       {doenca.doenca}
                     </Typography>
-                    <Chip label={doenca.parentesco} size="small" color="info" />
+                    <Chip label={doenca.parentesco || "Não informado"} size="small" color="info" />
                   </Box>
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    <strong>Parentesco:</strong> {doenca.parentesco || "Não informado"}
+                  </Typography>
                   {doenca.observacoes && (
                     <Typography variant="body2" sx={{ mt: 1 }}>
                       <strong>Observações:</strong> {doenca.observacoes}
@@ -1257,9 +1261,87 @@ Anexos.propTypes = {
 // Componente principal do Prontuário Eletrônico
 const ProntuarioDetails = ({ prontuario }) => {
   const [tabValue, setTabValue] = useState(0);
+  const [carregandoAba, setCarregandoAba] = useState(false);
+  const {
+    carregarConsultasExemplo,
+    carregarMedicamentosExemplo,
+    carregarAlergiasExemplo,
+    carregarCirurgiasExemplo,
+    carregarHistoricoFamiliarExemplo,
+    carregarAnexosExemplo,
+    verificarExemploJaCarregado
+  } = useProntuario();
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+
+    // Carregar dados sob demanda quando o usuário seleciona uma aba específica
+    carregarDadosDaAba(newValue);
+  };
+
+  // Função para carregar dados específicos de cada aba quando necessário
+  const carregarDadosDaAba = async (abaIndex) => {
+    try {
+      setCarregandoAba(true);
+      switch (abaIndex) {
+        case 1: // Histórico
+          if (
+            !verificarExemploJaCarregado("consultas") &&
+            (!prontuario.consultas || prontuario.consultas.length === 0)
+          ) {
+            await carregarConsultasExemplo();
+          }
+          break;
+        case 2: // Medicamentos
+          if (
+            !verificarExemploJaCarregado("medicamentos") &&
+            (!prontuario.medicamentos || prontuario.medicamentos.length === 0)
+          ) {
+            await carregarMedicamentosExemplo();
+          }
+          break;
+        case 3: // Alergias
+          if (
+            !verificarExemploJaCarregado("alergias") &&
+            (!prontuario.alergias || prontuario.alergias.length === 0)
+          ) {
+            await carregarAlergiasExemplo();
+          }
+          break;
+        case 4: // Cirurgias
+          if (
+            !verificarExemploJaCarregado("cirurgias") &&
+            (!prontuario.cirurgias || prontuario.cirurgias.length === 0)
+          ) {
+            await carregarCirurgiasExemplo();
+          }
+          break;
+        case 5: // Hist. Familiar
+          if (
+            !verificarExemploJaCarregado("historicoFamiliar") &&
+            (!prontuario.historicoFamiliar ||
+              !prontuario.historicoFamiliar.doencas ||
+              prontuario.historicoFamiliar.doencas.length === 0)
+          ) {
+            await carregarHistoricoFamiliarExemplo();
+          }
+          break;
+        case 6: // Anexos
+          if (
+            !verificarExemploJaCarregado("anexos") &&
+            (!prontuario.anexos || prontuario.anexos.length === 0)
+          ) {
+            await carregarAnexosExemplo();
+          }
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("Erro ao carregar dados da aba:", error);
+    } finally {
+      setCarregandoAba(false);
+    }
   };
 
   if (!prontuario) {
@@ -1409,22 +1491,58 @@ const ProntuarioDetails = ({ prontuario }) => {
         <DadosPessoais paciente={prontuario} />
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
-        <HistoricoMedico prontuario={prontuario} />
+        {carregandoAba ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <HistoricoMedico prontuario={prontuario} />
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index={2}>
-        <Medicamentos prontuario={prontuario} />
+        {carregandoAba ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Medicamentos prontuario={prontuario} />
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index={3}>
-        <AlergiasEPrecaucoes prontuario={prontuario} />
+        {carregandoAba ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <AlergiasEPrecaucoes prontuario={prontuario} />
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index={4}>
-        <Cirurgias prontuario={prontuario} />
+        {carregandoAba ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Cirurgias prontuario={prontuario} />
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index={5}>
-        <HistoricoFamiliar prontuario={prontuario} />
+        {carregandoAba ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <HistoricoFamiliar prontuario={prontuario} />
+        )}
       </TabPanel>
       <TabPanel value={tabValue} index={6}>
-        <Anexos prontuario={prontuario} />
+        {carregandoAba ? (
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Anexos prontuario={prontuario} />
+        )}
       </TabPanel>
     </Box>
   );
