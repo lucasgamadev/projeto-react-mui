@@ -29,6 +29,8 @@ import {
   Tooltip,
   Typography
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import ScienceIcon from "@mui/icons-material/Science";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import React, { useEffect, useState } from "react";
@@ -180,8 +182,18 @@ const VisualizadorResultadosExames = ({ pacienteId, medicoLogado, onExportarResu
     if (!exameAtual) return null;
 
     return (
-      <Dialog open={dialogRegistroAberto} onClose={fecharDialogRegistro} maxWidth="md" fullWidth>
-        <DialogTitle>Registrar Resultado - {exameAtual.tipoExame?.nome}</DialogTitle>
+      <Dialog open={dialogRegistroAberto} onClose={fecharDialogRegistro} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 2 } }}>
+        <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex" alignItems="center">
+              <ScienceIcon sx={{ mr: 1, color: 'text.secondary' }} />
+              <Typography variant="h6">RESULTADOS DE EXAMES</Typography>
+            </Box>
+            <IconButton onClick={fecharDialogRegistro} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
         <DialogContent>
           <Box sx={{ my: 2 }}>
             <Typography variant="subtitle2" gutterBottom>
@@ -251,8 +263,8 @@ const VisualizadorResultadosExames = ({ pacienteId, medicoLogado, onExportarResu
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={fecharDialogRegistro}>Cancelar</Button>
+        <DialogActions sx={{ px: 3, py: 2, borderTop: 1, borderColor: "divider" }}>
+          <Button onClick={fecharDialogRegistro} color="inherit">Cancelar</Button>
           <Button onClick={salvarResultado} color="primary" variant="contained" disabled={loading}>
             {loading ? <CircularProgress size={24} /> : "Salvar Resultado"}
           </Button>

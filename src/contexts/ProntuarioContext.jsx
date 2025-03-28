@@ -10,6 +10,7 @@ import {
   updateProntuario
 } from "../services/localStorageService";
 import { popularPacientes } from "../services/seedService";
+import AnexarDocumentoModal from '../components/AnexarDocumentoModal';
 
 const ProntuarioContext = createContext();
 
@@ -28,6 +29,7 @@ export const ProntuarioProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dadosInicializados, setDadosInicializados] = useState(false);
+  const [modalAnexarDocumentoAberto, setModalAnexarDocumentoAberto] = useState(false);
 
   // Inicializa dados de exemplo
   useEffect(() => {
@@ -745,6 +747,25 @@ export const ProntuarioProvider = ({ children }) => {
     [prontuarioAtual]
   );
 
+  const abrirModalAnexarDocumento = () => {
+    setModalAnexarDocumentoAberto(true);
+  };
+
+  const fecharModalAnexarDocumento = () => {
+    setModalAnexarDocumentoAberto(false);
+  };
+
+  const anexarDocumento = async (documento) => {
+    if (!prontuarioAtual) return;
+    try {
+      // Lógica para anexar o documento ao prontuário
+      console.log('Documento anexado:', documento);
+    } catch (error) {
+      console.error('Erro ao anexar documento:', error);
+      setError('Erro ao anexar documento. Tente novamente.');
+    }
+  };
+
   return (
     <ProntuarioContext.Provider
       value={{
@@ -771,10 +792,19 @@ export const ProntuarioProvider = ({ children }) => {
         verificarExemploJaCarregado,
         reinicializarDados,
         adicionarHistoricoFamiliar: () => {},
-        limparDados: limparProntuario
+        limparDados: limparProntuario,
+        modalAnexarDocumentoAberto,
+        abrirModalAnexarDocumento,
+        fecharModalAnexarDocumento,
+        anexarDocumento
       }}
     >
       {children}
+      <AnexarDocumentoModal
+        open={modalAnexarDocumentoAberto}
+        onClose={fecharModalAnexarDocumento}
+        onAnexar={anexarDocumento}
+      />
     </ProntuarioContext.Provider>
   );
 };

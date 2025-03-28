@@ -1,25 +1,12 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormHelperText,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography
-} from "@mui/material";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { ptBR } from "date-fns/locale";
-import PropTypes from "prop-types";
-import { useState } from "react";
+import { Close as CloseIcon } from '@mui/icons-material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Grid, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { ptBR } from 'date-fns/locale';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Report as ReportIcon } from '@mui/icons-material';
 
 const CirurgiaFormModal = ({ open, onClose, onSave }) => {
   const [cirurgia, setCirurgia] = useState({
@@ -94,105 +81,106 @@ const CirurgiaFormModal = ({ open, onClose, onSave }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>
-        <Typography variant="h6" component="div">
-          Registrar Nova Cirurgia
-        </Typography>
+    <Dialog 
+      open={open} 
+      onClose={handleClose} 
+      maxWidth="sm" 
+      fullWidth
+      PaperProps={{
+        sx: { borderRadius: 2 }
+      }}
+    >
+      <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" alignItems="center">
+            <ReportIcon sx={{ mr: 1, color: 'text.secondary' }} />
+            <Typography variant="h6">NOVA CIRURGIA</Typography>
+          </Box>
+          <IconButton onClick={handleClose} size="small">
+            <CloseIcon />
+          </IconButton>
+        </Box>
       </DialogTitle>
       <DialogContent>
         <Box sx={{ mt: 2 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
+              <FormControl fullWidth error={!!errors.tipo}>
+                <InputLabel>Tipo de Cirurgia</InputLabel>
+                <Select
+                  value={cirurgia.tipo}
+                  onChange={(e) => handleChange('tipo', e.target.value)}
+                  label="Tipo de Cirurgia"
+                >
+                  <MenuItem value="Cardíaca">Cardíaca</MenuItem>
+                  <MenuItem value="Ortopédica">Ortopédica</MenuItem>
+                  <MenuItem value="Plástica">Plástica</MenuItem>
+                  <MenuItem value="Outra">Outra</MenuItem>
+                </Select>
+                {errors.tipo && <FormHelperText>{errors.tipo}</FormHelperText>}
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
-                label="Tipo de Cirurgia"
                 fullWidth
-                value={cirurgia.tipo}
-                onChange={(e) => handleChange("tipo", e.target.value)}
-                error={!!errors.tipo}
-                helperText={errors.tipo}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
-                <DatePicker
-                  label="Data da Cirurgia"
-                  value={cirurgia.data}
-                  onChange={(newValue) => handleChange("data", newValue)}
-                  slotProps={{
-                    textField: {
-                      fullWidth: true,
-                      required: true
-                    }
-                  }}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
                 label="Hospital"
-                fullWidth
                 value={cirurgia.hospital}
-                onChange={(e) => handleChange("hospital", e.target.value)}
+                onChange={(e) => handleChange('hospital', e.target.value)}
                 error={!!errors.hospital}
                 helperText={errors.hospital}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Médico Responsável"
-                fullWidth
-                value={cirurgia.medicoResponsavel}
-                onChange={(e) => handleChange("medicoResponsavel", e.target.value)}
-                error={!!errors.medicoResponsavel}
-                helperText={errors.medicoResponsavel}
-                required
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Descrição do Procedimento"
                 fullWidth
-                multiline
-                rows={3}
-                value={cirurgia.descricao}
-                onChange={(e) => handleChange("descricao", e.target.value)}
+                label="Médico Responsável"
+                value={cirurgia.medicoResponsavel}
+                onChange={(e) => handleChange('medicoResponsavel', e.target.value)}
+                error={!!errors.medicoResponsavel}
+                helperText={errors.medicoResponsavel}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBR}>
+                <DatePicker
+                  label="Data da Cirurgia"
+                  value={cirurgia.data}
+                  onChange={(date) => handleChange('data', date)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                    />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12}>
               <TextField
-                label="Resultado"
                 fullWidth
+                label="Resultado"
                 value={cirurgia.resultado}
-                onChange={(e) => handleChange("resultado", e.target.value)}
+                onChange={(e) => handleChange('resultado', e.target.value)}
                 error={!!errors.resultado}
                 helperText={errors.resultado}
-                required
+                multiline
+                rows={3}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth>
-                <InputLabel id="complicacoes-label">Complicações</InputLabel>
-                <Select
-                  labelId="complicacoes-label"
-                  value={cirurgia.complicacoes}
-                  label="Complicações"
-                  onChange={(e) => handleChange("complicacoes", e.target.value)}
-                >
-                  <MenuItem value="Nenhuma">Nenhuma</MenuItem>
-                  <MenuItem value="Leves">Leves</MenuItem>
-                  <MenuItem value="Moderadas">Moderadas</MenuItem>
-                  <MenuItem value="Graves">Graves</MenuItem>
-                </Select>
-                <FormHelperText>Selecione se houve complicações</FormHelperText>
-              </FormControl>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Complicações"
+                value={cirurgia.complicacoes}
+                onChange={(e) => handleChange('complicacoes', e.target.value)}
+                multiline
+                rows={2}
+              />
             </Grid>
           </Grid>
         </Box>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ px: 3, py: 2, borderTop: 1, borderColor: "divider" }}>
         <Button onClick={handleClose} color="inherit">
           Cancelar
         </Button>

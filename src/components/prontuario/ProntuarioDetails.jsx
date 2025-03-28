@@ -5,6 +5,7 @@ import {
   DocumentScanner as DocumentScannerIcon,
   Download as DownloadIcon,
   Event as EventIcon,
+  FamilyRestroom as FamilyRestroomIcon,
   Healing as HealingIcon,
   MedicalServices as MedicalServicesIcon,
   Report as ReportIcon,
@@ -1001,7 +1002,7 @@ HistoricoFamiliar.propTypes = {
 
 // Componente para exibir anexos
 const Anexos = ({ prontuario }) => {
-  const { loading } = useProntuario();
+  const { loading, abrirModalAnexarDocumento } = useProntuario();
   // Limita o número de anexos a exibir de uma vez para evitar sobrecarga
   const maxItensRenderizados = 20;
 
@@ -1063,7 +1064,12 @@ const Anexos = ({ prontuario }) => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Anexos e Documentos</Typography>
-        <Button variant="contained" color="primary" startIcon={<AttachFileIcon />}>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          startIcon={<AttachFileIcon />}
+          onClick={abrirModalAnexarDocumento}
+        >
           Anexar Documento
         </Button>
       </Box>
@@ -1431,7 +1437,7 @@ const ProntuarioDetails = ({ prontuario }) => {
           <Tab icon={<LocalHospitalIcon />} label="Medicamentos" />
           <Tab icon={<SecurityUpdateWarningIcon />} label="Alergias" />
           <Tab icon={<ReportIcon />} label="Cirurgias" />
-          <Tab icon={<ScienceIcon />} label="Hist. Familiar" />
+          <Tab icon={<FamilyRestroomIcon />} label="Hist. Familiar" />
           <Tab icon={<DocumentScannerIcon />} label="Anexos" />
         </Tabs>
       </Paper>

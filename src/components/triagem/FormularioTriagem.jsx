@@ -2,7 +2,8 @@ import {
   Add as AddIcon,
   LocalHospital as HospitalIcon,
   Info as InfoIcon,
-  WarningAmber as WarningIcon
+  WarningAmber as WarningIcon,
+  Close as CloseIcon
 } from "@mui/icons-material";
 import {
   Box,
@@ -335,7 +336,16 @@ const FormularioTriagem = ({ paciente, triagem, onSubmit }) => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
-      <Paper sx={{ p: 3, mb: 2 }}>
+      <Paper sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
+          <Box display="flex" alignItems="center">
+            <HospitalIcon sx={{ mr: 1, color: 'primary.main' }} />
+            <Typography variant="h6">TRIAGEM DO PACIENTE</Typography>
+          </Box>
+          <IconButton size="small" onClick={() => window.history.back()}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
         <Typography variant="h6" gutterBottom>
           Dados do Paciente
         </Typography>
@@ -690,7 +700,12 @@ const FormularioTriagem = ({ paciente, triagem, onSubmit }) => {
           {criteriosAtendidos.length > 0 ? (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 2 }}>
               {criteriosAtendidos.map((criterio, index) => (
-                <Chip key={index} label={criterio} size="small" color="primary" />
+                <Chip
+                  key={index}
+                  label={criterio}
+                  size="small"
+                  color="primary"
+                />
               ))}
             </Box>
           ) : (
@@ -710,7 +725,7 @@ const FormularioTriagem = ({ paciente, triagem, onSubmit }) => {
       )}
 
       <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-        <Button type="button" sx={{ mr: 1 }}>
+        <Button type="button" color="inherit" sx={{ mr: 1 }}>
           Cancelar
         </Button>
         <Button type="submit" variant="contained" disabled={!classificacao}>

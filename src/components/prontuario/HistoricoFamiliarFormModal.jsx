@@ -1,4 +1,4 @@
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, FamilyRestroom as FamilyRestroomIcon, Add as AddIcon, Science as ScienceIcon } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -175,73 +175,77 @@ const HistoricoFamiliarFormModal = ({ open, onClose, onSave }) => {
         sx: { borderRadius: 2 }
       }}
     >
-      <DialogTitle sx={{ borderBottom: 1, borderColor: "divider", pb: 2, mb: 2 }}>
+      <DialogTitle sx={{ borderBottom: 1, borderColor: 'divider', pb: 2, mb: 2 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Adicionar Histórico Familiar</Typography>
+          <Box display="flex" alignItems="center">
+            <FamilyRestroomIcon sx={{ mr: 1, color: 'text.secondary' }} />
+            <Typography variant="h6">ADICIONAR HISTÓRICO</Typography>
+          </Box>
           <IconButton onClick={handleClose} size="small">
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
-
       <DialogContent>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth error={!!errors.doenca}>
-              <InputLabel id="doenca-label">Doença</InputLabel>
-              <Select
-                labelId="doenca-label"
-                id="doenca"
-                name="doenca"
-                value={formData.doenca}
-                onChange={handleChange}
-                label="Doença"
-              >
-                {doencasComuns.map((doenca) => (
-                  <MenuItem key={doenca} value={doenca}>
-                    {doenca}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors.doenca && <FormHelperText>{errors.doenca}</FormHelperText>}
-            </FormControl>
-          </Grid>
+        <Box component="form" noValidate sx={{ mt: 2 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth error={!!errors.doenca}>
+                <InputLabel id="doenca-label">Doença</InputLabel>
+                <Select
+                  labelId="doenca-label"
+                  id="doenca"
+                  name="doenca"
+                  value={formData.doenca}
+                  onChange={handleChange}
+                  label="Doença"
+                >
+                  {doencasComuns.map((doenca) => (
+                    <MenuItem key={doenca} value={doenca}>
+                      {doenca}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.doenca && <FormHelperText>{errors.doenca}</FormHelperText>}
+              </FormControl>
+            </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth error={!!errors.parentesco}>
-              <InputLabel id="parentesco-label">Parentesco</InputLabel>
-              <Select
-                labelId="parentesco-label"
-                id="parentesco"
-                name="parentesco"
-                value={formData.parentesco}
-                onChange={handleChange}
-                label="Parentesco"
-              >
-                {parentescos.map((parentesco) => (
-                  <MenuItem key={parentesco} value={parentesco}>
-                    {parentesco}
-                  </MenuItem>
-                ))}
-              </Select>
-              {errors.parentesco && <FormHelperText>{errors.parentesco}</FormHelperText>}
-            </FormControl>
-          </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth error={!!errors.parentesco}>
+                <InputLabel id="parentesco-label">Parentesco</InputLabel>
+                <Select
+                  labelId="parentesco-label"
+                  id="parentesco"
+                  name="parentesco"
+                  value={formData.parentesco}
+                  onChange={handleChange}
+                  label="Parentesco"
+                >
+                  {parentescos.map((parentesco) => (
+                    <MenuItem key={parentesco} value={parentesco}>
+                      {parentesco}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.parentesco && <FormHelperText>{errors.parentesco}</FormHelperText>}
+              </FormControl>
+            </Grid>
 
-          <Grid item xs={12}>
-            <TextField
-              id="observacoes"
-              name="observacoes"
-              label="Observações"
-              multiline
-              rows={4}
-              value={formData.observacoes}
-              onChange={handleChange}
-              fullWidth
-              placeholder="Informações adicionais sobre a condição, idade de diagnóstico, tratamentos realizados, etc."
-            />
+            <Grid item xs={12}>
+              <TextField
+                id="observacoes"
+                name="observacoes"
+                label="Observações"
+                multiline
+                rows={4}
+                value={formData.observacoes}
+                onChange={handleChange}
+                fullWidth
+                placeholder="Informações adicionais sobre a condição, idade de diagnóstico, tratamentos realizados, etc."
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2, borderTop: 1, borderColor: "divider" }}>

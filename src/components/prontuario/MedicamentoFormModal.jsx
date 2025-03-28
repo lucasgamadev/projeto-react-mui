@@ -1,4 +1,4 @@
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, LocalHospital as LocalHospitalIcon } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -188,7 +188,10 @@ const MedicamentoFormModal = ({ open, onClose, onSave, prontuarioId }) => {
     >
       <DialogTitle sx={{ borderBottom: 1, borderColor: "divider", pb: 2, mb: 2 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Adicionar Novo Medicamento</Typography>
+          <Box display="flex" alignItems="center">
+            <LocalHospitalIcon sx={{ mr: 1, color: 'text.secondary' }} />
+            <Typography variant="h6">NOVO MEDICAMENTO</Typography>
+          </Box>
           <IconButton onClick={handleClose} size="small">
             <CloseIcon />
           </IconButton>

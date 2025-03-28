@@ -307,7 +307,7 @@ const TratamentoFormModal = ({ open, onClose, pacienteId, pacienteNome, onSave, 
         </Grid>
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions sx={{ px: 3, py: 2, borderTop: 1, borderColor: "divider" }}>
         <Button onClick={onClose} color="inherit">
           Cancelar
         </Button>
