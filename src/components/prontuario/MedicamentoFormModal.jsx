@@ -1,3 +1,4 @@
+import { Close as CloseIcon } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -10,10 +11,12 @@ import {
   FormControlLabel,
   FormHelperText,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
-  TextField
+  TextField,
+  Typography
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -174,8 +177,23 @@ const MedicamentoFormModal = ({ open, onClose, onSave, prontuarioId }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>Adicionar Novo Medicamento</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: { borderRadius: 2 }
+      }}
+    >
+      <DialogTitle sx={{ borderBottom: 1, borderColor: "divider", pb: 2, mb: 2 }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6">Adicionar Novo Medicamento</Typography>
+          <IconButton onClick={handleClose} size="small">
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </DialogTitle>
       <DialogContent>
         <Box component="form" noValidate sx={{ mt: 2 }}>
           <Grid container spacing={2}>
@@ -348,8 +366,10 @@ const MedicamentoFormModal = ({ open, onClose, onSave, prontuarioId }) => {
           </Grid>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancelar</Button>
+      <DialogActions sx={{ px: 3, py: 2, borderTop: 1, borderColor: "divider" }}>
+        <Button onClick={handleClose} color="inherit">
+          Cancelar
+        </Button>
         <Button onClick={handleSubmit} variant="contained" color="primary">
           Salvar
         </Button>

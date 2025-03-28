@@ -41,6 +41,7 @@ import { useProntuario } from "../../contexts/ProntuarioContext";
 import AlergiaFormModal from "./AlergiaFormModal";
 import CirurgiaFormModal from "./CirurgiaFormModal";
 import ConsultaFormModal from "./ConsultaFormModal";
+import HistoricoFamiliarFormModal from "./HistoricoFamiliarFormModal";
 import MedicamentoFormModal from "./MedicamentoFormModal";
 
 // Componente de Tab Panel para as abas do prontuário
@@ -874,6 +875,7 @@ Cirurgias.propTypes = {
 // Componente para exibir histórico familiar
 const HistoricoFamiliar = ({ prontuario }) => {
   const { loading } = useProntuario();
+  const [historicoModalOpen, setHistoricoModalOpen] = useState(false);
 
   // Função para garantir que o parentesco seja exibido corretamente
   const obterParentesco = (doenca) => {
@@ -895,14 +897,32 @@ const HistoricoFamiliar = ({ prontuario }) => {
       : "Familiar";
   };
 
+  // Função para adicionar um novo histórico familiar
+  const handleAddHistoricoFamiliar = (novoHistorico) => {
+    // Aqui você deve implementar a lógica para adicionar o histórico ao prontuário
+    // Por enquanto, vamos apenas simular a adição
+    console.log("Novo histórico familiar:", novoHistorico);
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Histórico Familiar</Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setHistoricoModalOpen(true)}
+        >
           Adicionar Histórico
         </Button>
       </Box>
+
+      <HistoricoFamiliarFormModal
+        open={historicoModalOpen}
+        onClose={() => setHistoricoModalOpen(false)}
+        onSave={handleAddHistoricoFamiliar}
+      />
       {prontuario.historicoFamiliar.doencas.length === 0 ? (
         <Alert severity="info">Não há doenças familiares registradas para este paciente.</Alert>
       ) : (

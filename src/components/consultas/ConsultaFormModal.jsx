@@ -1,6 +1,5 @@
 import { Close as CloseIcon } from "@mui/icons-material";
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -192,17 +191,17 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
         sx: { borderRadius: 2 }
       }}
     >
-      <DialogTitle sx={{ borderBottom: 1, borderColor: "divider", pb: 2, mb: 2 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+      <DialogTitle sx={{ pb: 2, borderBottom: "1px solid rgba(0, 0, 0, 0.12)" }}>
+        <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6">Agendar Nova Consulta</Typography>
           <IconButton onClick={handleCancel} size="small">
             <CloseIcon />
           </IconButton>
-        </Box>
+        </Grid>
       </DialogTitle>
 
-      <DialogContent>
-        <Grid container spacing={2} sx={{ mt: 0.5 }}>
+      <DialogContent sx={{ pt: 2 }}>
+        <Grid container spacing={2} mt={1}>
           <Grid item xs={12}>
             <TextField
               inputRef={pacienteInputRef}
@@ -214,7 +213,7 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
               required
               error={errors.paciente}
               helperText={errors.paciente ? "Nome do paciente é obrigatório" : ""}
-              margin="normal"
+              margin="dense"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -229,7 +228,7 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
                     required: true,
                     error: errors.data,
                     helperText: errors.data ? "Data é obrigatória" : "",
-                    margin: "normal"
+                    margin: "dense"
                   }
                 }}
               />
@@ -247,7 +246,7 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
                     required: true,
                     error: errors.horario,
                     helperText: errors.horario ? "Horário é obrigatório" : "",
-                    margin: "normal"
+                    margin: "dense"
                   }
                 }}
               />
@@ -280,7 +279,7 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
               value={consulta.especialidade}
               disabled
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
           <Grid item xs={12}>
@@ -305,7 +304,7 @@ const ConsultaFormModal = ({ open, onClose, onSave }) => {
         </Grid>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, pb: 3 }}>
+      <DialogActions sx={{ p: 3, borderTop: "1px solid rgba(0, 0, 0, 0.12)" }}>
         <Button onClick={handleCancel} color="inherit" variant="outlined">
           Cancelar
         </Button>
