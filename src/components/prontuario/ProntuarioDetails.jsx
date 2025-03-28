@@ -417,29 +417,44 @@ const HistoricoMedico = ({ prontuario }) => {
                                       {consulta.descricaoQueixa || (consulta.historico && consulta.historico.queixaPrincipal) || "Não informada"}
                                     </Typography>
                                   </Grid>
-                                  <Grid item xs={12} sm={6}>
-                                    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
-                                      Diagnóstico
-                                    </Typography>
-                                    <Box sx={{ pl: 1 }}>
-                                      <Typography variant="body2" sx={{ display: 'flex' }}>
-                                        <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>Hipótese:</Typography>
-                                        <Typography component="span" variant="body2">{consulta.hipoteseDiagnostica || consulta.diagnostico || "Não informada"}</Typography>
+                                  <Grid item xs={12} sm={6} sx={{ 
+                                    display: 'flex', 
+                                    position: 'relative',
+                                    '&::before': {
+                                      content: '""',
+                                      position: 'absolute',
+                                      left: { xs: 0, sm: -8 },
+                                      top: 0,
+                                      height: '100%',
+                                      width: '1px',
+                                      backgroundColor: 'divider',
+                                      display: { xs: 'none', sm: 'block' }
+                                    }
+                                  }}>
+                                    <Box sx={{ width: '100%' }}>
+                                      <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                        Diagnóstico
                                       </Typography>
-                                      <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
-                                        <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>Definitivo:</Typography>
-                                        <Typography component="span" variant="body2">{consulta.diagnosticoDefinitivo || "Não informado"}</Typography>
-                                      </Typography>
-                                      {consulta.codigosCID && consulta.codigosCID.length > 0 && (
-                                        <Box display="flex" gap={0.5} mt={0.5} alignItems="center">
-                                          <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>CID:</Typography>
-                                          <Box>
-                                            {consulta.codigosCID.map((cid, index) => (
-                                              <Chip key={index} label={cid} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
-                                            ))}
+                                      <Box sx={{ pl: 1 }}>
+                                        <Typography variant="body2" sx={{ display: 'flex' }}>
+                                          <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>Hipótese:</Typography>
+                                          <Typography component="span" variant="body2">{consulta.hipoteseDiagnostica || consulta.diagnostico || "Não informada"}</Typography>
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
+                                          <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>Definitivo:</Typography>
+                                          <Typography component="span" variant="body2">{consulta.diagnosticoDefinitivo || "Não informado"}</Typography>
+                                        </Typography>
+                                        {consulta.codigosCID && consulta.codigosCID.length > 0 && (
+                                          <Box display="flex" gap={0.5} mt={0.5} alignItems="center">
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>CID:</Typography>
+                                            <Box>
+                                              {consulta.codigosCID.map((cid, index) => (
+                                                <Chip key={index} label={cid} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
+                                              ))}
+                                            </Box>
                                           </Box>
-                                        </Box>
-                                      )}
+                                        )}
+                                      </Box>
                                     </Box>
                                   </Grid>
                                 </Grid>
