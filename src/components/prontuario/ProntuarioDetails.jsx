@@ -339,23 +339,47 @@ const HistoricoMedico = ({ prontuario }) => {
                           {consulta.medicoNome || consulta.medico || "Não informado"}
                           {consulta.medicoCRM && ` (CRM: ${consulta.medicoCRM})`}
                         </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Typography 
-                            variant="body2" 
-                            fontWeight="medium" 
-                            sx={{
-                              color: 'primary.main',
-                              display: 'inline-block',
-                              mr: 1,
-                              borderRadius: '4px',
-                              px: 1,
-                              py: 0.5,
-                              bgcolor: 'primary.50'
-                            }}
-                          >
-                            {consulta.diagnosticoDefinitivo || consulta.hipoteseDiagnostica || consulta.diagnostico || "Diagnóstico não informado"}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
+                        <Box sx={{ 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          flexWrap: 'wrap',
+                          justifyContent: 'flex-end',
+                          ml: 1
+                        }}>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            mr: 1,
+                            maxWidth: { xs: '100%', sm: 'auto' },
+                            mb: { xs: 0.5, sm: 0 }
+                          }}>
+                            <Typography 
+                              variant="body2" 
+                              fontWeight="medium" 
+                              sx={{
+                                display: 'inline-block',
+                                borderRadius: '6px',
+                                px: 1.5,
+                                py: 0.6,
+                                color: 'primary.dark',
+                                background: (theme) => `linear-gradient(135deg, ${theme.palette.primary.lighter} 0%, ${theme.palette.primary.light} 100%)`,
+                                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+                                border: '1px solid',
+                                borderColor: 'primary.light',
+                                transition: 'all 0.2s ease-in-out',
+                                wordBreak: 'break-word',
+                                hyphens: 'auto',
+                                maxWidth: { sm: '100%' },
+                                '&:hover': {
+                                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)',
+                                  transform: 'translateY(-1px)'
+                                }
+                              }}
+                            >
+                              {consulta.diagnosticoDefinitivo || consulta.hipoteseDiagnostica || consulta.diagnostico || "Diagnóstico não informado"}
+                            </Typography>
+                          </Box>
+                          <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: 'nowrap' }}>
                             {dataFormatada}
                           </Typography>
                         </Box>
