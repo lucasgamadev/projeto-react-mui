@@ -38,6 +38,7 @@ import {
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useProntuario } from "../../contexts/ProntuarioContext";
+import AlergiaFormModal from "./AlergiaFormModal";
 import ConsultaFormModal from "./ConsultaFormModal";
 import MedicamentoFormModal from "./MedicamentoFormModal";
 
@@ -640,16 +641,41 @@ Medicamentos.propTypes = {
 
 // Componente para exibir alergias e precauções
 const AlergiasEPrecaucoes = ({ prontuario }) => {
-  const { loading } = useProntuario();
+  const { loading, adicionarAlergia } = useProntuario();
+  const [openAlergiaModal, setOpenAlergiaModal] = useState(false);
+
+  const handleOpenAlergiaModal = () => {
+    setOpenAlergiaModal(true);
+  };
+
+  const handleCloseAlergiaModal = () => {
+    setOpenAlergiaModal(false);
+  };
+
+  const handleSaveAlergia = (alergia) => {
+    adicionarAlergia(alergia);
+    handleCloseAlergiaModal();
+  };
 
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Alergias e Precauções</Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleOpenAlergiaModal}
+        >
           Nova Alergia
         </Button>
       </Box>
+      <AlergiaFormModal
+        open={openAlergiaModal}
+        onClose={handleCloseAlergiaModal}
+        onSave={handleSaveAlergia}
+        prontuarioId={prontuario.id}
+      />
       {prontuario.alergias.length === 0 ? (
         <Alert severity="info">Não há alergias registradas para este paciente.</Alert>
       ) : (
