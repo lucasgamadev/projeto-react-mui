@@ -310,7 +310,14 @@ const HistoricoMedico = ({ prontuario }) => {
                     borderLeft: 4, 
                     borderColor: "primary.main",
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    transition: 'all 0.2s ease-in-out',
+                    bgcolor: isExpanded ? 'background.paper' : 'inherit',
+                    '&:hover': {
+                      backgroundColor: isExpanded ? 'background.paper' : 'rgba(0, 0, 0, 0.02)',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                      transform: 'translateY(-1px)'
+                    }
                   }}
                 >
                   <CardHeader
