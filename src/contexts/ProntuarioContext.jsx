@@ -718,6 +718,33 @@ export const ProntuarioProvider = ({ children }) => {
     setError(null);
   }, []);
 
+  // Função para adicionar uma nova cirurgia ao prontuário atual
+  const adicionarCirurgia = useCallback(
+    async (cirurgia) => {
+      if (!prontuarioAtual?.id) {
+        throw new Error("Nenhum prontuário selecionado");
+      }
+
+      setLoading(true);
+      setError(null);
+      try {
+        const cirurgias = [...(prontuarioAtual.cirurgias || []), cirurgia];
+        const prontuarioAtualizado = updateProntuario(prontuarioAtual.id, {
+          ...prontuarioAtual,
+          cirurgias
+        });
+        setProntuarioAtual(prontuarioAtualizado);
+        return prontuarioAtualizado;
+      } catch (err) {
+        setError(err.message);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [prontuarioAtual]
+  );
+
   return (
     <ProntuarioContext.Provider
       value={{
@@ -732,6 +759,7 @@ export const ProntuarioProvider = ({ children }) => {
         adicionarAlergia,
         adicionarMedicamento,
         adicionarAnexo,
+        adicionarCirurgia,
         limparProntuario,
         carregarConsultasExemplo,
         carregarMedicamentosExemplo,
@@ -742,7 +770,6 @@ export const ProntuarioProvider = ({ children }) => {
         carregarTodosExemplos,
         verificarExemploJaCarregado,
         reinicializarDados,
-        adicionarCirurgia: () => {},
         adicionarHistoricoFamiliar: () => {},
         limparDados: limparProntuario
       }}

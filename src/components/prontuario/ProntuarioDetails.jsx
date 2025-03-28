@@ -39,6 +39,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useProntuario } from "../../contexts/ProntuarioContext";
 import AlergiaFormModal from "./AlergiaFormModal";
+import CirurgiaFormModal from "./CirurgiaFormModal";
 import ConsultaFormModal from "./ConsultaFormModal";
 import MedicamentoFormModal from "./MedicamentoFormModal";
 
@@ -755,7 +756,8 @@ AlergiasEPrecaucoes.propTypes = {
 
 // Componente para exibir cirurgias
 const Cirurgias = ({ prontuario }) => {
-  const { loading } = useProntuario();
+  const { loading, adicionarCirurgia } = useProntuario();
+  const [cirurgiaModalOpen, setCirurgiaModalOpen] = useState(false);
 
   // Função para formatar a data de forma segura
   const formatarData = (dataOriginal) => {
@@ -776,14 +778,35 @@ const Cirurgias = ({ prontuario }) => {
     }
   };
 
+  const handleAddCirurgia = (novaCirurgia) => {
+    // Adicionar a nova cirurgia ao prontuário
+    try {
+      adicionarCirurgia(novaCirurgia);
+    } catch (error) {
+      console.error("Erro ao adicionar cirurgia:", error);
+    }
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Procedimentos Cirúrgicos</Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setCirurgiaModalOpen(true)}
+        >
           Nova Cirurgia
         </Button>
       </Box>
+
+      <CirurgiaFormModal
+        open={cirurgiaModalOpen}
+        onClose={() => setCirurgiaModalOpen(false)}
+        onSave={handleAddCirurgia}
+      />
+
       {prontuario.cirurgias.length === 0 ? (
         <Alert severity="info">Não há cirurgias registradas para este paciente.</Alert>
       ) : (
