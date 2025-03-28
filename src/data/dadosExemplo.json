@@ -24,42 +24,150 @@
         {
           "id": 1,
           "data": "2024-03-15T10:00:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dr. João Santos",
+          "medicoNome": "Dr. João Santos",
+          "medicoCRM": "12345-SP",
           "especialidade": "Clínico Geral",
-          "diagnostico": "Hipertensão controlada",
-          "prescricao": "Manter medicamentos atuais",
+          "motivoConsulta": "Consulta de Rotina",
+          "descricaoQueixa": "Dor de cabeça ocasional",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "130",
+            "pressaoArterialDiastolica": "85",
+            "frequenciaCardiaca": "75",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "98",
+            "peso": "68",
+            "altura": "165",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Hipertensão Arterial Sistêmica",
+          "diagnosticoDefinitivo": "Hipertensão controlada",
+          "codigosCID": ["I10"],
+          "conduta": "Manter medicação atual. Retorno em 3 meses.",
+          "prescricoes": [
+            {
+              "medicamento": "Losartana",
+              "concentracao": "50mg",
+              "posologia": "1 comprimido ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Hemograma completo",
+              "justificativa": "Acompanhamento de rotina",
+              "preparos": "Jejum de 8 horas",
+              "prazoRecomendado": "2024-04-15T00:00:00"
+            }
+          ],
+          "encaminhamentos": [],
+          "procedimentos": [],
           "observacoes": "Paciente apresentou melhora significativa"
         },
         {
           "id": 2,
           "data": "2024-01-10T09:30:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dr. João Santos",
+          "medicoNome": "Dr. João Santos",
+          "medicoCRM": "12345-SP",
           "especialidade": "Clínico Geral",
-          "diagnostico": "Hipertensão estágio 1",
-          "prescricao": "Início do tratamento com Losartana",
+          "motivoConsulta": "Consulta de Rotina",
+          "descricaoQueixa": "Dores de cabeça frequentes e tonturas",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "145",
+            "pressaoArterialDiastolica": "95",
+            "frequenciaCardiaca": "82",
+            "frequenciaRespiratoria": "20",
+            "temperatura": "36.7",
+            "saturacaoOxigenio": "97",
+            "peso": "70",
+            "altura": "165",
+            "glicemia": "100"
+          },
+          "hipoteseDiagnostica": "Hipertensão Arterial Sistêmica",
+          "diagnosticoDefinitivo": "Hipertensão estágio 1",
+          "codigosCID": ["I10"],
+          "conduta": "Início de tratamento medicamentoso. Dieta hipossódica. Atividade física regular.",
+          "prescricoes": [
+            {
+              "medicamento": "Losartana",
+              "concentracao": "50mg",
+              "posologia": "1 comprimido ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Ecocardiograma",
+              "justificativa": "Avaliação cardíaca",
+              "preparos": "Não há preparo específico",
+              "prazoRecomendado": "2024-02-10T00:00:00"
+            }
+          ],
+          "encaminhamentos": [],
+          "procedimentos": [],
           "observacoes": "Paciente relata episódios de dor de cabeça frequente"
         },
         {
           "id": 3,
           "data": "2023-10-05T14:00:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dra. Carla Mendes",
+          "medicoNome": "Dra. Carla Mendes",
+          "medicoCRM": "67890-SP",
           "especialidade": "Cardiologia",
-          "diagnostico": "Hipertensão essencial",
-          "prescricao": "Solicitar exames de acompanhamento",
-          "observacoes": "Eletrocardiograma sem alterações significativas"
+          "motivoConsulta": "Avaliação cardiológica",
+          "descricaoQueixa": "Encaminhamento para avaliação cardiológica",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "150",
+            "pressaoArterialDiastolica": "90",
+            "frequenciaCardiaca": "78",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "98",
+            "peso": "68",
+            "altura": "165",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Hipertensão essencial",
+          "diagnosticoDefinitivo": "Hipertensão estágio 1",
+          "codigosCID": ["I10"],
+          "conduta": "Manter tratamento atual. Retorno em 3 meses.",
+          "prescricoes": [],
+          "examesSolicitados": [],
+          "encaminhamentos": [],
+          "procedimentos": [],
+          "observacoes": "Paciente sem alterações significativas"
         },
         {
           "id": 4,
           "data": "2023-07-22T11:15:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dr. Ricardo Almeida",
+          "medicoNome": "Dr. Ricardo Almeida",
+          "medicoCRM": "34567-SP",
           "especialidade": "Endocrinologia",
-          "diagnostico": "Exames hormonais normais",
-          "prescricao": "Manter dieta e atividade física",
-          "observacoes": "Paciente com exames de tireoide dentro da normalidade"
+          "motivoConsulta": "Avaliação endocrinológica",
+          "descricaoQueixa": "Cansaço e ganho de peso",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "140",
+            "pressaoArterialDiastolica": "85",
+            "frequenciaCardiaca": "72",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.6",
+            "saturacaoOxigenio": "99",
+            "peso": "70",
+            "altura": "165",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Exames hormonais normais",
+          "diagnosticoDefinitivo": "Exames hormonais normais",
+          "codigosCID": [],
+          "conduta": "Manter dieta e atividade física. Retorno em 3 meses.",
+          "prescricoes": [],
+          "examesSolicitados": [],
+          "encaminhamentos": [],
+          "procedimentos": [],
+          "observacoes": "Paciente sem alterações significativas"
         }
       ],
       "medicamentos": [
@@ -268,33 +376,129 @@
       "consultas": [
         {
           "id": 1,
-          "data": "2024-03-14T15:00:00",
-          "tipo": "Consulta de Emergência",
-          "medico": "Dra. Ana Costa",
-          "especialidade": "Ortopedista",
-          "diagnostico": "Lombalgia",
-          "prescricao": "Anti-inflamatório e fisioterapia",
+          "data": "2024-02-15T14:00:00",
+          "medicoNome": "Dr. Paulo Costa",
+          "medicoCRM": "54321-SP",
+          "especialidade": "Ortopedia",
+          "motivoConsulta": "Dor lombar",
+          "descricaoQueixa": "Dor lombar intensa após esforço físico",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "135",
+            "pressaoArterialDiastolica": "85",
+            "frequenciaCardiaca": "88",
+            "frequenciaRespiratoria": "20",
+            "temperatura": "36.8",
+            "saturacaoOxigenio": "97",
+            "peso": "82",
+            "altura": "178",
+            "glicemia": "90"
+          },
+          "hipoteseDiagnostica": "Lombalgia aguda",
+          "diagnosticoDefinitivo": "Lombalgia aguda",
+          "codigosCID": ["M54.5"],
+          "conduta": "Prescrição de anti-inflamatório e relaxante muscular. Repouso relativo. Encaminhamento para fisioterapia.",
+          "prescricoes": [
+            {
+              "medicamento": "Nimesulida",
+              "concentracao": "100mg",
+              "posologia": "1 comprimido de 12 em 12 horas",
+              "duracao": "5 dias",
+              "continuo": false,
+              "observacoes": ""
+            },
+            {
+              "medicamento": "Ciclobenzaprina",
+              "concentracao": "10mg",
+              "posologia": "1 comprimido à noite",
+              "duracao": "7 dias",
+              "continuo": false,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Ressonância magnética da coluna lombar",
+              "justificativa": "Avaliação de lombalgia",
+              "preparos": "Não há preparo específico",
+              "prazoRecomendado": "2024-03-15T00:00:00"
+            }
+          ],
+          "encaminhamentos": [
+            "Fisioterapia urgente"
+          ],
+          "procedimentos": [],
           "observacoes": "Paciente com dor intensa na região lombar"
         },
         {
           "id": 2,
-          "data": "2023-12-10T10:00:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dr. Paulo Souza",
+          "data": "2024-01-20T09:00:00",
+          "medicoNome": "Dr. Marcelo Silva",
+          "medicoCRM": "56789-SP",
           "especialidade": "Clínico Geral",
-          "diagnostico": "Exame físico normal",
-          "prescricao": "Exames de rotina",
+          "motivoConsulta": "Check-up de rotina",
+          "descricaoQueixa": "Check-up de rotina",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "120",
+            "pressaoArterialDiastolica": "80",
+            "frequenciaCardiaca": "70",
+            "frequenciaRespiratoria": "16",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "98",
+            "peso": "80",
+            "altura": "178",
+            "glicemia": "92"
+          },
+          "hipoteseDiagnostica": "Paciente saudável",
+          "diagnosticoDefinitivo": "Paciente saudável",
+          "codigosCID": ["Z00.0"],
+          "conduta": "Solicitados exames laboratoriais de rotina. Manter hábitos saudáveis.",
+          "prescricoes": [],
+          "examesSolicitados": [
+            {
+              "exame": "Hemograma completo",
+              "justificativa": "Rotina",
+              "preparos": "Jejum de 8 horas",
+              "prazoRecomendado": "2024-02-20T00:00:00"
+            },
+            {
+              "exame": "Perfil lipídico",
+              "justificativa": "Rotina",
+              "preparos": "Jejum de 12 horas",
+              "prazoRecomendado": "2024-02-20T00:00:00"
+            }
+          ],
+          "encaminhamentos": [],
+          "procedimentos": [],
           "observacoes": "Paciente sem queixas significativas"
         },
         {
           "id": 3,
           "data": "2023-09-05T09:15:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dr. Marcelo Ferreira",
+          "medicoNome": "Dr. Marcelo Ferreira",
+          "medicoCRM": "90123-SP",
           "especialidade": "Cardiologia",
-          "diagnostico": "Exame cardíaco normal",
-          "prescricao": "Manter atividade física regular",
-          "observacoes": "Eletrocardiograma sem alterações"
+          "motivoConsulta": "Avaliação cardiológica",
+          "descricaoQueixa": "Avaliação cardiológica pré-participação esportiva",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "125",
+            "pressaoArterialDiastolica": "80",
+            "frequenciaCardiaca": "68",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.6",
+            "saturacaoOxigenio": "99",
+            "peso": "79",
+            "altura": "178",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Paciente apto para atividade física",
+          "diagnosticoDefinitivo": "Paciente apto para atividade física",
+          "codigosCID": [],
+          "conduta": "Liberado para prática esportiva. Recomendado aumento gradual da intensidade do exercício.",
+          "prescricoes": [],
+          "examesSolicitados": [],
+          "encaminhamentos": [],
+          "procedimentos": [],
+          "observacoes": "Paciente sem alterações significativas"
         }
       ],
       "medicamentos": [
@@ -481,22 +685,87 @@
         {
           "id": 1,
           "data": "2024-03-10T14:30:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dra. Paula Lima",
+          "medicoNome": "Dra. Paula Lima",
+          "medicoCRM": "23456-SP",
           "especialidade": "Dermatologia",
-          "diagnostico": "Melanose solar",
-          "prescricao": "Protetor solar FPS 50",
-          "observacoes": "Paciente com manchas escuras nas costas"
+          "motivoConsulta": "Manchas escuras na pele",
+          "descricaoQueixa": "Manchas escuras nas costas",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "110",
+            "pressaoArterialDiastolica": "70",
+            "frequenciaCardiaca": "65",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.4",
+            "saturacaoOxigenio": "99",
+            "peso": "58",
+            "altura": "162",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Melanose solar",
+          "diagnosticoDefinitivo": "Melanose solar",
+          "codigosCID": ["L81.4"],
+          "conduta": "Orientado uso rigoroso de protetor solar. Prescrição de creme com ácido glicólico 10% para aplicação noturna.",
+          "prescricoes": [
+            {
+              "medicamento": "Protetor Solar FPS 50",
+              "concentracao": "50g",
+              "posologia": "2x ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": "Aplicar antes da exposição solar"
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Dermatoscopia",
+              "justificativa": "Avaliação de lesões pigmentadas",
+              "preparos": "Não há preparo específico",
+              "prazoRecomendado": "2024-04-10T00:00:00"
+            }
+          ],
+          "encaminhamentos": [],
+          "procedimentos": [],
+          "observacoes": "Paciente com manchas solares"
         },
         {
           "id": 2,
           "data": "2024-02-15T09:00:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dr. André Silva",
+          "medicoNome": "Dr. André Silva",
+          "medicoCRM": "34567-SP",
           "especialidade": "Psiquiatria",
-          "diagnostico": "Ansiedade moderada",
-          "prescricao": "Sertralina 50mg",
-          "observacoes": "Paciente relata episódios de ansiedade no trabalho"
+          "motivoConsulta": "Ansiedade",
+          "descricaoQueixa": "Ansiedade, insônia e irritabilidade",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "120",
+            "pressaoArterialDiastolica": "75",
+            "frequenciaCardiaca": "85",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "98",
+            "peso": "57",
+            "altura": "162",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Ansiedade moderada",
+          "diagnosticoDefinitivo": "Ansiedade moderada",
+          "codigosCID": ["F41.9"],
+          "conduta": "Início de tratamento com Sertralina 50mg/dia. Orientações sobre técnicas de relaxamento e higiene do sono.",
+          "prescricoes": [
+            {
+              "medicamento": "Sertralina",
+              "concentracao": "50mg",
+              "posologia": "1x ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": "Tomar pela manhã"
+            }
+          ],
+          "examesSolicitados": [],
+          "encaminhamentos": [
+            "Psicoterapia"
+          ],
+          "procedimentos": [],
+          "observacoes": "Paciente com ansiedade"
         }
       ],
       "medicamentos": [
@@ -624,22 +893,72 @@
         {
           "id": 1,
           "data": "2024-03-05T11:00:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dr. Carlos Mendes",
+          "medicoNome": "Dr. Carlos Mendes",
+          "medicoCRM": "90123-SP",
           "especialidade": "Cardiologia",
-          "diagnostico": "Hipertensão controlada",
-          "prescricao": "Manter medicamentos atuais",
-          "observacoes": "Paciente com pressão arterial estável"
+          "motivoConsulta": "Controle de hipertensão",
+          "descricaoQueixa": "Paciente com pressão arterial estável",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "135",
+            "pressaoArterialDiastolica": "85",
+            "frequenciaCardiaca": "72",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "97",
+            "peso": "88",
+            "altura": "170",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Hipertensão controlada",
+          "diagnosticoDefinitivo": "Hipertensão controlada",
+          "codigosCID": ["I10"],
+          "conduta": "Manter tratamento atual. Retorno em 3 meses.",
+          "prescricoes": [],
+          "examesSolicitados": [],
+          "encaminhamentos": [],
+          "procedimentos": [],
+          "observacoes": "Paciente sem alterações significativas"
         },
         {
           "id": 2,
           "data": "2024-01-20T10:30:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dra. Mariana Costa",
+          "medicoNome": "Dra. Mariana Costa",
+          "medicoCRM": "45678-SP",
           "especialidade": "Endocrinologia",
-          "diagnostico": "Diabetes tipo 2",
-          "prescricao": "Metformina 850mg",
-          "observacoes": "Início do tratamento para diabetes"
+          "motivoConsulta": "Avaliação endocrinológica",
+          "descricaoQueixa": "Fadiga e poliúria",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "140",
+            "pressaoArterialDiastolica": "90",
+            "frequenciaCardiaca": "80",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.6",
+            "saturacaoOxigenio": "98",
+            "peso": "90",
+            "altura": "170",
+            "glicemia": "145"
+          },
+          "hipoteseDiagnostica": "Diabetes tipo 2",
+          "diagnosticoDefinitivo": "Diabetes tipo 2",
+          "codigosCID": ["E11"],
+          "conduta": "Início de tratamento com Metformina. Orientações sobre dieta e exercícios físicos.",
+          "prescricoes": [
+            {
+              "medicamento": "Metformina",
+              "concentracao": "850mg",
+              "posologia": "2 comprimidos ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [],
+          "encaminhamentos": [
+            "Nutricionista",
+            "Educador físico"
+          ],
+          "procedimentos": [],
+          "observacoes": "Paciente com diabetes tipo 2"
         }
       ],
       "medicamentos": [
@@ -763,22 +1082,87 @@
         {
           "id": 1,
           "data": "2024-03-15T10:00:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dra. Beatriz Santos",
+          "medicoNome": "Dra. Beatriz Santos",
+          "medicoCRM": "23456-SP",
           "especialidade": "Ginecologia",
-          "diagnostico": "Síndrome dos Ovários Policísticos",
-          "prescricao": "Metformina 500mg",
-          "observacoes": "Paciente com irregularidade menstrual"
+          "motivoConsulta": "Irregularidade menstrual",
+          "descricaoQueixa": "Irregularidade menstrual e ganho de peso",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "120",
+            "pressaoArterialDiastolica": "70",
+            "frequenciaCardiaca": "75",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "99",
+            "peso": "65",
+            "altura": "165",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Síndrome dos Ovários Policísticos",
+          "diagnosticoDefinitivo": "Síndrome dos Ovários Policísticos",
+          "codigosCID": ["E28.2"],
+          "conduta": "Prescrição de Metformina. Orientações sobre dieta e exercícios físicos.",
+          "prescricoes": [
+            {
+              "medicamento": "Metformina",
+              "concentracao": "500mg",
+              "posologia": "2 comprimidos ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Ultrassom Pélvico",
+              "justificativa": "Avaliação pélvica",
+              "preparos": "Não há preparo específico",
+              "prazoRecomendado": "2024-04-15T00:00:00"
+            }
+          ],
+          "encaminhamentos": [
+            "Nutricionista para orientação dietética"
+          ],
+          "procedimentos": [],
+          "observacoes": "Paciente com SOP"
         },
         {
           "id": 2,
           "data": "2024-02-20T14:30:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dr. Ricardo Mendes",
+          "medicoNome": "Dr. Ricardo Mendes",
+          "medicoCRM": "34567-SP",
           "especialidade": "Endocrinologia",
-          "diagnostico": "Hipotireoidismo",
-          "prescricao": "Levotiroxina 50mcg",
-          "observacoes": "Início do tratamento para hipotireoidismo"
+          "motivoConsulta": "Avaliação endocrinológica",
+          "descricaoQueixa": "Cansaço excessivo e intolerância ao frio",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "115",
+            "pressaoArterialDiastolica": "75",
+            "frequenciaCardiaca": "68",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.3",
+            "saturacaoOxigenio": "98",
+            "peso": "63",
+            "altura": "165",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Hipotireoidismo",
+          "diagnosticoDefinitivo": "Hipotireoidismo",
+          "codigosCID": ["E03.9"],
+          "conduta": "Início de tratamento com Levotiroxina. Orientações sobre dieta e exercícios físicos.",
+          "prescricoes": [
+            {
+              "medicamento": "Levotiroxina",
+              "concentracao": "50mcg",
+              "posologia": "1 comprimido ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [],
+          "encaminhamentos": [],
+          "procedimentos": [],
+          "observacoes": "Paciente com hipotireoidismo"
         }
       ],
       "medicamentos": [
@@ -901,22 +1285,97 @@
         {
           "id": 1,
           "data": "2024-03-01T09:00:00",
-          "tipo": "Consulta de Rotina",
-          "medico": "Dr. Marcelo Oliveira",
+          "medicoNome": "Dr. Marcelo Oliveira",
+          "medicoCRM": "12345-SP",
           "especialidade": "Cardiologia",
-          "diagnostico": "Hipertensão estágio 1",
-          "prescricao": "Losartana 50mg",
-          "observacoes": "Paciente com pressão arterial elevada"
+          "motivoConsulta": "Controle de hipertensão",
+          "descricaoQueixa": "Paciente com pressão arterial elevada",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "150",
+            "pressaoArterialDiastolica": "95",
+            "frequenciaCardiaca": "78",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.7",
+            "saturacaoOxigenio": "98",
+            "peso": "75",
+            "altura": "175",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Hipertensão estágio 1",
+          "diagnosticoDefinitivo": "Hipertensão estágio 1",
+          "codigosCID": ["I10"],
+          "conduta": "Início de tratamento com Losartana. Orientações sobre dieta e exercícios físicos.",
+          "prescricoes": [
+            {
+              "medicamento": "Losartana",
+              "concentracao": "50mg",
+              "posologia": "1 comprimido ao dia",
+              "duracao": "Uso contínuo",
+              "continuo": true,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Ecocardiograma",
+              "justificativa": "Avaliação cardíaca",
+              "preparos": "Não há preparo específico",
+              "prazoRecomendado": "2024-04-15T00:00:00"
+            }
+          ],
+          "encaminhamentos": [
+            "Ecocardiograma"
+          ],
+          "procedimentos": [],
+          "observacoes": "Paciente com hipertensão"
         },
         {
           "id": 2,
           "data": "2024-01-15T11:30:00",
-          "tipo": "Consulta Especializada",
-          "medico": "Dra. Ana Paula Lima",
+          "medicoNome": "Dra. Ana Paula Lima",
+          "medicoCRM": "67890-SP",
           "especialidade": "Ortopedia",
-          "diagnostico": "Artrose de Joelho",
-          "prescricao": "Anti-inflamatório",
-          "observacoes": "Paciente com dor no joelho direito"
+          "motivoConsulta": "Dor no joelho direito",
+          "descricaoQueixa": "Dor crônica no joelho direito",
+          "sinaisVitais": {
+            "pressaoArterialSistolica": "140",
+            "pressaoArterialDiastolica": "90",
+            "frequenciaCardiaca": "70",
+            "frequenciaRespiratoria": "18",
+            "temperatura": "36.5",
+            "saturacaoOxigenio": "97",
+            "peso": "78",
+            "altura": "175",
+            "glicemia": "95"
+          },
+          "hipoteseDiagnostica": "Artrose de Joelho",
+          "diagnosticoDefinitivo": "Artrose de Joelho",
+          "codigosCID": ["M17.9"],
+          "conduta": "Prescrição de anti-inflamatório. Recomendado fisioterapia e perda de peso.",
+          "prescricoes": [
+            {
+              "medicamento": "Diclofenaco",
+              "concentracao": "50mg",
+              "posologia": "3 comprimidos ao dia",
+              "duracao": "7 dias",
+              "continuo": false,
+              "observacoes": ""
+            }
+          ],
+          "examesSolicitados": [
+            {
+              "exame": "Radiografia do Joelho",
+              "justificativa": "Avaliação do joelho",
+              "preparos": "Não há preparo específico",
+              "prazoRecomendado": "2024-02-15T00:00:00"
+            }
+          ],
+          "encaminhamentos": [
+            "Fisioterapia",
+            "Radiografia de joelho direito"
+          ],
+          "procedimentos": [],
+          "observacoes": "Paciente com artrose"
         }
       ],
       "medicamentos": [

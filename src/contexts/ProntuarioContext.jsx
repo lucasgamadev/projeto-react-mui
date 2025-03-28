@@ -97,9 +97,16 @@ export const ProntuarioProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
+      // Buscar paciente atual pelos dados de exemplo
+      const pacienteAtual = dadosExemplo.pacientes.find((p) => p.cpf === prontuarioAtual?.cpf);
+      
+      if (!pacienteAtual || !pacienteAtual.consultas) {
+        throw new Error("Dados de consulta não encontrados para o paciente");
+      }
+
       // Limitar a quantidade de consultas para evitar sobrecarga
       const maxConsultas = 20;
-      const consultasProcessadas = dadosExemplo.consultas.slice(0, maxConsultas).map((consulta) => {
+      const consultasProcessadas = pacienteAtual.consultas.slice(0, maxConsultas).map((consulta) => {
         // Processamento seguro das datas
         let dataConsulta;
         try {
@@ -112,10 +119,24 @@ export const ProntuarioProvider = ({ children }) => {
           dataConsulta = new Date();
         }
 
+        // Verificar se existe campo historico na consulta
+        const historicoConsulta = consulta.historico || {};
+        
+        // Verificar campos de sinaisVitais
+        const sinaisVitais = historicoConsulta.sinaisVitais || {};
+
         return {
           ...consulta,
           id: consulta.id || `consulta-${Math.random().toString(36).substr(2, 9)}`,
-          data: dataConsulta
+          data: dataConsulta,
+          queixaPrincipal: historicoConsulta.queixaPrincipal || '',
+          sinaisVitais: {
+            pressaoArterial: sinaisVitais.pressaoArterial || '',
+            frequenciaCardiaca: sinaisVitais.frequenciaCardiaca || '',
+            temperatura: sinaisVitais.temperatura || '',
+            saturacao: sinaisVitais.saturacaoO2 || '',
+          },
+          historico: historicoConsulta
         };
       });
 
