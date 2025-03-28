@@ -5,29 +5,37 @@ import {
   DocumentScanner as DocumentScannerIcon,
   Download as DownloadIcon,
   Event as EventIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
   FamilyRestroom as FamilyRestroomIcon,
   Healing as HealingIcon,
+  LocalHospital as LocalHospitalIcon,
   MedicalServices as MedicalServicesIcon,
   Report as ReportIcon,
   Science as ScienceIcon,
   SecurityUpdateWarning as SecurityUpdateWarningIcon,
   Visibility as VisibilityIcon
 } from "@mui/icons-material";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import {
   Alert,
   Avatar,
   Box,
   Button,
+  Card,
+  CardActions,
   CardContent,
+  CardHeader,
   Chip,
   CircularProgress,
   Collapse,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
+  ListItemButton,
+  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   Paper,
@@ -297,307 +305,373 @@ const HistoricoMedico = ({ prontuario }) => {
                 <Paper
                   key={consultaId}
                   elevation={1}
-                  sx={{ mb: 2, borderLeft: 4, borderColor: "primary.main" }}
+                  sx={{ 
+                    mb: 2, 
+                    borderLeft: 4, 
+                    borderColor: "primary.main",
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
                 >
-                  <ListItem
-                    button
-                    onClick={() => handleExpandClick(consultaId)}
-                    alignItems="flex-start"
-                  >
-                    <ListItemAvatar>
-                      <Avatar sx={{ bgcolor: "primary.main" }}>
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ 
+                        bgcolor: 'primary.light', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        width: 45,
+                        height: 45
+                      }}>
                         <MedicalServicesIcon />
                       </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <Box display="flex" justifyContent="space-between">
-                          <Typography variant="subtitle1">
-                            {consulta.medico || consulta.medicoNome || "Médico não informado"}
+                    }
+                    title={
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <Typography variant="subtitle1" fontWeight="bold" component="div">
+                          {consulta.medicoNome || consulta.medico || "Não informado"}
+                          {consulta.medicoCRM && ` (CRM: ${consulta.medicoCRM})`}
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography 
+                            variant="body2" 
+                            fontWeight="medium" 
+                            sx={{
+                              color: 'primary.main',
+                              display: 'inline-block',
+                              mr: 1,
+                              borderRadius: '4px',
+                              px: 1,
+                              py: 0.5,
+                              bgcolor: 'primary.50'
+                            }}
+                          >
+                            {consulta.diagnosticoDefinitivo || consulta.hipoteseDiagnostica || consulta.diagnostico || "Diagnóstico não informado"}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {dataFormatada} {horaFormatada ? `às ${horaFormatada}` : ""}
+                          <Typography variant="body2" color="text.secondary">
+                            {dataFormatada}
                           </Typography>
                         </Box>
-                      }
-                      secondary={
-                        <React.Fragment>
-                          <Typography variant="body2" color="text.primary" component="span">
-                            {consulta.especialidade || "Especialidade não informada"} -{" "}
-                            {consulta.motivoConsulta || consulta.tipo || "Consulta médica"}
+                      </Box>
+                    }
+                    subheader={
+                      <Box sx={{ mt: 0.5 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 0.5 }}>
+                          <Typography variant="body2" color="text.secondary" component="div" sx={{ flexShrink: 0, mr: 1 }}>
+                            {consulta.especialidade || "Especialidade não informada"}
                           </Typography>
-                          <br />
-                          <Typography variant="caption" color="text.secondary">
-                            {consulta.hipoteseDiagnostica ||
-                              consulta.diagnostico ||
-                              "Sem diagnóstico"}
+                          <Box sx={{ mx: 0.5, bgcolor: 'divider', width: '4px', height: '4px', borderRadius: '50%' }} />
+                          <Typography variant="body2" color="text.secondary" component="div">
+                            {consulta.motivoConsulta || consulta.tipo || "Consulta"}
                           </Typography>
-                        </React.Fragment>
+                        </Box>
+                      </Box>
+                    }
+                    action={
+                      <IconButton onClick={() => handleExpandClick(consultaId)}>
+                        {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      </IconButton>
+                    }
+                    sx={{ 
+                      pb: 0, 
+                      cursor: 'pointer',
+                      py: 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      '& .MuiCardHeader-avatar': {
+                        marginY: 'auto',
+                        marginRight: 2
+                      },
+                      '& .MuiCardHeader-content': {
+                        marginY: 'auto'
+                      },
+                      '& .MuiCardHeader-action': {
+                        marginY: 'auto',
+                        alignSelf: 'center'
                       }
-                    />
-                  </ListItem>
-
+                    }}
+                    onClick={() => handleExpandClick(consultaId)}
+                  />
                   <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                    <CardContent>
+                    <CardContent sx={{ pt: 1 }}>
+                      <Divider sx={{ mb: 2 }} />
                       <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Motivo da Consulta
-                          </Typography>
-                          <Typography variant="body2">
-                            {consulta.motivoConsulta || consulta.tipo || "Não informado"}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Médico
-                          </Typography>
-                          <Typography variant="body2">
-                            {consulta.medicoNome || consulta.medico || "Não informado"} 
-                            {consulta.medicoCRM && ` (CRM: ${consulta.medicoCRM})`}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Especialidade
-                          </Typography>
-                          <Typography variant="body2">
-                            {consulta.especialidade || "Não informada"}
-                          </Typography>
-                        </Grid>
+                        {/* Lado esquerdo: Informações clínicas */}
+                        <Grid item xs={12} md={7}>
+                          <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                              <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                <Grid container spacing={1}>
+                                  <Grid item xs={12} sm={6}>
+                                    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                      Queixa Principal
+                                    </Typography>
+                                    <Typography variant="body2" sx={{ pl: 1 }}>
+                                      {consulta.descricaoQueixa || (consulta.historico && consulta.historico.queixaPrincipal) || "Não informada"}
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                      Diagnóstico
+                                    </Typography>
+                                    <Box sx={{ pl: 1 }}>
+                                      <Typography variant="body2" sx={{ display: 'flex' }}>
+                                        <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>Hipótese:</Typography>
+                                        <Typography component="span" variant="body2">{consulta.hipoteseDiagnostica || consulta.diagnostico || "Não informada"}</Typography>
+                                      </Typography>
+                                      <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
+                                        <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>Definitivo:</Typography>
+                                        <Typography component="span" variant="body2">{consulta.diagnosticoDefinitivo || "Não informado"}</Typography>
+                                      </Typography>
+                                      {consulta.codigosCID && consulta.codigosCID.length > 0 && (
+                                        <Box display="flex" gap={0.5} mt={0.5} alignItems="center">
+                                          <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '75px' }}>CID:</Typography>
+                                          <Box>
+                                            {consulta.codigosCID.map((cid, index) => (
+                                              <Chip key={index} label={cid} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
+                                            ))}
+                                          </Box>
+                                        </Box>
+                                      )}
+                                    </Box>
+                                  </Grid>
+                                </Grid>
+                              </Paper>
+                            </Grid>
 
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Queixa Principal
-                          </Typography>
-                          <Typography variant="body2">
-                            {consulta.descricaoQueixa || (consulta.historico && consulta.historico.queixaPrincipal) || "Não informada"}
-                          </Typography>
-                        </Grid>
+                            <Grid item xs={12}>
+                              <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                  Conduta e Observações
+                                </Typography>
+                                <Box sx={{ pl: 1 }}>
+                                  {consulta.conduta && (
+                                    <Typography variant="body2" sx={{ display: 'flex', mb: 1 }}>
+                                      <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '95px' }}>Conduta:</Typography>
+                                      <Typography component="span" variant="body2">{consulta.conduta}</Typography>
+                                    </Typography>
+                                  )}
+                                  {consulta.observacoes && (
+                                    <Typography variant="body2" sx={{ display: 'flex', mb: 1 }}>
+                                      <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '95px' }}>Observações:</Typography>
+                                      <Typography component="span" variant="body2">{consulta.observacoes}</Typography>
+                                    </Typography>
+                                  )}
+                                  {consulta.historico && consulta.historico.planoCuidados && (
+                                    <Typography variant="body2" sx={{ display: 'flex', mb: 1 }}>
+                                      <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '95px' }}>Plano:</Typography>
+                                      <Typography component="span" variant="body2">{consulta.historico.planoCuidados}</Typography>
+                                    </Typography>
+                                  )}
+                                </Box>
+                              </Paper>
+                            </Grid>
 
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Hipótese Diagnóstica
-                          </Typography>
-                          <Typography variant="body2">
-                            {consulta.hipoteseDiagnostica || consulta.diagnostico || "Não informada"}
-                          </Typography>
-                        </Grid>
+                            <Grid item xs={12}>
+                              <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                  Sinais Vitais
+                                </Typography>
+                                {consulta.sinaisVitais ? (
+                                  <Box sx={{ pl: 1 }}>
+                                    <Grid container spacing={0.5}>
+                                      <Grid item xs={12} sm={6}>
+                                        {consulta.sinaisVitais.pressaoArterialSistolica && consulta.sinaisVitais.pressaoArterialDiastolica && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Pressão Arterial:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.pressaoArterialSistolica}/{consulta.sinaisVitais.pressaoArterialDiastolica} mmHg</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.pressaoArterial && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Pressão Arterial:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.pressaoArterial}</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.frequenciaCardiaca && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>FC:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.frequenciaCardiaca} {!consulta.sinaisVitais.frequenciaCardiaca.includes('bpm') && 'bpm'}</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.frequenciaRespiratoria && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>FR:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.frequenciaRespiratoria} irpm</Typography>
+                                          </Typography>
+                                        )}
+                                      </Grid>
+                                      <Grid item xs={12} sm={6}>
+                                        {consulta.sinaisVitais.temperatura && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Temperatura:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.temperatura} {!consulta.sinaisVitais.temperatura.includes('°C') && '°C'}</Typography>
+                                          </Typography>
+                                        )}
+                                        {(consulta.sinaisVitais.saturacaoOxigenio || consulta.sinaisVitais.saturacaoO2) && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Sat. O2:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.saturacaoOxigenio || consulta.sinaisVitais.saturacaoO2} {!(consulta.sinaisVitais.saturacaoOxigenio || '').includes('%') && !(consulta.sinaisVitais.saturacaoO2 || '').includes('%') && '%'}</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.peso && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Peso:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.peso} {!consulta.sinaisVitais.peso.includes('kg') && 'kg'}</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.altura && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Altura:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.altura} {consulta.sinaisVitais.altura.includes('m') ? '' : consulta.sinaisVitais.altura.includes('cm') ? '' : 'cm'}</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.imc && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>IMC:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.imc}</Typography>
+                                          </Typography>
+                                        )}
+                                        {consulta.sinaisVitais.glicemia && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mb: 0.75 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '105px' }}>Glicemia:</Typography>
+                                            <Typography component="span" variant="body2">{consulta.sinaisVitais.glicemia} mg/dL</Typography>
+                                          </Typography>
+                                        )}
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
+                                ) : (
+                                  <Typography variant="body2" color="text.secondary" sx={{ pl: 1 }}>
+                                    Sinais vitais não registrados
+                                  </Typography>
+                                )}
+                              </Paper>
+                            </Grid>
 
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Diagnóstico Definitivo
-                          </Typography>
-                          <Typography variant="body2">
-                            {consulta.diagnosticoDefinitivo || "Não informado"}
-                          </Typography>
-                        </Grid>
-
-                        {consulta.codigosCID && consulta.codigosCID.length > 0 && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              CID
-                            </Typography>
-                            <Box display="flex" gap={1}>
-                              {consulta.codigosCID.map((cid, index) => (
-                                <Chip key={index} label={cid} size="small" />
-                              ))}
-                            </Box>
-                          </Grid>
-                        )}
-
-                        <Grid item xs={12}>
-                          <Typography variant="subtitle2" color="text.secondary">
-                            Sinais Vitais
-                          </Typography>
-                          <Typography variant="body2" component="div">
-                            {consulta.sinaisVitais ? (
-                              <Box>
-                                {consulta.sinaisVitais.pressaoArterialSistolica && consulta.sinaisVitais.pressaoArterialDiastolica && (
-                                  <Typography variant="body2">
-                                    Pressão Arterial: {consulta.sinaisVitais.pressaoArterialSistolica}/{consulta.sinaisVitais.pressaoArterialDiastolica} mmHg
+                            {consulta.historico && consulta.historico.historicoConsulta && (
+                              <Grid item xs={12}>
+                                <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                    Histórico da Consulta
                                   </Typography>
-                                )}
-                                {consulta.sinaisVitais.pressaoArterial && (
                                   <Typography variant="body2">
-                                    Pressão Arterial: {consulta.sinaisVitais.pressaoArterial}
+                                    {consulta.historico.historicoConsulta}
                                   </Typography>
-                                )}
-                                {consulta.sinaisVitais.frequenciaCardiaca && (
-                                  <Typography variant="body2">
-                                    Frequência Cardíaca: {consulta.sinaisVitais.frequenciaCardiaca} {!consulta.sinaisVitais.frequenciaCardiaca.includes('bpm') && 'bpm'}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.frequenciaRespiratoria && (
-                                  <Typography variant="body2">
-                                    Frequência Respiratória: {consulta.sinaisVitais.frequenciaRespiratoria} irpm
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.temperatura && (
-                                  <Typography variant="body2">
-                                    Temperatura: {consulta.sinaisVitais.temperatura} {!consulta.sinaisVitais.temperatura.includes('°C') && '°C'}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.saturacaoOxigenio && (
-                                  <Typography variant="body2">
-                                    Saturação O2: {consulta.sinaisVitais.saturacaoOxigenio} {!consulta.sinaisVitais.saturacaoOxigenio.includes('%') && '%'}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.saturacaoO2 && (
-                                  <Typography variant="body2">
-                                    Saturação O2: {consulta.sinaisVitais.saturacaoO2}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.peso && (
-                                  <Typography variant="body2">
-                                    Peso: {consulta.sinaisVitais.peso} {!consulta.sinaisVitais.peso.includes('kg') && 'kg'}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.altura && (
-                                  <Typography variant="body2">
-                                    Altura: {consulta.sinaisVitais.altura} {consulta.sinaisVitais.altura.includes('m') ? '' : consulta.sinaisVitais.altura.includes('cm') ? '' : 'cm'}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.imc && (
-                                  <Typography variant="body2">
-                                    IMC: {consulta.sinaisVitais.imc}
-                                  </Typography>
-                                )}
-                                {consulta.sinaisVitais.glicemia && (
-                                  <Typography variant="body2">
-                                    Glicemia: {consulta.sinaisVitais.glicemia} mg/dL
-                                  </Typography>
-                                )}
-                              </Box>
-                            ) : (
-                              "Sinais vitais não registrados"
+                                </Paper>
+                              </Grid>
                             )}
-                          </Typography>
+
+                            {consulta.historico && consulta.historico.exameFisico && (
+                              <Grid item xs={12}>
+                                <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                    Exame Físico
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {consulta.historico.exameFisico}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                            )}
+                          </Grid>
                         </Grid>
-                        
-                        {consulta.conduta && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Conduta
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.conduta}
-                            </Typography>
-                          </Grid>
-                        )}
 
-                        {consulta.historico && consulta.historico.historicoConsulta && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Histórico da Consulta
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.historico.historicoConsulta}
-                            </Typography>
-                          </Grid>
-                        )}
-
-                        {consulta.historico && consulta.historico.exameFisico && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Exame Físico
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.historico.exameFisico}
-                            </Typography>
-                          </Grid>
-                        )}
-
-                        {consulta.historico && consulta.historico.planoCuidados && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Plano de Cuidados
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.historico.planoCuidados}
-                            </Typography>
-                          </Grid>
-                        )}
-
-                        {consulta.prescricoes && consulta.prescricoes.length > 0 && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Prescrições
-                            </Typography>
-                            {consulta.prescricoes.map((prescricao, index) => (
-                              <Box key={index} sx={{ mb: 1 }}>
-                                <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                                  {prescricao.medicamento} {prescricao.concentracao}
+                        {/* Lado direito: Sinais vitais, prescrições e exames */}
+                        <Grid item xs={12} md={5}>
+                          <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                              <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                  Prescrições
                                 </Typography>
-                                <Typography variant="body2">
-                                  {prescricao.posologia}
-                                </Typography>
-                                {prescricao.duracao && (
-                                  <Typography variant="body2">
-                                    Duração: {prescricao.duracao}
+                                {consulta.prescricoes && consulta.prescricoes.length > 0 ? (
+                                  <Box sx={{ pl: 1 }}>
+                                    {consulta.prescricoes.map((prescricao, index) => (
+                                      <Box key={index} sx={{ mb: index !== consulta.prescricoes.length - 1 ? 1.5 : 0 }}>
+                                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                          {prescricao.medicamento} {prescricao.concentracao}
+                                        </Typography>
+                                        <Box sx={{ pl: 1.5 }}>
+                                          <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '85px' }}>Posologia:</Typography>
+                                            <Typography component="span" variant="body2">{prescricao.posologia}</Typography>
+                                          </Typography>
+                                          {prescricao.duracao && (
+                                            <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
+                                              <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '85px' }}>Duração:</Typography>
+                                              <Typography component="span" variant="body2">{prescricao.duracao}</Typography>
+                                            </Typography>
+                                          )}
+                                        </Box>
+                                        {index !== consulta.prescricoes.length - 1 && <Divider sx={{ my: 1 }} />}
+                                      </Box>
+                                    ))}
+                                  </Box>
+                                ) : (
+                                  <Typography variant="body2" color="text.secondary" sx={{ pl: 1 }}>
+                                    Nenhuma prescrição registrada
                                   </Typography>
                                 )}
-                              </Box>
-                            ))}
-                          </Grid>
-                        )}
+                              </Paper>
+                            </Grid>
 
-                        {consulta.examesSolicitados && consulta.examesSolicitados.length > 0 && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Exames Solicitados
-                            </Typography>
-                            {consulta.examesSolicitados.map((exame, index) => (
-                              <Box key={index} sx={{ mb: 1 }}>
-                                <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                                  {exame.exame}
-                                </Typography>
-                                {exame.justificativa && (
-                                  <Typography variant="body2">
-                                    Justificativa: {exame.justificativa}
+                            {consulta.examesSolicitados && consulta.examesSolicitados.length > 0 && (
+                              <Grid item xs={12}>
+                                <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                    Exames Solicitados
                                   </Typography>
-                                )}
-                                {exame.preparos && (
-                                  <Typography variant="body2">
-                                    Preparos: {exame.preparos}
-                                  </Typography>
-                                )}
-                              </Box>
-                            ))}
-                          </Grid>
-                        )}
+                                  <Box sx={{ pl: 1, mt: 1 }}>
+                                    {consulta.examesSolicitados.map((exame, index) => (
+                                      <Box key={index} sx={{ mb: index !== consulta.examesSolicitados.length - 1 ? 1.5 : 0 }}>
+                                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                          {exame.exame}
+                                        </Typography>
+                                        {exame.justificativa && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '95px' }}>Justificativa:</Typography>
+                                            <Typography component="span" variant="body2">{exame.justificativa}</Typography>
+                                          </Typography>
+                                        )}
+                                        {exame.preparos && (
+                                          <Typography variant="body2" sx={{ display: 'flex', mt: 0.5 }}>
+                                            <Typography component="span" variant="body2" sx={{ fontWeight: 'bold', width: '95px' }}>Preparos:</Typography>
+                                            <Typography component="span" variant="body2">{exame.preparos}</Typography>
+                                          </Typography>
+                                        )}
+                                        {index !== consulta.examesSolicitados.length - 1 && <Divider sx={{ my: 1 }} />}
+                                      </Box>
+                                    ))}
+                                  </Box>
+                                </Paper>
+                              </Grid>
+                            )}
 
-                        {((consulta.encaminhamentos && consulta.encaminhamentos.length > 0) || 
-                          (consulta.historico && consulta.historico.encaminhamentos && consulta.historico.encaminhamentos.length > 0)) && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Encaminhamentos
-                            </Typography>
-                            <Box component="ul" sx={{ pl: 2, m: 0 }}>
-                              {consulta.encaminhamentos && consulta.encaminhamentos.map((encaminhamento, index) => (
-                                <Typography component="li" variant="body2" key={index}>
-                                  {encaminhamento}
-                                </Typography>
-                              ))}
-                              {consulta.historico && consulta.historico.encaminhamentos && consulta.historico.encaminhamentos.map((encaminhamento, index) => (
-                                <Typography component="li" variant="body2" key={`historico-${index}`}>
-                                  {encaminhamento}
-                                </Typography>
-                              ))}
-                            </Box>
+                            {((consulta.encaminhamentos && consulta.encaminhamentos.length > 0) || 
+                              (consulta.historico && consulta.historico.encaminhamentos && consulta.historico.encaminhamentos.length > 0)) && (
+                              <Grid item xs={12}>
+                                <Paper variant="outlined" sx={{ p: 1.5, mb: 1 }}>
+                                  <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                                    Encaminhamentos
+                                  </Typography>
+                                  <Box component="ul" sx={{ pl: 2, m: 0, mt: 0.5 }}>
+                                    {consulta.encaminhamentos && consulta.encaminhamentos.map((encaminhamento, index) => (
+                                      <Typography component="li" variant="body2" key={index} sx={{ mb: 0.5 }}>
+                                        {encaminhamento}
+                                      </Typography>
+                                    ))}
+                                    {consulta.historico && consulta.historico.encaminhamentos && consulta.historico.encaminhamentos.map((encaminhamento, index) => (
+                                      <Typography component="li" variant="body2" key={`historico-${index}`} sx={{ mb: 0.5 }}>
+                                        {encaminhamento}
+                                      </Typography>
+                                    ))}
+                                  </Box>
+                                </Paper>
+                              </Grid>
+                            )}
                           </Grid>
-                        )}
-                        
-                        {consulta.observacoes && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                              Observações
-                            </Typography>
-                            <Typography variant="body2">
-                              {consulta.observacoes}
-                            </Typography>
-                          </Grid>
-                        )}
+                        </Grid>
                       </Grid>
                     </CardContent>
                   </Collapse>

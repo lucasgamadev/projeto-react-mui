@@ -124,7 +124,7 @@ const CardEstatistico = ({
               </Box>
             )}
           </Grid>
-          <Grid item xs={4} sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Grid item xs={4} sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
             <IconContainer color={cor}>{icone}</IconContainer>
           </Grid>
         </Grid>
