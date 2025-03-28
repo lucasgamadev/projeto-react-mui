@@ -39,6 +39,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useProntuario } from "../../contexts/ProntuarioContext";
 import ConsultaFormModal from "./ConsultaFormModal";
+import MedicamentoFormModal from "./MedicamentoFormModal";
 
 // Componente de Tab Panel para as abas do prontuário
 function TabPanel(props) {
@@ -514,7 +515,8 @@ HistoricoMedico.propTypes = {
 
 // Componente para exibir medicamentos do paciente
 const Medicamentos = ({ prontuario }) => {
-  const { loading } = useProntuario();
+  const { loading, adicionarMedicamento } = useProntuario();
+  const [openMedicamentoModal, setOpenMedicamentoModal] = useState(false);
 
   // Função para formatar a data de forma segura
   const formatarData = (dataOriginal) => {
@@ -535,14 +537,39 @@ const Medicamentos = ({ prontuario }) => {
     }
   };
 
+  const handleOpenMedicamentoModal = () => {
+    setOpenMedicamentoModal(true);
+  };
+
+  const handleCloseMedicamentoModal = () => {
+    setOpenMedicamentoModal(false);
+  };
+
+  const handleSaveMedicamento = (medicamento) => {
+    adicionarMedicamento(prontuario.id, medicamento);
+    handleCloseMedicamentoModal();
+  };
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">Medicamentos</Typography>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleOpenMedicamentoModal}
+        >
           Novo Medicamento
         </Button>
       </Box>
+      <MedicamentoFormModal
+        open={openMedicamentoModal}
+        onClose={handleCloseMedicamentoModal}
+        onSave={handleSaveMedicamento}
+        prontuarioId={prontuario.id}
+      />
+
       {prontuario.medicamentos.length === 0 ? (
         <Alert severity="info">Não há medicamentos registrados para este paciente.</Alert>
       ) : (

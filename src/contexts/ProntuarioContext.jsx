@@ -741,7 +741,10 @@ export const ProntuarioProvider = ({ children }) => {
         carregarAnexosExemplo,
         carregarTodosExemplos,
         verificarExemploJaCarregado,
-        reinicializarDados
+        reinicializarDados,
+        adicionarCirurgia: () => {},
+        adicionarHistoricoFamiliar: () => {},
+        limparDados: limparProntuario
       }}
     >
       {children}
